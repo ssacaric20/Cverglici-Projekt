@@ -1,6 +1,6 @@
 # Cverglici-Projekt
 
-Predložak za AICareerBuddy
+Predložak za AICareerBuddy<br>
 Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u razvoju karijere koristeći Azure servise.
 
 ## Funkcionalnosti
@@ -22,10 +22,10 @@ Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u razvoju karij
 Aplikacija se gradi putem Azure Pipelinea
 
 ## Struktura repozitorija
-Prijedlog strukture:
-API	- Za rukovanje HTTP zahtjevima, endpointima, validacijom inputa
-App	- Poslovna logika i komunikacija između slojeva
-Domena - Sadrži čiste entitete i pravila domene (klase, enums)
-Infrastruktura -	Implementacija servisa, baze podataka, pristup AI API-jima
-Shared -	Helperi, exception handleri, i zajedničke klase
+Prijedlog strukture:<br>
+API	- Za rukovanje HTTP zahtjevima, endpointima, validacijom inputa<br>
+App	- Poslovna logika i komunikacija između slojeva<br>
+Domena - Sadrži čiste entitete i pravila domene (klase, enums)<br>
+Infrastruktura -	Implementacija servisa, baze podataka, pristup AI API-jima<br>
+Shared -	Helperi, exception handleri, i zajedničke klase<br>
 Testovi	- Pokriva unit i integration testove
