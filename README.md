@@ -1,19 +1,35 @@
 # Cverglici-Projekt
 
-Predložak za AICareerBuddy<br>
-Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u razvoju karijere koristeći Azure servise.
+Predložak za SmartMenzu<br>
+Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u personalizaciji obroka, praćenju nutritivnih vrijednosti, i postavljanju ciljeva vezanih uz prehranu.
 
 ## Funkcionalnosti
 - Registracija korisnika
 - Prijava korisnika
-- Dodjela uloge po korisničkom računu (razina studenta ili mentora/fakulteta)
-- Upload i analiza životopisa
-- Pregled i prijava na job oglase
-- Simulacija AI intervjua
+- Dodjela uloge po korisničkom računu (razina studenta ili zaposlenika)
+
+### Student:
+- Pregled dnevnog menija
+- Pregled detalja o jelu 
+- Dodavanje ciljeva
+- Ažuriranje ciljeva
+- Brisanje ciljeva
+- AI preporuka obroka
+- Označavanje najdražih jela
+- Uklanjanje određenih jela iz lise najdražih
+- Ocjenjivanje i komentiranje jela
+
+### Zaposlenik:
+- Unos menija
+- Uređivanje menija
+- Brisanje menija
+- Nutritivna analiza menija putem AI
+- Pregled osnovne statistike
+- Generiranje slike jela putem AI
 
 ## Tehnologije
 - ASP.NET Core Web API
-- Entity Framework (Code-First)
+- Entity Framework
 - Azure DevOps, Azure Pipelines
 - Azure AI Services, Blob Storage
 - SQL Server
