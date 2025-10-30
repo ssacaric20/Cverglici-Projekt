@@ -143,10 +143,8 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/email_hint"
                         android:inputType="textEmailAddress"
-                        android:backgroundTint="@color/orange_primary"
                         android:textSize="14sp"
-                        android:minHeight="48dp"
-                        android:text="@string/email_label" />
+                        android:minHeight="48dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Password Field -->
@@ -174,10 +172,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:backgroundTint="@color/orange_primary"
+                        android:hint="@string/password_hint"
                         android:textSize="14sp"
-                        android:minHeight="48dp"
-                        android:text="@string/password_label" />
+                        android:minHeight="48dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Login Button -->

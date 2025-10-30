@@ -6,7 +6,8 @@
     <string name="tab_login">Prijava</string>
     <string name="tab_register">Registracija</string>
     <string name="email_label">Email</string>
-    <string name="email_hint">ime.prezime@student.hr</string>
+    <string name="email_hint">Ime.prezime@student.hr</string>
+    <string name="password_hint">Lozinka</string>
     <string name="password_label">Zaporka</string>
     <string name="button_login">Prijavi se</string>
     <string name="google_login_option">Opcija prijave s Google računom</string>
