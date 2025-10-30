@@ -21,14 +21,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initializeViews()
-        setupClickListeners()
 
-        //enableEdgeToEdge()
+        setupClickListeners()
     }
 
     private fun initializeViews() {
         tabLogin = findViewById(R.id.tabLogin)
         tabRegister = findViewById(R.id.tabRegister)
+        emailInput = findViewById(R.id.emailInput)
+        passwordInput = findViewById(R.id.passwordInput)
+        loginButton = findViewById(R.id.loginButton)
+        googleLoginButton = findViewById(R.id.googleLoginButton)
     }
 
     private fun setupClickListeners() {
@@ -40,12 +43,10 @@ class MainActivity : AppCompatActivity() {
             selectRegisterTab()
         }
 
-        // Login button
         loginButton.setOnClickListener {
             handleLogin()
         }
 
-        // Google login button
         googleLoginButton.setOnClickListener {
             handleGoogleLogin()
         }
