@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartMenza.API.Data; 
@@ -29,6 +30,49 @@ namespace SmartMenza.API.Controllers
             var users = await _context.Korisnici.ToListAsync();
 
             return Ok(users);
+        }
+
+        // 4. Action Method: POST id_korisnik
+        // HTTP POST request na /api/korisnici/prijava
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginKorisnik([FromBody] Prijava request)
+        {
+            bool formIsEmpty = IsLoginInputEmpty(request); 
+
+            if (formIsEmpty) // Checks for empty feilds 
+            {
+                return Unauthorized(new {message = "Invalid Email or Password!"}); // Sends Status Code 401 with a message
+            }
+
+            try
+            {
+                var user = ValidateLoginInput(request); // Checks if email and password hash match with the ones in DB
+                if(user == null)
+                return Unauthorized(new { message = "Invalid Email or Password!" }); // Sends Status Code 401 with a message
+                return StatusCode(200, user); // Sends Status Code 200 with users data, in other words you did it 🎊🎊🎊😎😎😎
+            } 
+
+            catch (Exception ex) 
+            {
+                return StatusCode(500, ex); // Big stinky occured
+            }
+        }
+
+        // Empty feild check
+        private bool IsLoginInputEmpty(Prijava request)
+        {
+            if (request.LozinkaHash == "" || request.Email == "")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        // Returns a valid user or NULL
+        private Korisnik ValidateLoginInput(Prijava request)
+        {
+            var user = _context.Korisnici.FirstOrDefault(u => u.Email == request.Email && u.LozinkaHash == request.LozinkaHash);
+            return user;
         }
 
         // druge radnje ([HttpPost] za stvaranje korisnika)

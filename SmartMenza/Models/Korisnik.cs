@@ -1,4 +1,6 @@
-﻿namespace SmartMenza.API.Models
+﻿using Microsoft.Identity.Client;
+
+namespace SmartMenza.API.Models
 {
     public class Korisnik
     {
@@ -17,5 +19,11 @@
         public ICollection<Cilj> Ciljevi { get; set; } = new List<Cilj>();
         public ICollection<DnevniUnos> DnevniUnosi { get; set; } = new List<DnevniUnos>();
         public ICollection<Favorit> Favoriti { get; set; } = new List<Favorit>();
+    }
+
+    public class Prijava()
+    {
+        public string Email { get; set; }
+        public string LozinkaHash { get; set; }
     }
 }

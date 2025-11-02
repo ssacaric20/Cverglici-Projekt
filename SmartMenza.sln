@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.API", "SmartMenza\SmartMenza.API.csproj", "{4E846D4C-AC07-4A71-B3A4-546998A3EC84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Core", "SmartMenza.Core\SmartMenza.Core.csproj", "{39AF5E62-87AE-4E04-9057-0372A9520F95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{4E846D4C-AC07-4A71-B3A4-546998A3EC84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E846D4C-AC07-4A71-B3A4-546998A3EC84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E846D4C-AC07-4A71-B3A4-546998A3EC84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
