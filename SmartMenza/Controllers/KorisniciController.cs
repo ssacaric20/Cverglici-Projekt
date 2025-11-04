@@ -32,14 +32,14 @@ namespace SmartMenza.API.Controllers
             return Ok(users);
         }
 
-        // 4. Action Method: POST id_korisnik
+        // 4. Action Method: POST login korisnik
         // HTTP POST request na /api/korisnici/prijava
         [HttpPost("login")]
         public async Task<IActionResult> LoginKorisnik([FromBody] Prijava request)
         {
             bool formIsEmpty = IsLoginInputEmpty(request); 
 
-            if (formIsEmpty) // Checks for empty feilds 
+            if (formIsEmpty) // Checks for empty fields 
             {
                 return Unauthorized(new {message = "Invalid Email or Password!"}); // Sends Status Code 401 with a message
             }
@@ -58,7 +58,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        // Empty feild check
+        // Empty field check
         private bool IsLoginInputEmpty(Prijava request)
         {
             if (request.LozinkaHash == "" || request.Email == "")
