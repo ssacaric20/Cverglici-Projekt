@@ -58,7 +58,10 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        // Empty field check
+        // 5. Action Method: POST prijava Google oAuth 
+        //
+
+        // Empty feild check
         private bool IsLoginInputEmpty(Prijava request)
         {
             if (request.LozinkaHash == "" || request.Email == "")
