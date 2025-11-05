@@ -2,36 +2,50 @@ package foi.cverglici.smartmenza
 
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.textfield.TextInputEditText
+import androidx.fragment.app.Fragment
+import foi.cverglici.smartmenza.navigation.LoginFragment
+import foi.cverglici.smartmenza.navigation.RegistrationFragment
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var tabLogin: Button
     private lateinit var tabRegister: Button
-    private lateinit var emailInput: TextInputEditText
-    private lateinit var passwordInput: TextInputEditText
-    private lateinit var loginButton: Button
-    private lateinit var googleLoginButton: Button
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initializeViews()
-
         setupClickListeners()
+
+        if (savedInstanceState == null) {
+            showLoginFragment()
+        }
+
+        updateTabSelection(isLoginActive = true)
+
+        tabLogin.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, LoginFragment())
+                .commit()
+
+            updateTabSelection(isLoginActive = true)
+        }
+
+        tabRegister.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, RegistrationFragment())
+                .commit()
+
+            updateTabSelection(isLoginActive = false)
+        }
     }
 
     private fun initializeViews() {
         tabLogin = findViewById(R.id.tabLogin)
         tabRegister = findViewById(R.id.tabRegister)
-        emailInput = findViewById(R.id.emailInput)
-        passwordInput = findViewById(R.id.passwordInput)
-        loginButton = findViewById(R.id.loginButton)
-        googleLoginButton = findViewById(R.id.googleLoginButton)
     }
 
     private fun setupClickListeners() {
@@ -42,86 +56,68 @@ class MainActivity : AppCompatActivity() {
         tabRegister.setOnClickListener {
             selectRegisterTab()
         }
-
-        loginButton.setOnClickListener {
-            handleLogin()
-        }
-
-        googleLoginButton.setOnClickListener {
-            handleGoogleLogin()
-        }
     }
 
     private fun selectLoginTab() {
-        tabLogin.setBackgroundResource(R.drawable.selected_bg)
-        tabLogin.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
-
-        tabRegister.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
-        tabRegister.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
-
-        Toast.makeText(this, "Prijava odabrana", Toast.LENGTH_SHORT).show()
+        updateTabAppearance(isLoginSelected = true)
+        showLoginFragment()
     }
 
     private fun selectRegisterTab() {
-        tabRegister.setBackgroundResource(R.drawable.selected_bg)
-        tabRegister.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+        // Update tab appearance
+        updateTabAppearance(isLoginSelected = false)
 
-        tabLogin.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
-        tabLogin.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
-
-        Toast.makeText(this, "Registracija nije još implementirana", Toast.LENGTH_SHORT).show()
+        // Show registration fragment
+        showRegistrationFragment()
     }
 
-    private fun handleLogin() {
-        val email = emailInput.text.toString().trim()
-        val password = passwordInput.text.toString()
+    private fun updateTabAppearance(isLoginSelected: Boolean) {
+        if (isLoginSelected) {
+            // Login tab selected
+            tabLogin.setBackgroundResource(R.drawable.selected_bg)
+            tabLogin.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
 
-        if (!validateLoginInput(email, password)) {
-            return
+            tabRegister.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
+            tabRegister.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        } else {
+            tabRegister.setBackgroundResource(R.drawable.selected_bg)
+            tabRegister.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+
+            tabLogin.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
+            tabLogin.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
         }
-
-        // API call na backend
-
-        Toast.makeText(
-            this,
-            "Prijava za $email",
-            Toast.LENGTH_LONG
-        ).show()
     }
 
-    private fun validateLoginInput(email: String, password: String): Boolean {
-        if (email.isEmpty()) {
-            emailInput.error = "Email je obavezan"
-            return false
-        }
-
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailInput.error = "Unesite ispravan email"
-            return false
-        }
-
-        if (password.isEmpty()) {
-            passwordInput.error = "Zaporka je obavezna"
-            return false
-        }
-
-        if (password.length < 6) {
-            passwordInput.error = "Zaporka mora imati najmanje 6 znakova"
-            return false
-        }
-
-        return true
+    private fun showLoginFragment() {
+        replaceFragment(LoginFragment())
     }
 
-    private fun handleGoogleLogin() {
-        // google sign in
-        // google dependency
-        // autentifikacija
+    private fun showRegistrationFragment() {
+        replaceFragment(fragment = (RegistrationFragment()))
+    }
 
-        Toast.makeText(
-            this,
-            "Google prijava nije još implementirana",
-            Toast.LENGTH_SHORT
-        ).show()
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
+    }
+
+    private fun updateTabSelection(isLoginActive: Boolean) {
+        val loginButton = findViewById<Button>(R.id.tabLogin)
+        val registerButton = findViewById<Button>(R.id.tabRegister)
+
+        if (isLoginActive) {
+            loginButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.white))
+            loginButton.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+
+            registerButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.transparent)) // Assuming default/inactive background is transparent
+            registerButton.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        } else {
+            registerButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.white))
+            registerButton.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+
+            loginButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.transparent)) // Assuming default/inactive background is transparent
+            loginButton.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        }
     }
 }
