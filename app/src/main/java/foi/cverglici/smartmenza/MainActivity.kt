@@ -1,47 +1,123 @@
 package foi.cverglici.smartmenza
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import foi.cverglici.smartmenza.ui.theme.SmartMenzaTheme
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import foi.cverglici.smartmenza.navigation.LoginFragment
+import foi.cverglici.smartmenza.navigation.RegistrationFragment
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var tabLogin: Button
+    private lateinit var tabRegister: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            SmartMenzaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+        setContentView(R.layout.activity_main)
+
+        initializeViews()
+        setupClickListeners()
+
+        if (savedInstanceState == null) {
+            showLoginFragment()
+        }
+
+        updateTabSelection(isLoginActive = true)
+
+        tabLogin.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, LoginFragment())
+                .commit()
+
+            updateTabSelection(isLoginActive = true)
+        }
+
+        tabRegister.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, RegistrationFragment())
+                .commit()
+
+            updateTabSelection(isLoginActive = false)
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    private fun initializeViews() {
+        tabLogin = findViewById(R.id.tabLogin)
+        tabRegister = findViewById(R.id.tabRegister)
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SmartMenzaTheme {
-        Greeting("Android")
+    private fun setupClickListeners() {
+        tabLogin.setOnClickListener {
+            selectLoginTab()
+        }
+
+        tabRegister.setOnClickListener {
+            selectRegisterTab()
+        }
+    }
+
+    private fun selectLoginTab() {
+        updateTabAppearance(isLoginSelected = true)
+        showLoginFragment()
+    }
+
+    private fun selectRegisterTab() {
+        // Update tab appearance
+        updateTabAppearance(isLoginSelected = false)
+
+        // Show registration fragment
+        showRegistrationFragment()
+    }
+
+    private fun updateTabAppearance(isLoginSelected: Boolean) {
+        if (isLoginSelected) {
+            // Login tab selected
+            tabLogin.setBackgroundResource(R.drawable.selected_bg)
+            tabLogin.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+
+            tabRegister.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
+            tabRegister.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        } else {
+            tabRegister.setBackgroundResource(R.drawable.selected_bg)
+            tabRegister.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+
+            tabLogin.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
+            tabLogin.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        }
+    }
+
+    private fun showLoginFragment() {
+        replaceFragment(LoginFragment())
+    }
+
+    private fun showRegistrationFragment() {
+        replaceFragment(fragment = (RegistrationFragment()))
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
+    }
+
+    private fun updateTabSelection(isLoginActive: Boolean) {
+        val loginButton = findViewById<Button>(R.id.tabLogin)
+        val registerButton = findViewById<Button>(R.id.tabRegister)
+
+        if (isLoginActive) {
+            loginButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.white))
+            loginButton.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+
+            registerButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.transparent)) // Assuming default/inactive background is transparent
+            registerButton.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        } else {
+            registerButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.white))
+            registerButton.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+
+            loginButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.transparent)) // Assuming default/inactive background is transparent
+            loginButton.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        }
     }
 }
