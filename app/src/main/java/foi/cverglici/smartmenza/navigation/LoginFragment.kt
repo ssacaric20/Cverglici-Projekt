@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.data.api.RetrofitClient
+import foi.cverglici.smartmenza.data.model.LoginRequest
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -61,21 +65,36 @@ class LoginFragment : Fragment() {
             return
         }
 
-        // TODO: Make API call to backend
-        // Example:
-        // authService.login(email, password) { success, error ->
-        //     if (success) {
-        //         navigateToHomeScreen()
-        //     } else {
-        //         showError(error)
-        //     }
-        // }
+        val requestBody = LoginRequest (email, password)
 
-        Toast.makeText(
-            requireContext(),
-            "Prijava za: $email",
-            Toast.LENGTH_LONG
-        ).show()
+        //da se onemoguci prijava button tijekom API calla
+        loginButton.isEnabled = false
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.authService.loginUser(requestBody)
+
+                if (response.isSuccessful) {
+                    response.body()?.let { authResponse ->
+                        // spremanje
+                        // sessionManager.saveUserId(authResponse.userId)
+                        showSuccessMessage(authResponse.message)
+
+                        // navigacija na login nakon registracije
+                        activity?.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.fragmentContainer, LoginFragment())
+                            ?.commit()
+                    }
+                } else {
+                    val errorMsg = response.errorBody()?.string() ?: "Greška kod prijave."
+                    showError(errorMsg)
+                }
+            } catch (e: Exception) {
+                showError(e.message ?: "Mrežna greška: ${e.message}")
+            } finally {
+                loginButton.isEnabled = true
+            }
+        }
     }
 
     private fun validateLoginInput(email: String, password: String): Boolean {
@@ -99,8 +118,15 @@ class LoginFragment : Fragment() {
             passwordInput.error = "Zaporka mora imati najmanje 6 znakova"
             return false
         }
-
         return true
+    }
+
+    private fun showSuccessMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     private fun handleGoogleLogin() {
