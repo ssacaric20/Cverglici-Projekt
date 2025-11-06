@@ -7,8 +7,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.data.api.RetrofitClient
+import foi.cverglici.smartmenza.data.model.RegistrationRequest
+import kotlinx.coroutines.launch
+
 
 class RegistrationFragment : Fragment() {
 
@@ -61,28 +66,39 @@ class RegistrationFragment : Fragment() {
         val email = emailInputRegister.text.toString().trim()
         val password = passwordInputRegister.text.toString()
 
-        // Validate input
         if (!validateRegisterInput(name, email, password)) {
             return
         }
 
-        // TODO: Make API call to backend
-        // Example:
-        // authService.register(name, email, password) { success, error ->
-        //     if (success) {
-        //         showSuccessMessage()
-        //         navigateToLoginScreen()
-        //     } else {
-        //         showError(error)
-        //     }
-        // }
+        val requestBody = RegistrationRequest(name, email, password)
 
-        // For now, just show a success message
-        Toast.makeText(
-            requireContext(),
-            "Registracija za: $name ($email)",
-            Toast.LENGTH_LONG
-        ).show()
+        //da se onemoguci register button tijekom API calla
+        registerButton.isEnabled = false
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.authService.registerUser(requestBody)
+
+                if(response.isSuccessful) {
+                    response.body()?.let { authResponse ->
+                        //spremanje
+                        //sessionManager.saveUserId(authResponse.userId)
+                        showSuccessMessage(authResponse.message)
+
+                        activity?.supportFragmentManager?.beginTransaction()
+                            ?.replace(R.id.fragmentContainer, LoginFragment())
+                            ?.commit()
+                    }
+                } else {
+                    val errorMsg = response.errorBody()?.string() ?: "Registracija nije uspjela."
+                    showError(errorMsg)
+                }
+            } catch (e: Exception) {
+                showError("Mrežna greška: ${e.message}")
+            } finally {
+                registerButton.isEnabled = true
+            }
+        }
     }
 
     private fun validateRegisterInput(name: String, email: String, password: String): Boolean {
@@ -118,6 +134,14 @@ class RegistrationFragment : Fragment() {
         }
 
         return true
+    }
+
+    private fun showSuccessMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     private fun handleGoogleRegister() {
