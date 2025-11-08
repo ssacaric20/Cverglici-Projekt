@@ -23,6 +23,7 @@ import foi.cverglici.smartmenza.R
 class LoginFragment : Fragment() {
 
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
+    private lateinit var serverClientId : String
     private lateinit var emailInput: TextInputEditText
     private lateinit var passwordInput: TextInputEditText
     private lateinit var loginButton: Button
@@ -37,7 +38,12 @@ class LoginFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
+        serverClientId = getServerClientId(requireContext()) ?: ""
+
+        Log.d("serverClientId", "Value: resultCode=${serverClientId}")
 
         // Registracija launcher-a u Fragment-u
         googleSignInLauncher = registerForActivityResult(
@@ -207,7 +213,7 @@ class LoginFragment : Fragment() {
         }
     }*/
 
-    val serverClientId = getServerClientId(requireContext()) ?: ""
+
 
 }
 
