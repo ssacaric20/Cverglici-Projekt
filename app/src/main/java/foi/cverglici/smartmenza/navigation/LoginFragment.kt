@@ -23,7 +23,7 @@ import foi.cverglici.smartmenza.R
 class LoginFragment : Fragment() {
 
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
-    private lateinit var serverClientId : String
+    private lateinit var serverClientId: String
     private lateinit var emailInput: TextInputEditText
     private lateinit var passwordInput: TextInputEditText
     private lateinit var loginButton: Button
@@ -49,7 +49,10 @@ class LoginFragment : Fragment() {
         googleSignInLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            Log.d("GoogleSignIn", "Activity result received: resultCode=${result.resultCode}, data=${result.data}")
+            Log.d(
+                "GoogleSignIn",
+                "Activity result received: resultCode=${result.resultCode}, data=${result.data}"
+            )
 
             if (result.resultCode == Activity.RESULT_OK) {
                 Log.d("GoogleSignIn", "Result OK, processing sign-in")
@@ -72,10 +75,16 @@ class LoginFragment : Fragment() {
                         Log.e("GoogleSignIn", "Authorization code is null")
                     }
                 } catch (e: ApiException) {
-                    Log.e("GoogleSignIn", "Failed to get account result: ${e.statusCode}, message: ${e.message}")
+                    Log.e(
+                        "GoogleSignIn",
+                        "Failed to get account result: ${e.statusCode}, message: ${e.message}"
+                    )
                 }
             } else {
-                Log.e("GoogleSignIn", "Google sign-in failed, resultCode=${result.resultCode}, intentData=${result.data}")
+                Log.e(
+                    "GoogleSignIn",
+                    "Google sign-in failed, resultCode=${result.resultCode}, intentData=${result.data}"
+                )
             }
         }
     }
@@ -161,12 +170,6 @@ class LoginFragment : Fragment() {
     private fun handleGoogleLogin() {
 
         startGoogleSignIn()
-
-        Toast.makeText(
-            requireContext(),
-            "Google prijava nije još implementirana",
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     private fun startGoogleSignIn() {
@@ -179,53 +182,18 @@ class LoginFragment : Fragment() {
         val signInIntent = googleSignInClient.signInIntent
         googleSignInLauncher.launch(signInIntent)
     }
-    /*val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        Log.d("GoogleSignIn", "Activity result received: resultCode=${result.resultCode}, data=${result.data}")
 
-        if (result.resultCode == android.app.Activity.RESULT_OK) {
-            Log.d("GoogleSignIn", "Result OK, processing sign-in")
 
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            try {
-                val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
-
-                Log.d("GoogleSignIn", "Account retrieved successfully")
-                Log.d("GoogleSignIn", "Display Name: ${account?.displayName}")
-                Log.d("GoogleSignIn", "Email: ${account?.email}")
-                Log.d("GoogleSignIn", "Id: ${account?.id}")
-                Log.d("GoogleSignIn", "IdToken: ${account?.idToken}")
-                Log.d("GoogleSignIn", "Auth code: ${account?.serverAuthCode}")
-
-                val authorizationCode = account?.serverAuthCode
-                if (authorizationCode != null) {
-                    Log.d("GoogleSignIn", "Authorization code is present, sending to backend")
-                    //sendCodeToBackend(authorizationCode, viewModel, onSuccessfulLogin)
-                } else {
-                    Log.e("GoogleSignIn", "Authorization code is null")
-                }
-            } catch (e: com.google.android.gms.common.api.ApiException) {
-                Log.e("GoogleSignIn", "Failed to get account result: ${e.statusCode}, message: ${e.message}")
-            }
-        } else {
-            Log.e("GoogleSignIn", "Google sign-in failed, resultCode=${result.resultCode}, intentData=${result.data}")
+    fun getServerClientId(context: Context): String? {
+        return try {
+            val appInfo = context.packageManager.getApplicationInfo(
+                context.packageName,
+                PackageManager.GET_META_DATA
+            )
+            appInfo.metaData?.getString("com.google.android.gms.auth.api.signin.ServerClientId")
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+            null
         }
-    }*/
-
-
-
-}
-
-fun getServerClientId(context: Context): String? {
-    return try {
-        val appInfo = context.packageManager.getApplicationInfo(
-            context.packageName,
-            PackageManager.GET_META_DATA
-        )
-        appInfo.metaData?.getString("com.google.android.gms.auth.api.signin.ServerClientId")
-    } catch (e: PackageManager.NameNotFoundException) {
-        e.printStackTrace()
-        null
     }
 }
