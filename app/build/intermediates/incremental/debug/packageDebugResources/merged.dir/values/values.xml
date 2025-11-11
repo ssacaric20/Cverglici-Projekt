@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="blue_light">#E8F4FF</color>
+    <color name="gray_light">#F5F5F5</color>
+    <color name="orange_light">#FFF5ED</color>
+    <color name="orange_primary">#FF6B00</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="text_primary">#333333</color>
+    <color name="text_secondary">#666666</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_description">Dnevne ponude pri dohvatu ruke</string>
+    <string name="app_name">SmartMenza</string>
+    <string name="button_login">Prijavi se</string>
+    <string name="demo_access">Demo pristupni podaci:</string>
+    <string name="demo_employee">Zaposlenik: ivan.juric@menza.hr / employee123</string>
+    <string name="demo_student">Student: ana.kovac@student.hr / student123</string>
+    <string name="email_hint">Ime.prezime@student.hr</string>
+    <string name="email_label">Email</string>
+    <string name="google_login_button">Google prijava</string>
+    <string name="google_login_option">Opcija prijave s Google računom</string>
+    <string name="login_prompt">Prijavite se na svoj Smart Menza račun</string>
+    <string name="password_hint">Lozinka</string>
+    <string name="password_label">Zaporka</string>
+    <string name="tab_login">Prijava</string>
+    <string name="tab_register">Registracija</string>
+    <string name="welcome_message">Dobrodošli!</string>
+    <style name="Theme.MaterialComponents.NoActionBar." parent="android:Theme.Material.Light.NoActionBar"/>
+</resources>
