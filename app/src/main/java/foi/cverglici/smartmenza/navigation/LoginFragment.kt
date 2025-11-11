@@ -1,21 +1,29 @@
 package foi.cverglici.smartmenza.navigation
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.R
-import foi.cverglici.smartmenza.data.api.RetrofitClient
-import foi.cverglici.smartmenza.data.model.LoginRequest
-import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
+    private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
+    private lateinit var serverClientId : String
     private lateinit var emailInput: TextInputEditText
     private lateinit var passwordInput: TextInputEditText
     private lateinit var loginButton: Button
@@ -27,6 +35,49 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.login_fragment, container, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        super.onCreate(savedInstanceState)
+
+        serverClientId = getServerClientId(requireContext()) ?: ""
+
+        Log.d("serverClientId", "Value: resultCode=${serverClientId}")
+
+        // Registracija launcher-a u Fragment-u
+        googleSignInLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            Log.d("GoogleSignIn", "Activity result received: resultCode=${result.resultCode}, data=${result.data}")
+
+            if (result.resultCode == Activity.RESULT_OK) {
+                Log.d("GoogleSignIn", "Result OK, processing sign-in")
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                try {
+                    val account = task.getResult(ApiException::class.java)
+
+                    Log.d("GoogleSignIn", "Account retrieved successfully")
+                    Log.d("GoogleSignIn", "Display Name: ${account?.displayName}")
+                    Log.d("GoogleSignIn", "Email: ${account?.email}")
+                    Log.d("GoogleSignIn", "Id: ${account?.id}")
+                    Log.d("GoogleSignIn", "IdToken: ${account?.idToken}")
+                    Log.d("GoogleSignIn", "Auth code: ${account?.serverAuthCode}")
+
+                    val authorizationCode = account?.serverAuthCode
+                    if (authorizationCode != null) {
+                        Log.d("GoogleSignIn", "Authorization code is present, sending to backend")
+                        //sendCodeToBackend(authorizationCode)
+                    } else {
+                        Log.e("GoogleSignIn", "Authorization code is null")
+                    }
+                } catch (e: ApiException) {
+                    Log.e("GoogleSignIn", "Failed to get account result: ${e.statusCode}, message: ${e.message}")
+                }
+            } else {
+                Log.e("GoogleSignIn", "Google sign-in failed, resultCode=${result.resultCode}, intentData=${result.data}")
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,36 +116,21 @@ class LoginFragment : Fragment() {
             return
         }
 
-        val requestBody = LoginRequest (email, password)
+        // TODO: Make API call to backend
+        // Example:
+        // authService.login(email, password) { success, error ->
+        //     if (success) {
+        //         navigateToHomeScreen()
+        //     } else {
+        //         showError(error)
+        //     }
+        // }
 
-        //da se onemoguci prijava button tijekom API calla
-        loginButton.isEnabled = false
-
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.authService.loginUser(requestBody)
-
-                if (response.isSuccessful) {
-                    response.body()?.let { authResponse ->
-                        // spremanje
-                        // sessionManager.saveUserId(authResponse.userId)
-                        showSuccessMessage(authResponse.message)
-
-                        // navigacija na login nakon registracije
-                        activity?.supportFragmentManager?.beginTransaction()
-                            ?.replace(R.id.fragmentContainer, LoginFragment())
-                            ?.commit()
-                    }
-                } else {
-                    val errorMsg = response.errorBody()?.string() ?: "Greška kod prijave."
-                    showError(errorMsg)
-                }
-            } catch (e: Exception) {
-                showError(e.message ?: "Mrežna greška: ${e.message}")
-            } finally {
-                loginButton.isEnabled = true
-            }
-        }
+        Toast.makeText(
+            requireContext(),
+            "Prijava za: $email",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun validateLoginInput(email: String, password: String): Boolean {
@@ -118,28 +154,78 @@ class LoginFragment : Fragment() {
             passwordInput.error = "Zaporka mora imati najmanje 6 znakova"
             return false
         }
+
         return true
     }
 
-    private fun showSuccessMessage(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-    }
-
-    private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-    }
-
     private fun handleGoogleLogin() {
-        // TODO: Implement Google Sign-In flow
-        // You'll need to:
-        // 1. Add Google Sign-In dependency
-        // 2. Configure Google Sign-In in Firebase Console
-        // 3. Implement the authentication flow
+
+        startGoogleSignIn()
 
         Toast.makeText(
             requireContext(),
             "Google prijava nije još implementirana",
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun startGoogleSignIn() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestServerAuthCode(serverClientId)
+            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        val signInIntent = googleSignInClient.signInIntent
+        googleSignInLauncher.launch(signInIntent)
+    }
+    /*val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        Log.d("GoogleSignIn", "Activity result received: resultCode=${result.resultCode}, data=${result.data}")
+
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            Log.d("GoogleSignIn", "Result OK, processing sign-in")
+
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)
+
+                Log.d("GoogleSignIn", "Account retrieved successfully")
+                Log.d("GoogleSignIn", "Display Name: ${account?.displayName}")
+                Log.d("GoogleSignIn", "Email: ${account?.email}")
+                Log.d("GoogleSignIn", "Id: ${account?.id}")
+                Log.d("GoogleSignIn", "IdToken: ${account?.idToken}")
+                Log.d("GoogleSignIn", "Auth code: ${account?.serverAuthCode}")
+
+                val authorizationCode = account?.serverAuthCode
+                if (authorizationCode != null) {
+                    Log.d("GoogleSignIn", "Authorization code is present, sending to backend")
+                    //sendCodeToBackend(authorizationCode, viewModel, onSuccessfulLogin)
+                } else {
+                    Log.e("GoogleSignIn", "Authorization code is null")
+                }
+            } catch (e: com.google.android.gms.common.api.ApiException) {
+                Log.e("GoogleSignIn", "Failed to get account result: ${e.statusCode}, message: ${e.message}")
+            }
+        } else {
+            Log.e("GoogleSignIn", "Google sign-in failed, resultCode=${result.resultCode}, intentData=${result.data}")
+        }
+    }*/
+
+
+
+}
+
+fun getServerClientId(context: Context): String? {
+    return try {
+        val appInfo = context.packageManager.getApplicationInfo(
+            context.packageName,
+            PackageManager.GET_META_DATA
+        )
+        appInfo.metaData?.getString("com.google.android.gms.auth.api.signin.ServerClientId")
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        null
     }
 }
