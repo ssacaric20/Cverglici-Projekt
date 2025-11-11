@@ -125,16 +125,6 @@ class LoginFragment : Fragment() {
             return
         }
 
-        // TODO: Make API call to backend
-        // Example:
-        // authService.login(email, password) { success, error ->
-        //     if (success) {
-        //         navigateToHomeScreen()
-        //     } else {
-        //         showError(error)
-        //     }
-        // }
-
         Toast.makeText(
             requireContext(),
             "Prijava za: $email",
@@ -143,7 +133,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun validateLoginInput(email: String, password: String): Boolean {
-        // Check if email is empty
         if (email.isEmpty()) {
             emailInput.error = "Email je obavezan"
             return false
