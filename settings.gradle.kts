@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SmartMenza"
 include(":app")
+include(":core")
+include(":Ciljevi")
