@@ -13,4 +13,5 @@
     <color name="text_primary">#333333</color>
     <color name="text_secondary">#666666</color>
     <color name="gray_light">#F5F5F5</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

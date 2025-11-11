@@ -1,18 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SmartMenza</string>
+    <!-- EXISTING STRINGS - Keep these -->
+    <string name="app_name">Smart Menza</string>
     <string name="app_description">Dnevne ponude pri dohvatu ruke</string>
     <string name="welcome_message">Dobrodošli!</string>
     <string name="login_prompt">Prijavite se na svoj Smart Menza račun</string>
     <string name="tab_login">Prijava</string>
     <string name="tab_register">Registracija</string>
     <string name="email_label">Email</string>
-    <string name="email_hint">Ime.prezime@student.hr</string>
-    <string name="password_hint">Lozinka</string>
+    <string name="email_hint">ime.prezime@student.hr</string>
     <string name="password_label">Zaporka</string>
+    <string name="password_hint">Lozinka</string>
     <string name="button_login">Prijavi se</string>
     <string name="google_login_option">Opcija prijave s Google računom</string>
     <string name="google_login_button">Prijavi se s Google-om</string>
     <string name="demo_access">Demo pristupni podaci:</string>
     <string name="demo_student">Student: ana.kovac@student.hr / student123</string>
     <string name="demo_employee">Zaposlenik: ivan.juric@menza.hr / employee123</string>
+
+    <!-- NEW STRINGS - Add these for registration -->
+    <string name="register_prompt">Stvorite novi Smart Menza račun</string>
+    <string name="name_label">Ime</string>
+    <string name="name_hint">Ana Kovač</string>
+    <string name="button_register">Registriraj se</string>
+    <string name="already_have_account">Već imate račun? Prijavite se</string>
 </resources>
