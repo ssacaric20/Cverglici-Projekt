@@ -14,14 +14,21 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputEditText
+import foi.cverglici.smartmenza.MainActivity
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.core.SessionManager
+import foi.cverglici.smartmenza.data.api.RetrofitClient
+import foi.cverglici.smartmenza.data.model.LoginRequest
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
+    private lateinit var sessionManager: SessionManager
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
     private lateinit var serverClientId: String
     private lateinit var emailInput: TextInputEditText
@@ -97,6 +104,9 @@ class LoginFragment : Fragment() {
 
         // Set up click listeners
         setupClickListeners()
+
+        sessionManager = SessionManager(requireContext())
+
     }
 
     private fun initializeViews(view: View) {
@@ -125,11 +135,33 @@ class LoginFragment : Fragment() {
             return
         }
 
-        Toast.makeText(
-            requireContext(),
-            "Prijava za: $email",
-            Toast.LENGTH_LONG
-        ).show()
+        val requestBody = LoginRequest(email, password)
+        loginButton.isEnabled = false
+
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.authService.loginUser(requestBody)
+
+                if (response.isSuccessful) {
+                    response.body()?.let { authResponse ->
+
+                        // spremanje tokena
+                        sessionManager.saveAuthToken(authResponse.token)
+
+                        showSuccessMessage(authResponse.message)
+
+                        // navigacija na MainActivity
+                        navigateToMainActivity()
+                    }
+                } else {
+                    showError("Greška kod prijave")
+                }
+            } catch (e: Exception) {
+                showError("Mrežna greška")
+            } finally {
+                loginButton.isEnabled = true
+            }
+        }
     }
 
     private fun validateLoginInput(email: String, password: String): Boolean {
@@ -185,4 +217,19 @@ class LoginFragment : Fragment() {
             null
         }
     }
+
+    private fun showSuccessMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+}
+
 }
