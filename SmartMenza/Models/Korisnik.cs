@@ -26,4 +26,9 @@ namespace SmartMenza.API.Models
         public string Email { get; set; }
         public string LozinkaHash { get; set; }
     }
+
+    public class PrijavaGoogle()
+    {
+        public string IdToken { get; set; }
+    }
 }

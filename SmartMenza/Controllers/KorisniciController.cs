@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +59,61 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        // Empty field check
+        // 5. Action Method: POST prijava Google oAuth 
+        // HTTP POST request na /api/korisnici/prijava-google-oAuth
+        [HttpPost("prijava-google-oAuth")]
+        public async Task<IActionResult> LoginGoogle([FromBody] PrijavaGoogle request)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                // GOOGLE CLIENT ID FALI!!!!!!!!!!!!
+                Audience = new[] { "STAVITI GOOGLE CLIENT ID" }
+            };
+            try
+            {
+                // validacija tokena sa google cloudom
+                var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings);
+
+                // Mora bit async jer je paylaod async
+                // Provjera dal postoji korisnik u bazi
+                var user = await _context.Korisnici.FirstOrDefaultAsync(u => u.Email == payload.Email);
+
+                // Provjera dal korisnik postoji
+                if (user == null)
+                {
+                    // Kreira novog korisika ako ne postoji
+                    user = CreateUserForGoogleRegistration(payload);
+
+                    // Pohrana korisnika u bazu
+                    _context.Korisnici.Add(user);
+                    await _context.SaveChangesAsync();
+                }
+
+                return StatusCode(200, user);
+            } 
+            catch (Exception ex) 
+            { 
+                return Unauthorized(new { message = "Invalid Google token!" }); 
+            }
+
+            
+        }
+
+        private Korisnik CreateUserForGoogleRegistration(GoogleJsonWebSignature.Payload payload)
+        {
+            var user = new Korisnik
+            {
+                Email = payload.Email,
+                Ime = payload.GivenName,
+                Prezime = payload.FamilyName,
+                LozinkaHash = "", // Not too sure this is safe. Should be tested
+                UlogaId = 1 // ovisno o ulozi, trebalo bi dodat enumeraciju
+            };
+
+            return user;
+        }
+
+        // Empty feild check
         private bool IsLoginInputEmpty(Prijava request)
         {
             if (request.LozinkaHash == "" || request.Email == "")
