@@ -17,10 +17,12 @@ Za Frontend dio:
 Ako imate imate **Gradle problema**...
 Nekada zbog cashe memorije izbacuje grešku za Gradle Sync projekta. Ukoliko Vam čak i nakon čekanja automatski ne postavi projekt, pokušajte:
 1. pod Build Tools omogućiti Auto-Sync ("Project Sync mode: Always Sync projects automatically")
-2. pod "File>Invalidate cashes" pritisnuti "Invalidate and Restart" opciju.
-3. pod "File>Sync Project with Gradle files"
+2. pod "File>Sync Project with Gradle files"
+3. ako ne radi, pod "File>Invalidate cashes" pritisnuti "Invalidate and Restart" opciju.
+4. ponoviti korak 3.
 Ako ni to ne radi, probajte:
-4. u Gradle settings omogućiti "Enable Parallel Gradle model fetching" i "Download external annotations for dependencies". 
+5. u Gradle settings omogućiti "Enable Parallel Gradle model fetching" i "Download external annotations for dependencies". 
+
 
 Ako se sve izvede kao zamišljeno, trebali biste vidjeti početni ekran za prijavu korisnika. Ako se aplikacija samostalno ne otvori, potrebno je među listom aplikacija pronaći aplikaciju pod nazivom "SmartMenza".
 Bit će vidljiva dva fragmenta: login i register fragmenti koji se izmijenjuju prilikom klika na svaki pojedinačni tab button ("Prijava"/"Registracija").
