@@ -11,7 +11,7 @@ Za Frontend dio:
 4. Kada se prikaže mogućnost za to, unjeti prethodno kopirati URL za kloniranje i odabrati prazan folder.
 5. Dozvoliti da se aplikacija izgradi i potpuno učita.
 6. Prebaciti na granu "Frontend" preko "Checkout" opcije.
-7. Pričekati ako je potrebno, prihvatiti opcije ukoliko dođu upozorenja o potrebnom ažuriranju (Reload).
+7. Pričekati ako je potrebno, prihvatiti opciju ukoliko dođe upozorenja o potrebnom ažuriranju (Reload).
 8. Ako još nije vidljiva mogućnost za debuggiranjem ili pokretanjem aplikacije, zatvoriti i ponovno pokrenuti Android Studio.
 9. U suprotnome, pokrenuti aplikaciju.
 
