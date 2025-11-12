@@ -15,7 +15,7 @@ Za Frontend dio:
 8. Ako još nije vidljiva mogućnost za debuggiranjem ili pokretanjem aplikacije, zatvoriti i ponovno pokrenuti Android Studio.
 9. U suprotnome, pokrenuti aplikaciju.
 
-Ako imate imate Gradle problema...
+Ako imate imate **Gradle problema**...
 Nekada zbog cashe memorije izbacuje grešku za Gradle Sync projekta. Ukoliko Vam čak i nakon čekanja automatski ne postavi projekt, pokušajte:
 1. pod Build Tools omogućiti Auto-Sync ("Project Sync mode: Always Sync projects automatically")
 2. pod "File>Invalidate cashes" pritisnuti "Invalidate and Restart" opciju.
