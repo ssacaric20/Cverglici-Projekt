@@ -4,7 +4,7 @@ Predložak za SmartMenzu<br>
 Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u personalizaciji obroka, praćenju nutritivnih vrijednosti, i postavljanju ciljeva vezanih uz prehranu.
 
 # UPUTE ZA POKRETANJE
-Za Frontend dio:
+Za **Frontend** dio:
 1. Otvoriti Android Studio
 2. Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
 3. Unutar Android Studia, odabrati opciju za kloniranje repozitorija.
@@ -14,7 +14,7 @@ Za Frontend dio:
 7. Pričekati ako je potrebno, prihvatiti opciju ukoliko dođe upozorenja o potrebnom ažuriranju (Reload).
 8. Ako još nije vidljiva mogućnost za debuggiranjem ili pokretanjem aplikacije, zatvoriti i ponovno pokrenuti Android Studio.
 
-Ako imate imate **Gradle problema**...
+### Ako imate imate **Gradle problema**...
 Nekada zbog cashe memorije izbacuje grešku za Gradle Sync projekta. Ukoliko Vam čak i nakon čekanja automatski ne postavi projekt, pokušajte:
 1. pod Build Tools omogućiti Auto-Sync ("Project Sync mode: Always Sync projects automatically")
 2. pod "File>Sync Project with Gradle files"
