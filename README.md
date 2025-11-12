@@ -23,10 +23,23 @@ Nekada zbog cashe memorije izbacuje grešku za Gradle Sync projekta. Ukoliko Vam
 Ako ni to ne radi, probajte:
 5. u Gradle settings omogućiti "Enable Parallel Gradle model fetching" i "Download external annotations for dependencies". 
 
-
 Ako se sve izvede kao zamišljeno, trebali biste vidjeti početni ekran za prijavu korisnika. Ako se aplikacija samostalno ne otvori, potrebno je među listom aplikacija pronaći aplikaciju pod nazivom "SmartMenza".
 Bit će vidljiva dva fragmenta: login i register fragmenti koji se izmijenjuju prilikom klika na svaki pojedinačni tab button ("Prijava"/"Registracija").
 Demo mock podaci za prijavu su (ime/email/lozinka): Ana, ana.kovac@student.hr, student123.
+
+Za pokretanje Backend dijela projekta:
+
+Otvoriti Visual Studio
+Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
+Unutar Visual Studia, odabrati opciju za kloniranje repozitorija.
+Kada se prikaže mogućnost za to, unjeti prethodno kopirati URL za kloniranje i odabrati prazan folder.
+Kada se repozitorij klonira, pritisnuti na "Git Changes" i prebaciti se na "Backend" granu.
+Unutar Visual Studija pritisnuti desni klik na solution i rebuildati ga.
+Unutar Visual Studija pritisnuti desni klik na solution i pritisnuti na Restore NuGet Packages.
+Pričekati ako je potrebno, prihvatiti opcije ukoliko dođu upozorenja o potrebnom ažuriranju.
+Pokrenuti aplikaciju.
+Kako bi Backend dio aplikacije radio, potrebno je imati instaliran sql express server i uspostavljenu bazu podataka.
+Pokretanjem aplikacije pokrenut će se browser u koji omogućuje testiranje API endpointa uz pomoć swaggera.
 
 ## Funkcionalnosti
 - Registracija korisnika
