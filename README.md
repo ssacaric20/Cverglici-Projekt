@@ -13,7 +13,6 @@ Za Frontend dio:
 6. Prebaciti na granu "Frontend" preko "Checkout" opcije.
 7. Pričekati ako je potrebno, prihvatiti opciju ukoliko dođe upozorenja o potrebnom ažuriranju (Reload).
 8. Ako još nije vidljiva mogućnost za debuggiranjem ili pokretanjem aplikacije, zatvoriti i ponovno pokrenuti Android Studio.
-9. U suprotnome, pokrenuti aplikaciju.
 
 Ako imate imate **Gradle problema**...
 Nekada zbog cashe memorije izbacuje grešku za Gradle Sync projekta. Ukoliko Vam čak i nakon čekanja automatski ne postavi projekt, pokušajte:
