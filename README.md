@@ -3,6 +3,20 @@
 Predložak za SmartMenzu<br>
 Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u personalizaciji obroka, praćenju nutritivnih vrijednosti, i postavljanju ciljeva vezanih uz prehranu.
 
+Za pokretanje Backend dijela projekta:
+1. Otvoriti Visual Studio
+2. Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
+3. Unutar Visual Studia, odabrati opciju za kloniranje repozitorija.
+4. Kada se prikaže mogućnost za to, unjeti prethodno kopirati URL za kloniranje i odabrati prazan folder.
+5. Kada se repozitorij klonira, pritisnuti na "Git Changes" i prebaciti se na "Backend" granu.
+6. Unutar Visual Studija pritisnuti desni klik na solution i rebuildati ga.
+7. Unutar Visual Studija pritisnuti desni klik na solution i pritisnuti na Restore NuGet Packages.
+8. Pričekati ako je potrebno, prihvatiti opcije ukoliko dođu upozorenja o potrebnom ažuriranju.
+9. Pokrenuti aplikaciju.
+
+Kako bi Backend dio aplikacije radio, potrebno je imati instaliran sql express server i uspostavljenu bazu podataka.
+Pokretanjem aplikacije pokrenut će se browser u koji omogućuje testiranje API endpointa uz pomoć swaggera.
+
 ## Funkcionalnosti
 - Registracija korisnika
 - Prijava korisnika
