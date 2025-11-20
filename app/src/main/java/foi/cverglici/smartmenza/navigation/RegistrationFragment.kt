@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.R
-import foi.cverglici.smartmenza.data.api.RetrofitClient
-import foi.cverglici.smartmenza.data.model.RegistrationRequest
+import foi.cverglici.smartmenza.core.data.api.RetrofitClient
+import foi.cverglici.smartmenza.core.data.model.RegistrationRequest
 import kotlinx.coroutines.launch
 
 

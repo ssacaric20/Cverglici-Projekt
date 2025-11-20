@@ -1,4 +1,4 @@
-package foi.cverglici.smartmenza.data.api
+package foi.cverglici.smartmenza.core.data.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -22,8 +22,8 @@ import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.MainActivity
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.core.SessionManager
-import foi.cverglici.smartmenza.data.api.RetrofitClient
-import foi.cverglici.smartmenza.data.model.LoginRequest
+import foi.cverglici.smartmenza.core.data.api.RetrofitClient
+import foi.cverglici.smartmenza.core.data.model.LoginRequest
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {

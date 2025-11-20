@@ -1,4 +1,4 @@
-package foi.cverglici.smartmenza.data.model
+package foi.cverglici.smartmenza.core.data.model
 
 data class AuthResponse(
     val userId: Int,
