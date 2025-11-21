@@ -24,7 +24,7 @@ namespace SmartMenza.API.Controllers
         // 3. Action Method: GET all korisnici
         // HTTP GET requesti na /api/Korisnici
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
         {
 
             try
@@ -35,14 +35,14 @@ namespace SmartMenza.API.Controllers
 
             } catch (Exception ex)
             {
-                //"An error occurred while retrieving users."
-                return StatusCode(500, ex.Message);
+
+                return StatusCode(500, "An error occurred while retrieving users.");
             }
 
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginKorisnik([FromBody] Data.Models.LoginRequest request)
+        public async Task<IActionResult> LoginKorisnikAsync([FromBody] Data.Models.LoginRequest request)
         {
 
             try
@@ -61,8 +61,8 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        [HttpPost("prijava-google-oAuth")]
-        public async Task<IActionResult> LoginGoogle([FromBody] GoogleLoginRequest request)
+        [HttpPost("google-login")]
+        public async Task<IActionResult> LoginGoogleAsync([FromBody] GoogleLoginRequest request)
         {
 
             try
