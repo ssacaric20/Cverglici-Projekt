@@ -13,7 +13,7 @@ namespace SmartMenza.UnitTests.Korisnici
     {
         // Postavljanje okoline za testiranje
         private readonly AppDBContext _context;
-        private readonly KorisniciController _korisniciController;
+        private readonly UserController _korisniciController;
 
         public UnitTestPrijava()
         {

@@ -1,6 +1,6 @@
-﻿namespace SmartMenza.API.Models
+﻿namespace SmartMenza.Data.Models
 {
-    public class DnevniMeni
+    public class DailyMenuDto
     {
         // PK
         public int Id { get; set; }
@@ -10,6 +10,6 @@
         public int JeloId { get; set; }
 
         // nav
-        public Jelo Jelo { get; set; } = null!;
+        public DishDto Jelo { get; set; } = null!;
     }
 }

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace SmartMenza.API.Migrations
+namespace SmartMenza.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

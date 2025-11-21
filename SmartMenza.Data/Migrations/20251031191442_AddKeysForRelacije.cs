@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SmartMenza.API.Migrations
+namespace SmartMenza.Data.Migrations
 {
     /// <inheritdoc />
     public partial class AddKeysForRelacije : Migration

@@ -1,5 +1,6 @@
-using SmartMenza.API.Data;
+using SmartMenza.Data.Data;
 using Microsoft.EntityFrameworkCore;
+using SmartMenza.Business.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<UserServices>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
