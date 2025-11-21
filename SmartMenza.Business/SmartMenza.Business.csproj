@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.72.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartMenza.Core\SmartMenza.Core.csproj" />
     <ProjectReference Include="..\SmartMenza.Data\SmartMenza.Data.csproj" />
   </ItemGroup>
 

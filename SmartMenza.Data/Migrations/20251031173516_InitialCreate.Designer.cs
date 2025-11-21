@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SmartMenza.API.Data;
+using SmartMenza.Data.Data;
 
 #nullable disable
 
-namespace SmartMenza.API.Migrations
+namespace SmartMenza.Data.Migrations
 {
     [DbContext(typeof(AppDBContext))]
     [Migration("20251031173516_InitialCreate")]

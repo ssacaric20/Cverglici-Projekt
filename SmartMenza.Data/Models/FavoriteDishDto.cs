@@ -1,14 +1,14 @@
-﻿namespace SmartMenza.API.Models
+﻿namespace SmartMenza.Data.Models
 {
-    public class Favorit
+    public class FavoriteDishDto
     {
         // veza vise-vise korisnik-jelo
         // FK 1: tko
         public int KorisnikId { get; set; }
-        public Korisnik Korisnik { get; set; } = null!;
+        public UserDto Korisnik { get; set; } = null!;
 
         // FK 2: fav
         public int JeloId { get; set; }
-        public Jelo Jelo { get; set; } = null!;
+        public DishDto Jelo { get; set; } = null!;
     }
 }

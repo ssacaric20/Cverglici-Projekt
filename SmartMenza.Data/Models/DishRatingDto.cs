@@ -1,6 +1,6 @@
-﻿namespace SmartMenza.API.Models
+﻿namespace SmartMenza.Data.Models
 {
-    public class OcjenaJela
+    public class DishRatingDto
     {
         // PK
         public int Id { get; set; }
@@ -8,6 +8,6 @@
 
         // FK
         public int JeloId { get; set; }
-        public Jelo Jelo { get; set; } = null!;
+        public DishDto Jelo { get; set; } = null!;
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace SmartMenza.API.Models
+﻿namespace SmartMenza.Data.Models
 {
-    public class Cilj
+    public class NutricionGoalDto
     {
         // PK
         public int Id { get; set; }
@@ -16,6 +16,6 @@
         public int KorisnikId { get; set; }
 
         // nav
-        public Korisnik Korisnik { get; set; } = null!;
+        public UserDto Korisnik { get; set; } = null!;
     }
 }
