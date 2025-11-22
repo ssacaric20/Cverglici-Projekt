@@ -11,6 +11,7 @@ builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<UserServices>();
+builder.Services.AddScoped<DailyMenuServices>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
