@@ -42,7 +42,7 @@ namespace SmartMenza.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginKorisnikAsync([FromBody] Data.Models.LoginRequest request)
+        public async Task<IActionResult> LoginUserAsync([FromBody] Data.Models.LoginRequest request)
         {
 
             try

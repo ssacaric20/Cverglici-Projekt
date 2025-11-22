@@ -7,11 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.API", "SmartMenz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Core", "SmartMenza.Core\SmartMenza.Core.csproj", "{39AF5E62-87AE-4E04-9057-0372A9520F95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTests.Korisnici", "SmartMenza.UnitTests.Korisnici\SmartMenza.UnitTests.Korisnici.csproj", "{634D4869-E572-4E2F-94E1-79A4707BA616}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTests.Users", "SmartMenza.UnitTests.Korisnici\SmartMenza.UnitTests.Users.csproj", "{634D4869-E572-4E2F-94E1-79A4707BA616}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Business", "SmartMenza.Business\SmartMenza.Business.csproj", "{83D3E596-879A-4E62-AFD0-AA11412CD1C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Data", "SmartMenza.Data\SmartMenza.Data.csproj", "{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTests.Menu", "SmartMenza.UnitTests.Menu\SmartMenza.UnitTests.Menu.csproj", "{D8E04744-423D-4EF1-98BC-C86A2933E463}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

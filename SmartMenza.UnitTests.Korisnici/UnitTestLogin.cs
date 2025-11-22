@@ -1,21 +1,24 @@
 ﻿using Xunit;
 using System.Threading.Tasks;
-using SmartMenza.API.Data;
+using SmartMenza.Data.Data;
 using SmartMenza.API.Controllers;
 using Microsoft.EntityFrameworkCore;
-using SmartMenza.API.Models;
+using SmartMenza.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using SmartMenza.Core.Enums;
+using SmartMenza.Business.Services;
 
 
 namespace SmartMenza.UnitTests.Korisnici
 {
-    public class UnitTestPrijava
+    public class UnitTestLogin
     {
         // Postavljanje okoline za testiranje
         private readonly AppDBContext _context;
-        private readonly UserController _korisniciController;
+        private readonly UserController _userController;
+        private readonly UserServices _userServices;
 
-        public UnitTestPrijava()
+        public UnitTestLogin()
         {
             // Postavljanje privremene baze
             var options = new DbContextOptionsBuilder<AppDBContext>()
@@ -26,45 +29,46 @@ namespace SmartMenza.UnitTests.Korisnici
             _context = new AppDBContext(options);
 
             // Dodavanje testnih korisnika u bazu
-            _context.Korisnici.Add(
-                new Korisnik
+            _context.Users.Add(
+                new UserDto
                 {
-                    Ime = "Test",
-                    Prezime = "Testic",
-                    Email = "test@gmail.com",
-                    LozinkaHash = "test1234",
-                    UlogaId = 2
+                    firstName = "Test",
+                    lastName = "Testic",
+                    email = "test@gmail.com",
+                    passwordHash = "test1234",
+                    roleId = (int)UserRole.Student
                 });
-            _context.Korisnici.Add(
-                new Korisnik
+            _context.Users.Add(
+                new UserDto
                 {
-                    Ime = "Radnik",
-                    Prezime = "Radnikic",
-                    Email = "radnik@gmail.com",
-                    LozinkaHash = "radnikpass",
-                    UlogaId = 1
+                    firstName = "Radnik",
+                    lastName = "Radnikic",
+                    email = "radnik@gmail.com",
+                    passwordHash = "radnikpass",
+                    roleId= (int)UserRole.Employee
                 });
 
             // Spremanje korisnika u bazu
             _context.SaveChanges();
 
             // Instanciranje kontrolera sa privremenom bazom kako bi se mogle testirati funkcije
-            _korisniciController = new KorisniciController(_context);
+            _userServices = new UserServices(_context);
+            _userController = new UserController(_userServices);
         }
 
         // Testira funkciju LoginKorisnik sa prazim poljima u zahtjevu
         [Fact]
-        public async Task LoginKorisnik_EmptyInput_ReturnsUnauthorized()
+        public async Task LoginUserAsync_EmptyInput_ReturnsUnauthorized()
         {
             // Arrange
-            var request = new Prijava
+            var request = new LoginRequest
             {
-                Email = "",
-                LozinkaHash = ""
+                email = "",
+                passwordHash = ""
             };
 
             // Act
-            var result = await _korisniciController.LoginKorisnik(request);
+            var result = await _userController.LoginUserAsync(request);
 
             // Assert
             var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
@@ -73,17 +77,17 @@ namespace SmartMenza.UnitTests.Korisnici
 
         // Testira funkciju LoginKorisnik sa praznim email poljem u zahtjevu
         [Fact]
-        public async Task LoginKorisnik_EmptyEmail_ReturnsUnauthorized()
+        public async Task LoginUserAsync_EmptyEmail_ReturnsUnauthorized()
         {
             // Arrange
-            var request = new Prijava
+            var request = new LoginRequest
             {
-                Email = "",
-                LozinkaHash = "test1234"
+                email = "",
+                passwordHash = "test1234"
             };
 
             // Act
-            var result = await _korisniciController.LoginKorisnik(request);
+            var result = await _userController.LoginUserAsync(request);
 
             // Assert
             var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
@@ -92,17 +96,17 @@ namespace SmartMenza.UnitTests.Korisnici
 
         // Testira funkciju LoginKorisnik sa praznim lozinka poljem u zahtjevu
         [Fact]
-        public async Task LoginKorisnik_EmptyPassword_ReturnsUnauthorized()
+        public async Task LoginUserAsync_EmptyPassword_ReturnsUnauthorized()
         {
             // Arrange
-            var request = new Prijava
+            var request = new LoginRequest
             {
-                Email = "test@gmail.com",
-                LozinkaHash = ""
+                email = "test@gmail.com",
+                passwordHash = ""
             };
 
             // Act
-            var result = await _korisniciController.LoginKorisnik(request);
+            var result = await _userController.LoginUserAsync(request);
 
             // Assert
             var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
@@ -111,17 +115,17 @@ namespace SmartMenza.UnitTests.Korisnici
 
         // Testira funkciju LoginKorisnik sa pogrešnom lozinkom u zahtjevu
         [Fact]
-        public async Task LoginKorisnik_WrongPassword_ReturnUnauthorized()
+        public async Task LoginUserAsync_WrongPassword_ReturnUnauthorized()
         {
             // Arrange
-            var request = new Prijava
+            var request = new LoginRequest
             {
-                Email = "test@gmail.com",
-                LozinkaHash = "test12345"
+                email = "test@gmail.com",
+                passwordHash = "test12345"
             };
 
             // Act
-            var result = await _korisniciController.LoginKorisnik(request);
+            var result = await _userController.LoginUserAsync(request);
 
             // Assert
             var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
@@ -130,17 +134,17 @@ namespace SmartMenza.UnitTests.Korisnici
 
         // Testira funkciju LoginKorisnik sa podacima postojeceg korisnika u zahtjevu
         [Fact]
-        public async Task LoginKorisnik_CorrectInput_ReturnsOk()
+        public async Task LoginUserAsync_CorrectInput_ReturnsOk()
         {
             // Arrange
-            var request = new Prijava
+            var request = new LoginRequest
             {
-                Email = "test@gmail.com",
-                LozinkaHash = "test1234"
+                email = "test@gmail.com",
+                passwordHash = "test1234"
             };
 
             // Act
-            var result = await _korisniciController.LoginKorisnik(request);
+            var result = await _userController.LoginUserAsync(request);
 
             // Assert
             var okResult = Assert.IsType<ObjectResult>(result);
@@ -149,17 +153,17 @@ namespace SmartMenza.UnitTests.Korisnici
 
         // Testira funkciju LoginKorisnik sa ispravnim emailom ali lozinkom drugog korisnika u zahtjevu
         [Fact]
-        public async Task LoginKorisnik_CorrectEmailOtherUsersPassword_ReturnsUnauthorized()
+        public async Task LoginUserAsync_CorrectEmailOtherUsersPassword_ReturnsUnauthorized()
         {
             // Arrange
-            var request = new Prijava
+            var request = new LoginRequest
             {
-                Email = "test@gmail.com",
-                LozinkaHash = "radnikpass"
+                email = "test@gmail.com",
+                passwordHash = "radnikpass"
             };
 
             // Act
-            var result = await _korisniciController.LoginKorisnik(request);
+            var result = await _userController.LoginUserAsync(request);
 
             // Assert
             var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
