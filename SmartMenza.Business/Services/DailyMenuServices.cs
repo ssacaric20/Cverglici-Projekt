@@ -24,24 +24,24 @@ namespace SmartMenza.Business.Services
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
-            var dailyMenu = await _context.DnevniMeniji
-                .Include(dm => dm.Jelo)
-                .Where(dm => dm.Datum == today)
+            var dailyMenu = await _context.DailyMenus
+                .Include(dm => dm.dish)
+                .Where(dm => dm.date == today)
                 .Select(dm => new
                 {
-                    dm.Id,
-                    dm.Datum,
+                    dm.dishId,
+                    dm.date,
                     Jelo = new
                     {
-                        dm.Jelo.Id,
-                        dm.Jelo.Naziv,
-                        dm.Jelo.Cijena,
-                        dm.Jelo.Opis,
-                        dm.Jelo.Kalorije,
-                        dm.Jelo.Proteini,
-                        dm.Jelo.Masti,
-                        dm.Jelo.Ugljikohidrati,
-                        dm.Jelo.SlikaPutanja
+                        dm.dish.dishId,
+                        dm.dish.title,
+                        dm.dish.price,
+                        dm.dish.description,
+                        dm.dish.calories,
+                        dm.dish.protein,
+                        dm.dish.fat,
+                        dm.dish.carbohydrates,
+                        dm.dish.imgPath
                     }
                 })
                 .ToListAsync();
@@ -56,24 +56,24 @@ namespace SmartMenza.Business.Services
                 return null;
             }
 
-            var menu = await _context.DnevniMeniji
-                .Include(m => m.Jelo)
-                .Where(m => m.Datum == parsedDate)
-                .Select(m => new
+            var menu = await _context.DailyMenus
+                .Include(dm => dm.dish)
+                .Where(dm => dm.date == parsedDate)
+                .Select(dm => new
                 {
-                    m.Id,
-                    m.Datum,
+                    dm.dishId,
+                    dm.date,
                     Jelo = new
                     {
-                        m.Jelo.Id,
-                        m.Jelo.Naziv,
-                        m.Jelo.Cijena,
-                        m.Jelo.Opis,
-                        m.Jelo.Kalorije,
-                        m.Jelo.Proteini,
-                        m.Jelo.Masti,
-                        m.Jelo.Ugljikohidrati,
-                        m.Jelo.SlikaPutanja
+                        dm.dish.dishId,
+                        dm.dish.title,
+                        dm.dish.price,
+                        dm.dish.description,
+                        dm.dish.calories,
+                        dm.dish.protein,
+                        dm.dish.fat,
+                        dm.dish.carbohydrates,
+                        dm.dish.imgPath
                     }
                 })
                 .ToListAsync();

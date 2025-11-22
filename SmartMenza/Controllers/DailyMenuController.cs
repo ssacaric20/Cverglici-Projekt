@@ -8,11 +8,11 @@ namespace SmartMenza.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DnevniMeniController : ControllerBase
+    public class DailyMenuController : ControllerBase
     {
         private readonly DailyMenuServices _dailyMenuServices;
 
-        public DnevniMeniController(DailyMenuServices dailyMenuServices)
+        public DailyMenuController(DailyMenuServices dailyMenuServices)
         {
             _dailyMenuServices = dailyMenuServices;
         }
@@ -22,7 +22,7 @@ namespace SmartMenza.API.Controllers
         {
             try
             {
-                var dailyMenu = _dailyMenuServices.GetTodaysMenuAsync();
+                var dailyMenu = await _dailyMenuServices.GetTodaysMenuAsync();
 
                 return Ok(dailyMenu);
             }

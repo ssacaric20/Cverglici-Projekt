@@ -36,7 +36,7 @@ namespace SmartMenza.API.Controllers
             } catch (Exception ex)
             {
 
-                return StatusCode(500, "An error occurred while retrieving users.");
+                return StatusCode(500,new {message = "An error occurred while retrieving users.",error = ex.Message });
             }
 
         }

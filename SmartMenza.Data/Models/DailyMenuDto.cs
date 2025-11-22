@@ -3,13 +3,13 @@
     public class DailyMenuDto
     {
         // PK
-        public int Id { get; set; }
-        public DateOnly Datum { get; set; }
+        public int dailyMenuId { get; set; }
+        public DateOnly date { get; set; }
 
         // FK
-        public int JeloId { get; set; }
+        public int dishId { get; set; }
 
         // nav
-        public DishDto Jelo { get; set; } = null!;
+        public DishDto dish { get; set; } = null!;
     }
 }

@@ -18,7 +18,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 	  <Folder Include="Data\" />
-	  <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartMenza.Core\SmartMenza.Core.csproj" />
   </ItemGroup>
 
 </Project>

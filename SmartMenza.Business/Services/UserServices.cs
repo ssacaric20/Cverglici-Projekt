@@ -25,7 +25,7 @@ namespace SmartMenza.Business.Services
 
         public async Task<IEnumerable<UserDto>> GetUsersAsync()
         {
-            var users = await _context.Korisnici.ToListAsync();
+            var users = await _context.Users.ToListAsync();
 
             if (users == null || !users.Any())
             {
@@ -41,7 +41,7 @@ namespace SmartMenza.Business.Services
 
             if (formIsEmpty) return null;
 
-            var user = await _context.Korisnici.FirstOrDefaultAsync(u => u.Email == request.email && u.LozinkaHash == request.passwordHash);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == request.email && u.passwordHash == request.passwordHash);
 
             return user;
 
@@ -57,14 +57,14 @@ namespace SmartMenza.Business.Services
 
             var payload = await GoogleJsonWebSignature.ValidateAsync(request.tokenId, settings);
 
-            var user = await _context.Korisnici.FirstOrDefaultAsync(u => u.Email == payload.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == payload.Email);
 
             if (user == null)
             {
 
                 user = CreateUserForGoogleRegistration(payload);
 
-                _context.Korisnici.Add(user);
+                _context.Users.Add(user);
                 await _context.SaveChangesAsync();
             }
 
@@ -75,11 +75,11 @@ namespace SmartMenza.Business.Services
         {
             var user = new UserDto
             {
-                Email = payload.Email,
-                Ime = payload.GivenName,
-                Prezime = payload.FamilyName,
-                LozinkaHash = "",
-                Id = (int)UserRole.Student
+                email = payload.Email,
+                firstName = payload.GivenName,
+                lastName = payload.FamilyName,
+                passwordHash = "",
+                roleId = (int)UserRole.Student
             };
 
             return user;

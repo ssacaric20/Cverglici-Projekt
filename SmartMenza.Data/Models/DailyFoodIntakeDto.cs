@@ -3,15 +3,15 @@
     public class DailyFoodIntakeDto
     {
         // PK
-        public int Id { get; set; }
-        public DateTime DatumUnosa { get; set; }
+        public int dailyFoodIntakeId { get; set; }
+        public DateTime date { get; set; }
 
         // FK 1: tko
-        public int KorisnikId { get; set; }
-        public UserDto Korisnik { get; set; } = null!;
+        public int userId { get; set; }
+        public UserDto user{ get; set; } = null!;
 
         // FK 2: sto
-        public int JeloId { get; set; }
-        public DishDto Jelo { get; set; } = null!;
+        public int dishId { get; set; }
+        public DishDto dish { get; set; } = null!;
     }
 }

@@ -5,11 +5,11 @@
         // veza vise-vise jelo-sastojak
         // komponentni PK se definira u DbContextu, ovdje su samo FK
         // FK 1
-        public int JeloId { get; set; }
-        public DishDto Jelo { get; set; } = null!;
+        public int dishId { get; set; }
+        public DishDto dish { get; set; } = null!;
 
         // FK 2
-        public int SastojakId { get; set; }
-        public IngredientDto Sastojak { get; set; } = null!;
+        public int ingredientId { get; set; }
+        public IngredientDto ingredient { get; set; } = null!;
     }
 }

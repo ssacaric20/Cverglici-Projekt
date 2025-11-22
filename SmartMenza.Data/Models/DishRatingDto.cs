@@ -3,11 +3,11 @@
     public class DishRatingDto
     {
         // PK
-        public int Id { get; set; }
-        public int Ocjena { get; set; }
+        public int dishRatingId { get; set; }
+        public int rating { get; set; }
 
         // FK
-        public int JeloId { get; set; }
-        public DishDto Jelo { get; set; } = null!;
+        public int dishId { get; set; }
+        public DishDto dish { get; set; } = null!;
     }
 }
