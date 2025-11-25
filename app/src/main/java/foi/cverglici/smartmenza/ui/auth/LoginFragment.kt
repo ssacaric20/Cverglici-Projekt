@@ -1,4 +1,4 @@
-package foi.cverglici.smartmenza.navigation
+package foi.cverglici.smartmenza.ui.auth
 
 import android.app.Activity
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,9 +22,9 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.MainActivity
 import foi.cverglici.smartmenza.R
-import foi.cverglici.smartmenza.core.SessionManager
-import foi.cverglici.smartmenza.core.data.api.RetrofitClient
-import foi.cverglici.smartmenza.core.data.model.LoginRequest
+import foi.cverglici.smartmenza.session.SessionManager
+import foi.cverglici.mailauth.api.RetrofitClient
+import foi.cverglici.mailauth.model.LoginRequest
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -170,7 +171,7 @@ class LoginFragment : Fragment() {
             return false
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInput.error = "Unesite ispravan email"
             return false
         }

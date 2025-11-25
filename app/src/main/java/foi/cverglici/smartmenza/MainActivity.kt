@@ -3,7 +3,7 @@ package foi.cverglici.smartmenza
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import foi.cverglici.smartmenza.core.SessionManager
+import foi.cverglici.smartmenza.session.SessionManager
 
 class MainActivity : AppCompatActivity() {
 

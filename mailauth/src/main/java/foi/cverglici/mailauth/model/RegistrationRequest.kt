@@ -1,4 +1,4 @@
-package foi.cverglici.smartmenza.core.data.model
+package foi.cverglici.mailauth.model
 
 data class RegistrationRequest(
     val name: String,

@@ -14,4 +14,13 @@
     <color name="text_secondary">#666666</color>
     <color name="gray_light">#F5F5F5</color>
     <color name="transparent">#00FFFFFF</color>
+    <!-- Macronutrients -->
+    <color name="carbs_bg">#FFF3E0</color>
+    <color name="carbs_text">#F57C00</color>
+    <color name="fiber_bg">#E8F5E9</color>
+    <color name="fiber_text">#43A047</color>
+    <color name="fat_bg">#FFF9C4</color>
+    <color name="fat_text">#FBC02D</color>
+    <color name="protein_bg">#E3F2FD</color>
+    <color name="protein_text">#1976D2</color>
 </resources>

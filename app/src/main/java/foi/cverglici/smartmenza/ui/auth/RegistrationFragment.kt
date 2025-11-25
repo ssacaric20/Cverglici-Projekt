@@ -1,6 +1,7 @@
-package foi.cverglici.smartmenza.navigation
+package foi.cverglici.smartmenza.ui.auth
 
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.R
-import foi.cverglici.smartmenza.core.data.api.RetrofitClient
-import foi.cverglici.smartmenza.core.data.model.RegistrationRequest
+import foi.cverglici.mailauth.api.RetrofitClient
+import foi.cverglici.mailauth.model.RegistrationRequest
 import kotlinx.coroutines.launch
 
 
@@ -118,7 +119,7 @@ class RegistrationFragment : Fragment() {
             return false
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailInputRegister.error = "Unesite ispravan email"
             return false
         }

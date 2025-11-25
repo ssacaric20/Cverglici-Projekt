@@ -1,4 +1,4 @@
-package foi.cverglici.smartmenza.core
+package foi.cverglici.smartmenza.session
 
 import android.content.Context
 import android.content.SharedPreferences

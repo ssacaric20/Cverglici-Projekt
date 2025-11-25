@@ -81,7 +81,7 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="foi.cverglici.smartmenza.navigation.LoginFragment"
+            android:name="foi.cverglici.smartmenza.ui.auth.LoginFragment"
             tools:layout="@layout/login_fragment" />
 
     </LinearLayout>

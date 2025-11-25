@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- EXISTING STRINGS - Keep these -->
+    <!-- LOGIN STRINGS -->
     <string name="app_name">Smart Menza</string>
     <string name="app_description">Dnevne ponude pri dohvatu ruke</string>
     <string name="welcome_message">Dobrodošli!</string>
@@ -18,10 +18,32 @@
     <string name="demo_student">Student: ana.kovac@student.hr / student123</string>
     <string name="demo_employee">Zaposlenik: ivan.juric@menza.hr / employee123</string>
 
-    <!-- NEW STRINGS - Add these for registration -->
+    <!-- NEW STRINGS - registration -->
     <string name="register_prompt">Stvorite novi Smart Menza račun</string>
     <string name="name_label">Ime</string>
     <string name="name_hint">Ana Kovač</string>
     <string name="button_register">Registriraj se</string>
     <string name="already_have_account">Već imate račun? Prijavite se</string>
+
+    <!-- DISH DETAIL -->
+    <string name="dish_detail_subtitle">Detalji o jelu, nutritivne vrijednosti i recenzije</string>
+    <string name="nutritional_values">Nutritivne Vrijednosti</string>
+    <string name="macronutrients">Makronutrijenti</string>
+    <string name="ingredients_label">Sastojci</string>
+    <string name="reviews_label">Recenzije (%d)</string>
+    <string name="price_format">%.2f €</string>
+    <string name="calories_detail">%d kcal</string>
+    <string name="protein_label">Proteini</string>
+    <string name="carbs_label">Ugljikohidrati</string>
+    <string name="fat_label">Masti</string>
+    <string name="fiber_label">Vlakna</string>
+    <string name="grams_format">%.0fg</string>
+    <string name="loading">Učitavanje...</string>
+    <string name="error_loading_dish">Greška pri učitavanju jela</string>
+    
+    <string name="close">Close</string>
+    <string name="dish_image">Dish image</string>
+    <string name="favorite">Favoriti</string>
+    <string name="recenzije">Recenzija (0)</string>
+    <string name="recenzije_unavailable">Pregled recenzija trenutno nije dostupan</string>
 </resources>
