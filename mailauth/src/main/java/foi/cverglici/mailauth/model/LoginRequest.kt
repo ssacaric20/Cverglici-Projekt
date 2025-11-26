@@ -1,6 +1,6 @@
 package foi.cverglici.mailauth.model
 
 data class LoginRequest(
-    val username: String,
-    val password: String
+    val email: String,
+    val passwordHash: String
 )

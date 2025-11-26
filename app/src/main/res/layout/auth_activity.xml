@@ -57,32 +57,14 @@
             android:paddingLeft="6dp"
             android:paddingRight="6dp">
 
-
-            <Button
-                android:id="@+id/tabLogin"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/tab_login"
-                android:textColor="@color/text_primary" />
-
-            <Button
-                android:id="@+id/tabRegister"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/tab_register"
-                android:textColor="@color/text_secondary" />
         </LinearLayout>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="foi.cverglici.smartmenza.ui.auth.LoginFragment"
-            tools:layout="@layout/login_fragment" />
+            android:name="foi.cverglici.smartmenza.ui.nav.AuthFragment"
+            tools:layout="@layout/auth_fragment" />
 
     </LinearLayout>
 </ScrollView>
