@@ -21,14 +21,4 @@ namespace SmartMenza.Data.Models
         public ICollection<FavoriteDishDto> favoriteDishes { get; set; } = new List<FavoriteDishDto>();
     }
 
-    public class LoginRequest()
-    {
-        public string email { get; set; }
-        public string passwordHash { get; set; }
-    }
-
-    public class GoogleLoginRequest()
-    {
-        public string tokenId { get; set; }
-    }
 }

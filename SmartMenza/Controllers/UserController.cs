@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartMenza.Business.Services;
 using SmartMenza.Data.Data;
 using SmartMenza.Data.Models;
+using SmartMenza.Data.Data.Entities;
 
 namespace SmartMenza.API.Controllers
 {
@@ -42,7 +43,7 @@ namespace SmartMenza.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUserAsync([FromBody] Data.Models.LoginRequest request)
+        public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequest request)
         {
 
             try

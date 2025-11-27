@@ -1,16 +1,21 @@
 ﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SmartMenza.Core;
 using SmartMenza.Core.Enums;
 using SmartMenza.Data;
 using SmartMenza.Data.Data;
+using SmartMenza.Data.Data.Entities;
 using SmartMenza.Data.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace SmartMenza.Business.Services
 {
@@ -35,7 +40,7 @@ namespace SmartMenza.Business.Services
             return users;
         }
 
-        public async Task<UserDto?> LoginUserAsync(LoginRequest request)
+        public async Task<LoginResponse?> LoginUserAsync(LoginRequest request)
         {
             bool formIsEmpty = IsLoginInputEmpty(request);
 
@@ -43,7 +48,18 @@ namespace SmartMenza.Business.Services
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.email == request.email && u.passwordHash == request.passwordHash);
 
-            return user;
+            if (user == null) return null;
+
+            var token = GenerateJwtToken(user);
+
+            var loginResponse = new LoginResponse
+            {
+                userId = user.userId,
+                message = "Login successful",
+                token = token
+            };
+
+            return loginResponse;
 
         }
 
@@ -92,6 +108,30 @@ namespace SmartMenza.Business.Services
                 return true;
             }
             return false;
+        }
+
+        private string GenerateJwtToken(UserDto user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("f17ca2eec6a314d8f6d80fddb6bd4135a2a5a5a715700e463f788465a221f099");
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+            new Claim(ClaimTypes.NameIdentifier, user.userId.ToString()),
+            new Claim(ClaimTypes.Email, user.email),
+            new Claim(ClaimTypes.Role, user.roleId.ToString())
+        }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }
