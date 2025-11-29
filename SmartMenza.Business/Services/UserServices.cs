@@ -56,7 +56,8 @@ namespace SmartMenza.Business.Services
             {
                 userId = user.userId,
                 message = "Login successful",
-                token = token
+                token = token,
+                roleId = (int)UserRole.Student
             };
 
             return loginResponse;

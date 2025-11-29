@@ -21,5 +21,6 @@ namespace SmartMenza.Data.Data.Entities
         public int userId { get; set; }
         public string message { get; set; }
         public string token { get; set; }
+        public int roleId { get; set; }
     }
 }
