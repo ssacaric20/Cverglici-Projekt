@@ -1,0 +1,121 @@
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SmartMenza.Business.Services;
+using SmartMenza.Data.Data;
+using SmartMenza.Data.Models;
+using SmartMenza.Data.Data.Entities;
+
+namespace SmartMenza.API.Controllers
+{
+    [Route("api/[controller]")] // URL  /api/Korisnici
+    [ApiController]
+    public class UserController : ControllerBase
+    {
+
+        private readonly UserServices _userServices;
+
+        public UserController(UserServices userServices)
+        {
+            _userServices = userServices;
+        }
+
+
+        // 3. Action Method: GET all korisnici
+        // HTTP GET requesti na /api/Korisnici
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
+        {
+
+            try
+            {
+                var users = await _userServices.GetUsersAsync();
+
+                return Ok(users);
+
+            } catch (Exception ex)
+            {
+
+                return StatusCode(500,new {message = "An error occurred while retrieving users.",error = ex.Message });
+            }
+
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequest request)
+        {
+
+            try
+            {
+                var loginUser = await _userServices.LoginUserAsync(request);
+
+                if (loginUser == null)
+                    return Unauthorized(new { message = "Invalid Email or Password!" });
+
+                return StatusCode(200, loginUser);
+            } 
+
+            catch (Exception ex) 
+            {
+                return StatusCode(500, "An error occurred during login.");
+            }
+        }
+
+        //POST /api/user/register
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterRequest request)
+        {
+            try
+            {
+                var newUser = await _userServices.RegisterUserAsync(request);
+
+                if (newUser == null)
+                {
+                    return BadRequest(new { message = "Registration failed. Email might already exist or invalid data provided." });
+                }
+
+                var token = await _userServices.LoginUserAsync(new LoginRequest
+                {
+                    email = newUser.email,
+                    passwordHash = newUser.passwordHash
+                });
+
+                return StatusCode(201, new
+                {
+                    message = "User registered successfully",
+                    userId = newUser.userId,
+                    email = newUser.email,
+                    firstName = newUser.firstName,
+                    lastName = newUser.lastName,
+                    token = token?.token
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during registration.", error = ex.Message });
+            }
+        }
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> LoginGoogleAsync([FromBody] GoogleLoginRequest request)
+        {
+
+            try
+            {
+                var googleLogin = await _userServices.LoginGoogleAsync(request);
+
+                if (googleLogin == null)
+                    return Unauthorized(new { message = "Invalid Google token!" });
+
+                return StatusCode(200, googleLogin);
+            } 
+            catch (Exception ex) 
+            {
+                return StatusCode(500, "An error occurred during Google login.");
+            }
+
+            
+        }
+    }
+}

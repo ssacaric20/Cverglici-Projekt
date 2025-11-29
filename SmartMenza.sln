@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11222.16 d18.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.API", "SmartMenza\SmartMenza.API.csproj", "{4E846D4C-AC07-4A71-B3A4-546998A3EC84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Core", "SmartMenza.Core\SmartMenza.Core.csproj", "{39AF5E62-87AE-4E04-9057-0372A9520F95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTests.Users", "SmartMenza.UnitTests.Korisnici\SmartMenza.UnitTests.Users.csproj", "{634D4869-E572-4E2F-94E1-79A4707BA616}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Business", "SmartMenza.Business\SmartMenza.Business.csproj", "{83D3E596-879A-4E62-AFD0-AA11412CD1C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Data", "SmartMenza.Data\SmartMenza.Data.csproj", "{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTests.Menu", "SmartMenza.UnitTests.Menu\SmartMenza.UnitTests.Menu.csproj", "{D8E04744-423D-4EF1-98BC-C86A2933E463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTest.Dishes", "SmartMenza.UnitTest.Dishes\SmartMenza.UnitTest.Dishes.csproj", "{24868B5B-965C-4418-B28F-FB8C578573C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E846D4C-AC07-4A71-B3A4-546998A3EC84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E846D4C-AC07-4A71-B3A4-546998A3EC84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E846D4C-AC07-4A71-B3A4-546998A3EC84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E846D4C-AC07-4A71-B3A4-546998A3EC84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AF5E62-87AE-4E04-9057-0372A9520F95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{634D4869-E572-4E2F-94E1-79A4707BA616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{634D4869-E572-4E2F-94E1-79A4707BA616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{634D4869-E572-4E2F-94E1-79A4707BA616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{634D4869-E572-4E2F-94E1-79A4707BA616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D3E596-879A-4E62-AFD0-AA11412CD1C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D3E596-879A-4E62-AFD0-AA11412CD1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D3E596-879A-4E62-AFD0-AA11412CD1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D3E596-879A-4E62-AFD0-AA11412CD1C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28ADB6F2-25E8-4F21-B610-3B9D23B47FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BB86B4B3-3333-4163-B789-8FD1184BC364}
+	EndGlobalSection
+EndGlobal

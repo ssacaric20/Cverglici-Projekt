@@ -1,0 +1,6 @@
+@SmartMenza_HostAddress = http://localhost:5166
+
+GET {{SmartMenza_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
