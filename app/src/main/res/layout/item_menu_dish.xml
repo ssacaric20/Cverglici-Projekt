@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- GORNJI DIO - Slika + overlay elementi -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+
+            <!-- SLIKA -->
+            <ImageView
+                android:id="@+id/imageDish"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background" />
+
+            <!-- KALORIJE (badge) -->
+            <TextView
+                android:id="@+id/textCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@drawable/bg_calorie_badge"
+                android:padding="6dp"
+                android:text="520 cal"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+            />
+
+            <!-- SRCE (favorite ikona) -->
+            <ImageView
+                android:id="@+id/iconFavorite"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="12dp"
+                android:padding="6dp"
+                android:background="@drawable/bg_circle_white"
+                android:src="@drawable/ic_favorite_border"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- DONJI DIO - Tekst i info -->
+        <LinearLayout
+            android:padding="12dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Naziv jela -->
+            <TextView
+                android:id="@+id/textDishTitle"
+                android:text="Pečena piletina s rižom"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- Opis -->
+            <TextView
+                android:id="@+id/textDishDescription"
+                android:text="Sočna pečena pileća prsa poslužena s kuhanom jasmin rižom i sezonskim povrćem"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <!-- OCJENA + VIEWS -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:layout_height="wrap_content">
+
+                <!-- Zvjezdica -->
+                <ImageView
+                    android:src="@drawable/ic_star"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"/>
+
+                <!-- Ocjena -->
+                <TextView
+                    android:id="@+id/textRating"
+                    android:text="4.5 (2)"
+                    android:layout_marginStart="4dp"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <!-- RAZMAK -->
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"/>
+
+                <!-- Ikona oka -->
+                <ImageView
+                    android:src="@drawable/ic_eye"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"/>
+
+                <!-- Broj pregleda -->
+                <TextView
+                    android:id="@+id/textFavoritesCount"
+                    android:text="42"
+                    android:layout_marginStart="4dp"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
