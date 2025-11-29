@@ -40,21 +40,21 @@
                 app:layout_constraintStart_toStartOf="parent"
             />
 
-            <!-- SRCE (favorite ikona) -->
-            <ImageView
-                android:id="@+id/iconFavorite"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="12dp"
-                android:padding="6dp"
-                android:background="@drawable/bg_circle_white"
-                android:src="@drawable/ic_favorite_border"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <!-- SRCE (favorite ikona) DODAT IKONICU -->
+            <!--   <ImageView
+                  android:id="@+id/iconFavorite"
+                  android:layout_width="32dp"
+                  android:layout_height="32dp"
+                  android:layout_margin="12dp"
+                  android:padding="6dp"
+                  android:background="@drawable/bg_circle_white"
+          android:src="@drawable/ic_favorite_border"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintTop_toTopOf="parent"/> -->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+ </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- DONJI DIO - Tekst i info -->
+ <!-- DONJI DIO - Tekst i info -->
         <LinearLayout
             android:padding="12dp"
             android:orientation="vertical"
@@ -89,13 +89,13 @@
                 android:gravity="center_vertical"
                 android:layout_height="wrap_content">
 
-                <!-- Zvjezdica -->
-                <ImageView
-                    android:src="@drawable/ic_star"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"/>
+                <!-- Zvjezdica dodat ikonicu -->
+                <!-- <ImageView
+                     android:src="@drawable/ic_star"
+                     android:layout_width="16dp"
+                     android:layout_height="16dp"/> -->
 
-                <!-- Ocjena -->
+                 <!-- Ocjena -->
                 <TextView
                     android:id="@+id/textRating"
                     android:text="4.5 (2)"
@@ -111,11 +111,11 @@
                     android:layout_weight="1"
                     android:layout_height="1dp"/>
 
-                <!-- Ikona oka -->
-                <ImageView
-                    android:src="@drawable/ic_eye"
+                <!--  dodat ikonicu -->
+                <!-- <ImageView
+                    android:src="@drawable/..."
                     android:layout_width="16dp"
-                    android:layout_height="16dp"/>
+                    android:layout_height="16dp"/> -->
 
                 <!-- Broj pregleda -->
                 <TextView

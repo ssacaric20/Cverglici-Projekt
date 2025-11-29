@@ -104,10 +104,13 @@ class AuthFragment : Fragment() {
      * handle email/password login using EmailAuthHandler
      */
     private fun handleEmailLogin() {
+        Log.d("AUTH_DEBUG", "Login button CLICKED")
+
         val handler = authManager.getHandler(AuthenticationManager.AuthType.EMAIL)
 
         if (handler == null || !handler.isAvailable()) {
             showError("Email prijava nije dostupna")
+            Log.e("AUTH_DEBUG", "Email handler NULL ili nedostupan")
             return
         }
 
@@ -118,20 +121,24 @@ class AuthFragment : Fragment() {
                 when (val result = handler.login()) {
                     is AuthResult.Success -> {
                         // Save token to session
+                        Log.d("AUTH_DEBUG", "Login SUCCESS, token = ${result.token}")
                         sessionManager.saveAuthToken(result.token)
 
                         showSuccessMessage(result.message)
                         navigateToMainActivity()
                     }
                     is AuthResult.Error -> {
+                        Log.e("AUTH_DEBUG", "Login ERROR: ${result.message}")
                         showError(result.message)
                     }
                     is AuthResult.Cancelled -> {
                         // User cancelled, do nothing
+                        Log.d("AUTH_DEBUG", "Login CANCELLED")
                         Log.d("AuthFragment", "Login cancelled by user")
                     }
                 }
             } catch (e: Exception) {
+                Log.e("AUTH_DEBUG", "Exception: ${e.message}")
                 showError("Neočekivana greška: ${e.message}")
                 Log.e("AuthFragment", "Login error", e)
             } finally {
