@@ -117,8 +117,11 @@ class AuthFragment : Fragment() {
             try {
                 when (val result = handler.login()) {
                     is AuthResult.Success -> {
-                        // Save token to session
-                        sessionManager.saveAuthToken(result.token)
+                        sessionManager.saveAuthData(
+                            userId = result.userId,
+                            token = result.token,
+                            roleId = result.roleId
+                        )
 
                         showSuccessMessage(result.message)
                         navigateToMainActivity()
@@ -128,7 +131,6 @@ class AuthFragment : Fragment() {
                     }
                     is AuthResult.Cancelled -> {
                         // User cancelled, do nothing
-                        Log.d("AuthFragment", "Login cancelled by user")
                     }
                 }
             } catch (e: Exception) {

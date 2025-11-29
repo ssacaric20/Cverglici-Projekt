@@ -76,7 +76,8 @@ class EmailAuthHandler(
                     AuthResult.Success(
                         userId = authResponse.userId,
                         token = authResponse.token,
-                        message = authResponse.message
+                        message = authResponse.message,
+                        roleId = authResponse.roleId
                     )
                 } ?: AuthResult.Error("Neispravna odgovor od servera")
             } else {
@@ -102,7 +103,8 @@ class EmailAuthHandler(
                     AuthResult.Success(
                         userId = authResponse.userId,
                         token = authResponse.token,
-                        message = authResponse.message
+                        message = authResponse.message,
+                        roleId = authResponse.roleId
                     )
                 } ?: AuthResult.Error("Neispravna odgovor od servera")
             } else {
