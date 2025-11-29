@@ -4,7 +4,8 @@ sealed class AuthResult {
     data class Success(
         val userId: Int,
         val token: String,
-        val message: String
+        val message: String,
+        val roleId: Int
     ) : AuthResult()
 
     data class Error(
