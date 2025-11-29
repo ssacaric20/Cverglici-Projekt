@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.Data", "SmartMen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTests.Menu", "SmartMenza.UnitTests.Menu\SmartMenza.UnitTests.Menu.csproj", "{D8E04744-423D-4EF1-98BC-C86A2933E463}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartMenza.UnitTest.Dishes", "SmartMenza.UnitTest.Dishes\SmartMenza.UnitTest.Dishes.csproj", "{24868B5B-965C-4418-B28F-FB8C578573C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8E04744-423D-4EF1-98BC-C86A2933E463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24868B5B-965C-4418-B28F-FB8C578573C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
