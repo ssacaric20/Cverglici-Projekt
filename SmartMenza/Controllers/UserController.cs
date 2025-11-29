@@ -62,6 +62,41 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        //POST /api/user/register
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterRequest request)
+        {
+            try
+            {
+                var newUser = await _userServices.RegisterUserAsync(request);
+
+                if (newUser == null)
+                {
+                    return BadRequest(new { message = "Registration failed. Email might already exist or invalid data provided." });
+                }
+
+                var token = await _userServices.LoginUserAsync(new LoginRequest
+                {
+                    email = newUser.email,
+                    passwordHash = newUser.passwordHash
+                });
+
+                return StatusCode(201, new
+                {
+                    message = "User registered successfully",
+                    userId = newUser.userId,
+                    email = newUser.email,
+                    firstName = newUser.firstName,
+                    lastName = newUser.lastName,
+                    token = token?.token
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred during registration.", error = ex.Message });
+            }
+        }
+
         [HttpPost("google-login")]
         public async Task<IActionResult> LoginGoogleAsync([FromBody] GoogleLoginRequest request)
         {
