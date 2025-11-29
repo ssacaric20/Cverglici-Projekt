@@ -7,6 +7,7 @@ using SmartMenza.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using SmartMenza.Core.Enums;
 using SmartMenza.Business.Services;
+using SmartMenza.Data.Data.Entities;
 
 
 namespace SmartMenza.UnitTests.Korisnici
