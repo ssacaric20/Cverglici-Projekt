@@ -33,7 +33,7 @@
                 android:layout_margin="12dp"
                 android:background="@drawable/bg_calorie_badge"
                 android:padding="6dp"
-                android:text="520 cal"
+                android:text="5 €"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -98,7 +98,7 @@
                  <!-- Ocjena -->
                 <TextView
                     android:id="@+id/textRating"
-                    android:text="4.5 (2)"
+                    android:text="520 cal"
                     android:layout_marginStart="4dp"
                     android:textSize="14sp"
                     android:textColor="@android:color/black"
@@ -120,7 +120,7 @@
                 <!-- Broj pregleda -->
                 <TextView
                     android:id="@+id/textFavoritesCount"
-                    android:text="42"
+                    android:text="4.5 (2)"
                     android:layout_marginStart="4dp"
                     android:textSize="14sp"
                     android:textColor="@android:color/black"
