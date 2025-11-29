@@ -63,6 +63,47 @@ namespace SmartMenza.Business.Services
 
         }
 
+        public async Task<UserDto?> RegisterUserAsync(RegisterRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.email) ||
+                string.IsNullOrWhiteSpace(request.password) ||
+                string.IsNullOrWhiteSpace(request.firstName) ||
+                string.IsNullOrWhiteSpace(request.lastName))
+            {
+                return null;
+            }
+
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.email == request.email);
+
+            if (existingUser != null)
+            {
+                return null;
+            }
+
+            string hashedPassword = HashPassword(request.password);
+
+            var newUser = new UserDto
+            {
+                email = request.email,
+                passwordHash = hashedPassword,
+                firstName = request.firstName,
+                lastName = request.lastName,
+                roleId = request.roleId
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            return newUser;
+        }
+
+        private string HashPassword(string password)
+        {
+            return password;
+        }
+
+
         public async Task<UserDto?> LoginGoogleAsync(GoogleLoginRequest request)
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings()
