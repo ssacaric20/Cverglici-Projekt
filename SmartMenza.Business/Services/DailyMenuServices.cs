@@ -1,13 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartMenza.Data.Data;
-using SmartMenza.Data.Data;
-using SmartMenza.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using SmartMenza.Business.Models.DailyMenu;
 
 namespace SmartMenza.Business.Services
 {
@@ -20,28 +13,31 @@ namespace SmartMenza.Business.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<object>> GetTodaysMenuAsync()
+        /// <summary>
+        /// Dohvat dnevnog menija za današnji dan.
+        /// </summary>
+        public async Task<IReadOnlyList<DailyMenuListItemResponse>> GetTodaysMenuAsync()
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
             var dailyMenu = await _context.DailyMenus
                 .Include(dm => dm.dish)
                 .Where(dm => dm.date == today)
-                .Select(dm => new
+                .Select(dm => new DailyMenuListItemResponse
                 {
-                    dm.dishId,
-                    dm.date,
-                    Jelo = new
+                    DishId = dm.dishId,
+                    Date = dm.date,
+                    Jelo = new DailyMenuDishListItemResponse
                     {
-                        dm.dish.dishId,
-                        dm.dish.title,
-                        dm.dish.price,
-                        dm.dish.description,
-                        dm.dish.calories,
-                        dm.dish.protein,
-                        dm.dish.fat,
-                        dm.dish.carbohydrates,
-                        dm.dish.imgPath
+                        DishId = dm.dish.dishId,
+                        Title = dm.dish.title,
+                        Price = dm.dish.price,
+                        Description = dm.dish.description,
+                        Calories = dm.dish.calories,
+                        Protein = dm.dish.protein,
+                        Fat = dm.dish.fat,
+                        Carbohydrates = dm.dish.carbohydrates,
+                        ImgPath = dm.dish.imgPath
                     }
                 })
                 .ToListAsync();
@@ -49,7 +45,11 @@ namespace SmartMenza.Business.Services
             return dailyMenu;
         }
 
-        public async Task<IEnumerable<object?>> GetMenuForDateAsync(string date)
+        /// <summary>
+        /// Dohvat dnevnog menija za zadani datum (yyyy-MM-dd).
+        /// Ako je format datuma neispravan, vraća null.
+        /// </summary>
+        public async Task<IReadOnlyList<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date)
         {
             if (!DateOnly.TryParse(date, out DateOnly parsedDate))
             {
@@ -59,27 +59,26 @@ namespace SmartMenza.Business.Services
             var menu = await _context.DailyMenus
                 .Include(dm => dm.dish)
                 .Where(dm => dm.date == parsedDate)
-                .Select(dm => new
+                .Select(dm => new DailyMenuListItemResponse
                 {
-                    dm.dishId,
-                    dm.date,
-                    Jelo = new
+                    DishId = dm.dishId,
+                    Date = dm.date,
+                    Jelo = new DailyMenuDishListItemResponse
                     {
-                        dm.dish.dishId,
-                        dm.dish.title,
-                        dm.dish.price,
-                        dm.dish.description,
-                        dm.dish.calories,
-                        dm.dish.protein,
-                        dm.dish.fat,
-                        dm.dish.carbohydrates,
-                        dm.dish.imgPath
+                        DishId = dm.dish.dishId,
+                        Title = dm.dish.title,
+                        Price = dm.dish.price,
+                        Description = dm.dish.description,
+                        Calories = dm.dish.calories,
+                        Protein = dm.dish.protein,
+                        Fat = dm.dish.fat,
+                        Carbohydrates = dm.dish.carbohydrates,
+                        ImgPath = dm.dish.imgPath
                     }
                 })
                 .ToListAsync();
 
             return menu;
         }
-
     }
 }

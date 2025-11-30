@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SmartMenza.Data.Data;
-using SmartMenza.Data.Models;
 using SmartMenza.Business.Services;
+using SmartMenza.Business.Models.DailyMenu;
 
 namespace SmartMenza.API.Controllers
 {
@@ -18,22 +16,25 @@ namespace SmartMenza.API.Controllers
         }
 
         [HttpGet("today")]
-        public async Task<ActionResult<IEnumerable<object>>> GetTodaysMenuAsync()
+        public async Task<ActionResult<IEnumerable<DailyMenuListItemResponse>>> GetTodaysMenuAsync()
         {
             try
             {
                 var dailyMenu = await _dailyMenuServices.GetTodaysMenuAsync();
-
                 return Ok(dailyMenu);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error occured while fetching the menu!", error = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Error occured while fetching the menu!",
+                    error = ex.Message
+                });
             }
         }
 
         [HttpGet("date")]
-        public async Task<ActionResult<IEnumerable<object>>> GetMenuForDateAsync([FromQuery] string date)
+        public async Task<ActionResult<IEnumerable<DailyMenuListItemResponse>>> GetMenuForDateAsync([FromQuery] string date)
         {
             try
             {
@@ -48,7 +49,11 @@ namespace SmartMenza.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error occured while fetching the menu!", error = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Error occured while fetching the menu!",
+                    error = ex.Message
+                });
             }
         }
     }
