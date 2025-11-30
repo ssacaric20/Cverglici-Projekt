@@ -25,6 +25,7 @@ namespace SmartMenza.Data.Data
         public DbSet<DishIngredientDto> DishIngredients { get; set; } = null!;
         public DbSet<FavoriteDishDto> FavoriteDishes { get; set; } = null!;
         public DbSet<DishRatingDto> DishRatings { get; set; } = null!;
+        public DbSet<DailyMenuDishDto> DailyMenuDishes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,6 +60,16 @@ namespace SmartMenza.Data.Data
 
             modelBuilder.Entity<FavoriteDishDto>()
                 .HasKey(fd => new { fd.userId, fd.dishId });
+
+            modelBuilder.Entity<DailyMenuDishDto>()
+                .HasOne(dmd => dmd.dailyMenu)
+                .WithMany(dm => dm.dailyMenuDishes)
+                .HasForeignKey(dmd => dmd.dailyMenuId);
+
+            modelBuilder.Entity<DailyMenuDishDto>()
+                .HasOne(dmd => dmd.dish)
+                .WithMany(d => d.dailyMenuDishes)
+                .HasForeignKey(dmd => dmd.dishId);
 
 
             // Seed data
@@ -125,8 +136,22 @@ namespace SmartMenza.Data.Data
                     fat = 8m,
                     imgPath = null,
                     nutricionalValueId = 1
+                },
+                new DishDto
+                {
+                    dishId = 3,
+                    title = "Grilled fish",
+                    description = "Fresh grilled fish with lemon",
+                    price = 4.50m,
+                    calories = 320,
+                    protein = 40m,
+                    carbohydrates = 5m,
+                    fat = 10m,
+                    imgPath = null,
+                    nutricionalValueId = 1
                 }
             );
+            
 
             // Dish–Ingredient (many-to-many)
             modelBuilder.Entity<DishIngredientDto>().HasData(
@@ -186,15 +211,32 @@ namespace SmartMenza.Data.Data
                 new DailyMenuDto
                 {
                     dailyMenuId = 1,
-                    date = new DateOnly(2025, 11, 29),
-                    dishId = 2
+                    date = new DateOnly(2025, 11, 29)
                 },
                 new DailyMenuDto
                 {
                     dailyMenuId = 2,
-                    date = new DateOnly(2025, 11, 29),
-                    dishId = 2
+                    date = new DateOnly(2025, 11, 30)
+                },
+                new DailyMenuDto
+                {
+                    dailyMenuId = 3,
+                    date = new DateOnly(2025, 12, 1)
                 }
+            );
+
+            modelBuilder.Entity<DailyMenuDishDto>().HasData(
+                // 29.11.2025 - vege pasta i chicken
+                new DailyMenuDishDto { dailyMenuId = 1, dishId = 2 },
+                new DailyMenuDishDto { dailyMenuId = 1, dishId = 1 },
+
+                // 30.11.2025 - sva tri jela
+                new DailyMenuDishDto { dailyMenuId = 2, dishId = 1 },
+                new DailyMenuDishDto { dailyMenuId = 2, dishId = 2 },
+                new DailyMenuDishDto { dailyMenuId = 2, dishId = 3 },
+
+                // 01.12.2025 - grilled fish
+                new DailyMenuDishDto { dailyMenuId = 3, dishId = 3 }
             );
         }
     }

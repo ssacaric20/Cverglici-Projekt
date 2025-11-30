@@ -6,10 +6,6 @@
         public int dailyMenuId { get; set; }
         public DateOnly date { get; set; }
 
-        // FK
-        public int dishId { get; set; }
-
-        // nav
-        public DishDto dish { get; set; } = null!;
+        public ICollection<DailyMenuDishDto> dailyMenuDishes { get; set; } = new List<DailyMenuDishDto>();
     }
 }

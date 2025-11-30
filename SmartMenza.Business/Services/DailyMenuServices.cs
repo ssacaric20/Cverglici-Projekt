@@ -13,42 +13,36 @@ namespace SmartMenza.Business.Services
             _context = context;
         }
 
-        /// <summary>
-        /// Dohvat dnevnog menija za današnji dan.
-        /// </summary>
         public async Task<IReadOnlyList<DailyMenuListItemResponse>> GetTodaysMenuAsync()
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
             var dailyMenu = await _context.DailyMenus
-                .Include(dm => dm.dish)
+                .Include(dm => dm.dailyMenuDishes)
+                    .ThenInclude(dmd => dmd.dish)
                 .Where(dm => dm.date == today)
-                .Select(dm => new DailyMenuListItemResponse
+                .SelectMany(dm => dm.dailyMenuDishes.Select(dmd => new DailyMenuListItemResponse
                 {
-                    DishId = dm.dishId,
+                    DishId = dmd.dishId,
                     Date = dm.date,
                     Jelo = new DailyMenuDishListItemResponse
                     {
-                        DishId = dm.dish.dishId,
-                        Title = dm.dish.title,
-                        Price = dm.dish.price,
-                        Description = dm.dish.description,
-                        Calories = dm.dish.calories,
-                        Protein = dm.dish.protein,
-                        Fat = dm.dish.fat,
-                        Carbohydrates = dm.dish.carbohydrates,
-                        ImgPath = dm.dish.imgPath
+                        DishId = dmd.dish.dishId,
+                        Title = dmd.dish.title,
+                        Price = dmd.dish.price,
+                        Description = dmd.dish.description,
+                        Calories = dmd.dish.calories,
+                        Protein = dmd.dish.protein,
+                        Fat = dmd.dish.fat,
+                        Carbohydrates = dmd.dish.carbohydrates,
+                        ImgPath = dmd.dish.imgPath
                     }
-                })
+                }))
                 .ToListAsync();
 
             return dailyMenu;
         }
 
-        /// <summary>
-        /// Dohvat dnevnog menija za zadani datum (yyyy-MM-dd).
-        /// Ako je format datuma neispravan, vraća null.
-        /// </summary>
         public async Task<IReadOnlyList<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date)
         {
             if (!DateOnly.TryParse(date, out DateOnly parsedDate))
@@ -57,25 +51,26 @@ namespace SmartMenza.Business.Services
             }
 
             var menu = await _context.DailyMenus
-                .Include(dm => dm.dish)
+                .Include(dm => dm.dailyMenuDishes)
+                    .ThenInclude(dmd => dmd.dish)
                 .Where(dm => dm.date == parsedDate)
-                .Select(dm => new DailyMenuListItemResponse
+                .SelectMany(dm => dm.dailyMenuDishes.Select(dmd => new DailyMenuListItemResponse
                 {
-                    DishId = dm.dishId,
+                    DishId = dmd.dishId,
                     Date = dm.date,
                     Jelo = new DailyMenuDishListItemResponse
                     {
-                        DishId = dm.dish.dishId,
-                        Title = dm.dish.title,
-                        Price = dm.dish.price,
-                        Description = dm.dish.description,
-                        Calories = dm.dish.calories,
-                        Protein = dm.dish.protein,
-                        Fat = dm.dish.fat,
-                        Carbohydrates = dm.dish.carbohydrates,
-                        ImgPath = dm.dish.imgPath
+                        DishId = dmd.dish.dishId,
+                        Title = dmd.dish.title,
+                        Price = dmd.dish.price,
+                        Description = dmd.dish.description,
+                        Calories = dmd.dish.calories,
+                        Protein = dmd.dish.protein,
+                        Fat = dmd.dish.fat,
+                        Carbohydrates = dmd.dish.carbohydrates,
+                        ImgPath = dmd.dish.imgPath
                     }
-                })
+                }))
                 .ToListAsync();
 
             return menu;

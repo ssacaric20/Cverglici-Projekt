@@ -17,9 +17,11 @@
 
         // navigacija
         public ICollection<DishIngredientDto> dishIngredients { get; set; } = new List<DishIngredientDto>();
-        public ICollection<DailyMenuDto> dailyMenus { get; set; } = new List<DailyMenuDto>();
         public ICollection<FavoriteDishDto> favoriteDishes { get; set; } = new List<FavoriteDishDto>();
         public ICollection<DishRatingDto> dishRatings { get; set; } = new List<DishRatingDto>();
-        public ICollection<DailyFoodIntakeDto> intakeAmounts { get; set; } = new List<DailyFoodIntakeDto>();
+        public ICollection<DailyFoodIntakeDto> dailyFoodIntakes { get; set; } = new List<DailyFoodIntakeDto>();
+
+        // veza vise-vise *NOVO
+        public ICollection<DailyMenuDishDto> dailyMenuDishes { get; set; } = new List<DailyMenuDishDto>();
     }
 }
