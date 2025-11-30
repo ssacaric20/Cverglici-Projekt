@@ -186,13 +186,13 @@ namespace SmartMenza.Data.Data
                 new DailyMenuDto
                 {
                     dailyMenuId = 1,
-                    date = new DateOnly(2025, 1, 1),
-                    dishId = 1
+                    date = new DateOnly(2025, 11, 29),
+                    dishId = 2
                 },
                 new DailyMenuDto
                 {
                     dailyMenuId = 2,
-                    date = new DateOnly(2025, 11, 22),
+                    date = new DateOnly(2025, 11, 29),
                     dishId = 2
                 }
             );
