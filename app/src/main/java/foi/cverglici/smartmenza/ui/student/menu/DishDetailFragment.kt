@@ -109,7 +109,7 @@ class DishDetailFragment : Fragment() {
     private fun loadDishDetails(dishId: Int) {
         lifecycleScope.launch {
             try {
-                val response = RetrofitDish.dishService.getDishDetails(dishId)
+                val response = RetrofitDish.menuService.getDishDetails(dishId)
 
                 if (response.isSuccessful) {
                     response.body()?.let { dish ->

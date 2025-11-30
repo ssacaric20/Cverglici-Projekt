@@ -1,4 +1,4 @@
-package foi.cverglic.core.menu.model
+package foi.cverglici.core.menu.model
 
 data class Dish(
     val dishId: Int,
