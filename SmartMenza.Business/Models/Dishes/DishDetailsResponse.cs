@@ -1,6 +1,6 @@
-﻿namespace SmartMenza.API.Models.Responses
+﻿namespace SmartMenza.Business.Models.Dishes
 {
-    public class DishDetailsResponseDto
+    public class DishDetailsResponse
     {
         public int DishId { get; set; }
         public string Title { get; set; } = string.Empty;
