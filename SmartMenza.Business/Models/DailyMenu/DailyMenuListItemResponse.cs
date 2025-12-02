@@ -17,6 +17,7 @@
     {
         public int DishId { get; set; }
         public DateOnly Date { get; set; }
+        public string Category { get; set; } = string.Empty;  // NOVO: "Lunch" or "Dinner"
         public DailyMenuDishListItemResponse Jelo { get; set; } = null!;
     }
 }
