@@ -113,13 +113,14 @@ class MenuListFragment : Fragment() {
     }
 
     private fun onDishClicked(menuItem: DailyMenuItem) {
-        // TODO: Navigate to DishDetailFragment
-        Toast.makeText(
-            requireContext(),
-            "Clicked: ${'$'}{menuItem.dish.title}",
-            Toast.LENGTH_SHORT
-        ).show()
+        Log.d("MenuListFragment", "Dish clicked: ${menuItem.dish.title} (ID: ${menuItem.dishId})")
 
-        Log.d("MenuListFragment", "Dish clicked: ${'$'}{menuItem.dish.title} (ID: ${'$'}{menuItem.dishId})")
+        // prikazi DishDetailDialog
+        val dialog = DishDetailDialog(
+            requireContext(),
+            viewLifecycleOwner,
+            menuItem.dishId
+        )
+        dialog.show()
     }
 }
