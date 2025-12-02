@@ -41,7 +41,7 @@ class DishDetailDialog(
         setContentView(R.layout.dish_detail_fragment)
 
         window?.setLayout(
-            (context.resources.displayMetrics.widthPixels * 0.90).toInt(),
+            (context.resources.displayMetrics.widthPixels * 1),
             (context.resources.displayMetrics.heightPixels * 0.85).toInt()
         )
 
