@@ -22,8 +22,7 @@ namespace SmartMenza.API.Controllers
             {
                 var dailyMenu = await _dailyMenuServices.GetTodaysMenuAsync();
                 return Ok(dailyMenu);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 return StatusCode(500, new
                 {
@@ -46,8 +45,7 @@ namespace SmartMenza.API.Controllers
                 }
 
                 return Ok(menu);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
                 return StatusCode(500, new
                 {

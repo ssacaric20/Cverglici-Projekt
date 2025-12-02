@@ -33,7 +33,7 @@ namespace SmartMenza.UnitTests.Menu
 
         private void SeedTestData()
         {
-            // Jedno jelo
+            // Jela
             var dish1 = new DishDto
             {
                 dishId = 1,
@@ -44,8 +44,8 @@ namespace SmartMenza.UnitTests.Menu
                 protein = 35m,
                 carbohydrates = 50m,
                 fat = 12m,
-                imgPath = null,
-                nutricionalValueId = 1
+                imgPath = null
+                // REMOVED: nutricionalValueId
             };
 
             var dish2 = new DishDto
@@ -58,29 +58,36 @@ namespace SmartMenza.UnitTests.Menu
                 protein = 15m,
                 carbohydrates = 70m,
                 fat = 8m,
-                imgPath = null,
-                nutricionalValueId = 1
+                imgPath = null
+                // REMOVED: nutricionalValueId
             };
 
             _context.Dishes.AddRange(dish1, dish2);
 
             // Dnevni meni za današnji dan
-            _context.DailyMenus.Add(new DailyMenuDto
+            var todayMenu = new DailyMenuDto
             {
                 dailyMenuId = 1,
-                date = DateOnly.FromDateTime(DateTime.Today),
-                dishId = dish1.dishId,
-                dish = dish1
-            });
+                date = DateOnly.FromDateTime(DateTime.Today)
+                // REMOVED: dishId and dish navigation
+            };
 
             // Dnevni meni za fiksni datum (2025-01-22)
-            _context.DailyMenus.Add(new DailyMenuDto
+            var fixedDateMenu = new DailyMenuDto
             {
                 dailyMenuId = 2,
-                date = new DateOnly(2025, 1, 22),
-                dishId = dish2.dishId,
-                dish = dish2
-            });
+                date = new DateOnly(2025, 1, 22)
+                // REMOVED: dishId and dish navigation
+            };
+
+            _context.DailyMenus.AddRange(todayMenu, fixedDateMenu);
+            _context.SaveChanges();
+
+            // NOVO: Many-to-many veze kroz DailyMenuDish
+            _context.DailyMenuDishes.AddRange(
+                new DailyMenuDishDto { dailyMenuId = 1, dishId = 1 },
+                new DailyMenuDishDto { dailyMenuId = 2, dishId = 2 }
+            );
 
             _context.SaveChanges();
         }

@@ -12,9 +12,6 @@
         public decimal carbohydrates { get; set; }
         public string? imgPath { get; set; }
 
-        // FK
-        public int nutricionalValueId { get; set; }
-
         // navigacija
         public ICollection<DishIngredientDto> dishIngredients { get; set; } = new List<DishIngredientDto>();
         public ICollection<FavoriteDishDto> favoriteDishes { get; set; } = new List<FavoriteDishDto>();

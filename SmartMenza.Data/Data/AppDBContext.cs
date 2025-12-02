@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SmartMenza.Data.Models;
 using SmartMenza.Core.Enums;
 
@@ -52,7 +51,7 @@ namespace SmartMenza.Data.Data
                 .HasKey(dfi => dfi.dailyFoodIntakeId);
 
             modelBuilder.Entity<DailyMenuDto>()
-                .HasKey(dm => dm.dailyMenuId); 
+                .HasKey(dm => dm.dailyMenuId);
 
             // 2, komponentni kljucevi
             modelBuilder.Entity<DishIngredientDto>()
@@ -66,11 +65,14 @@ namespace SmartMenza.Data.Data
                 .WithMany(dm => dm.dailyMenuDishes)
                 .HasForeignKey(dmd => dmd.dailyMenuId);
 
+            // NOVO: dailymenudish dvokomponentni kljuc
             modelBuilder.Entity<DailyMenuDishDto>()
-                .HasOne(dmd => dmd.dish)
-                .WithMany(d => d.dailyMenuDishes)
-                .HasForeignKey(dmd => dmd.dishId);
+                .HasKey(dmd => new { dmd.dailyMenuId, dmd.dishId });
 
+            modelBuilder.Entity<DailyMenuDishDto>()
+                .HasOne(dmd => dmd.dailyMenu)
+                .WithMany(dm => dm.dailyMenuDishes)
+                .HasForeignKey(dmd => dmd.dailyMenuId);
 
             // Seed data
             // Roles
@@ -109,7 +111,7 @@ namespace SmartMenza.Data.Data
                 new IngredientDto { ingredientId = 4, name = "Mixed vegetables" }
             );
 
-            // Dishes
+            // Dishes - REMOVED nutricionalValueId
             modelBuilder.Entity<DishDto>().HasData(
                 new DishDto
                 {
@@ -121,8 +123,7 @@ namespace SmartMenza.Data.Data
                     protein = 35m,
                     carbohydrates = 50m,
                     fat = 12m,
-                    imgPath = null,
-                    nutricionalValueId = 1
+                    imgPath = null
                 },
                 new DishDto
                 {
@@ -134,8 +135,7 @@ namespace SmartMenza.Data.Data
                     protein = 15m,
                     carbohydrates = 70m,
                     fat = 8m,
-                    imgPath = null,
-                    nutricionalValueId = 1
+                    imgPath = null
                 },
                 new DishDto
                 {
@@ -147,11 +147,10 @@ namespace SmartMenza.Data.Data
                     protein = 40m,
                     carbohydrates = 5m,
                     fat = 10m,
-                    imgPath = null,
-                    nutricionalValueId = 1
+                    imgPath = null
                 }
             );
-            
+
 
             // Dish–Ingredient (many-to-many)
             modelBuilder.Entity<DishIngredientDto>().HasData(
@@ -216,7 +215,7 @@ namespace SmartMenza.Data.Data
                 new DailyMenuDto
                 {
                     dailyMenuId = 2,
-                    date = new DateOnly(2025, 11, 30)
+                    date = new DateOnly(2025, 12, 2)
                 },
                 new DailyMenuDto
                 {

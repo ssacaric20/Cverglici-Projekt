@@ -40,8 +40,7 @@ namespace SmartMenza.UnitTest.Dishes
                 protein = 35m,
                 carbohydrates = 50m,
                 fat = 12m,
-                imgPath = null,
-                nutricionalValueId = 1
+                imgPath = null
             };
 
             var dish2 = new DishDto
@@ -54,8 +53,7 @@ namespace SmartMenza.UnitTest.Dishes
                 protein = 15m,
                 carbohydrates = 70m,
                 fat = 8m,
-                imgPath = null,
-                nutricionalValueId = 1
+                imgPath = null
             };
 
             _context.Dishes.AddRange(dish1, dish2);

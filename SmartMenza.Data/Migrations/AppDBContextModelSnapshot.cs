@@ -64,6 +64,53 @@ namespace SmartMenza.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SmartMenza.Data.Models.DailyMenuDishDto", b =>
+                {
+                    b.Property<int>("dailyMenuId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("dishId")
+                        .HasColumnType("int");
+
+                    b.HasKey("dailyMenuId", "dishId");
+
+                    b.HasIndex("dishId");
+
+                    b.ToTable("DailyMenuDishes");
+
+                    b.HasData(
+                        new
+                        {
+                            dailyMenuId = 1,
+                            dishId = 2
+                        },
+                        new
+                        {
+                            dailyMenuId = 1,
+                            dishId = 1
+                        },
+                        new
+                        {
+                            dailyMenuId = 2,
+                            dishId = 1
+                        },
+                        new
+                        {
+                            dailyMenuId = 2,
+                            dishId = 2
+                        },
+                        new
+                        {
+                            dailyMenuId = 2,
+                            dishId = 3
+                        },
+                        new
+                        {
+                            dailyMenuId = 3,
+                            dishId = 3
+                        });
+                });
+
             modelBuilder.Entity("SmartMenza.Data.Models.DailyMenuDto", b =>
                 {
                     b.Property<int>("dailyMenuId")
@@ -75,12 +122,7 @@ namespace SmartMenza.Data.Migrations
                     b.Property<DateOnly>("date")
                         .HasColumnType("date");
 
-                    b.Property<int>("dishId")
-                        .HasColumnType("int");
-
                     b.HasKey("dailyMenuId");
-
-                    b.HasIndex("dishId");
 
                     b.ToTable("DailyMenus");
 
@@ -88,14 +130,17 @@ namespace SmartMenza.Data.Migrations
                         new
                         {
                             dailyMenuId = 1,
-                            date = new DateOnly(2025, 11, 29),
-                            dishId = 2
+                            date = new DateOnly(2025, 11, 29)
                         },
                         new
                         {
                             dailyMenuId = 2,
-                            date = new DateOnly(2025, 11, 29),
-                            dishId = 2
+                            date = new DateOnly(2025, 12, 2)
+                        },
+                        new
+                        {
+                            dailyMenuId = 3,
+                            date = new DateOnly(2025, 12, 1)
                         });
                 });
 
@@ -123,9 +168,6 @@ namespace SmartMenza.Data.Migrations
                     b.Property<string>("imgPath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("nutricionalValueId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("price")
                         .HasColumnType("decimal(18,2)");
 
@@ -148,7 +190,6 @@ namespace SmartMenza.Data.Migrations
                             carbohydrates = 50m,
                             description = "Boiled chicken with white rice",
                             fat = 12m,
-                            nutricionalValueId = 1,
                             price = 3.20m,
                             protein = 35m,
                             title = "Chicken with rice"
@@ -160,10 +201,20 @@ namespace SmartMenza.Data.Migrations
                             carbohydrates = 70m,
                             description = "Pasta with vegetables",
                             fat = 8m,
-                            nutricionalValueId = 1,
                             price = 2.80m,
                             protein = 15m,
                             title = "Vegetarian pasta"
+                        },
+                        new
+                        {
+                            dishId = 3,
+                            calories = 320,
+                            carbohydrates = 5m,
+                            description = "Fresh grilled fish with lemon",
+                            fat = 10m,
+                            price = 4.50m,
+                            protein = 40m,
+                            title = "Grilled fish"
                         });
                 });
 
@@ -436,7 +487,7 @@ namespace SmartMenza.Data.Migrations
             modelBuilder.Entity("SmartMenza.Data.Models.DailyFoodIntakeDto", b =>
                 {
                     b.HasOne("SmartMenza.Data.Models.DishDto", "dish")
-                        .WithMany("intakeAmounts")
+                        .WithMany("dailyFoodIntakes")
                         .HasForeignKey("dishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -452,13 +503,21 @@ namespace SmartMenza.Data.Migrations
                     b.Navigation("user");
                 });
 
-            modelBuilder.Entity("SmartMenza.Data.Models.DailyMenuDto", b =>
+            modelBuilder.Entity("SmartMenza.Data.Models.DailyMenuDishDto", b =>
                 {
+                    b.HasOne("SmartMenza.Data.Models.DailyMenuDto", "dailyMenu")
+                        .WithMany("dailyMenuDishes")
+                        .HasForeignKey("dailyMenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SmartMenza.Data.Models.DishDto", "dish")
-                        .WithMany("dailyMenus")
+                        .WithMany("dailyMenuDishes")
                         .HasForeignKey("dishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("dailyMenu");
 
                     b.Navigation("dish");
                 });
@@ -534,17 +593,22 @@ namespace SmartMenza.Data.Migrations
                     b.Navigation("role");
                 });
 
+            modelBuilder.Entity("SmartMenza.Data.Models.DailyMenuDto", b =>
+                {
+                    b.Navigation("dailyMenuDishes");
+                });
+
             modelBuilder.Entity("SmartMenza.Data.Models.DishDto", b =>
                 {
-                    b.Navigation("dailyMenus");
+                    b.Navigation("dailyFoodIntakes");
+
+                    b.Navigation("dailyMenuDishes");
 
                     b.Navigation("dishIngredients");
 
                     b.Navigation("dishRatings");
 
                     b.Navigation("favoriteDishes");
-
-                    b.Navigation("intakeAmounts");
                 });
 
             modelBuilder.Entity("SmartMenza.Data.Models.IngredientDto", b =>
