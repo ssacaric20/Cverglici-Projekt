@@ -60,10 +60,6 @@ namespace SmartMenza.Data.Data
             modelBuilder.Entity<FavoriteDishDto>()
                 .HasKey(fd => new { fd.userId, fd.dishId });
 
-            modelBuilder.Entity<DailyMenuDishDto>()
-                .HasOne(dmd => dmd.dailyMenu)
-                .WithMany(dm => dm.dailyMenuDishes)
-                .HasForeignKey(dmd => dmd.dailyMenuId);
 
             // NOVO: dailymenudish dvokomponentni kljuc
             modelBuilder.Entity<DailyMenuDishDto>()
@@ -73,6 +69,12 @@ namespace SmartMenza.Data.Data
                 .HasOne(dmd => dmd.dailyMenu)
                 .WithMany(dm => dm.dailyMenuDishes)
                 .HasForeignKey(dmd => dmd.dailyMenuId);
+
+            modelBuilder.Entity<DailyMenuDishDto>()
+                .HasOne(dmd => dmd.dish)
+                .WithMany(d => d.dailyMenuDishes)
+                .HasForeignKey(dmd => dmd.dishId);
+
 
             // Seed data
             // Roles
@@ -229,7 +231,7 @@ namespace SmartMenza.Data.Data
                 new DailyMenuDishDto { dailyMenuId = 1, dishId = 2 },
                 new DailyMenuDishDto { dailyMenuId = 1, dishId = 1 },
 
-                // 30.11.2025 - sva tri jela
+                // 02.12.2025 - sva tri jela
                 new DailyMenuDishDto { dailyMenuId = 2, dishId = 1 },
                 new DailyMenuDishDto { dailyMenuId = 2, dishId = 2 },
                 new DailyMenuDishDto { dailyMenuId = 2, dishId = 3 },
