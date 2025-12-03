@@ -227,8 +227,8 @@ namespace SmartMenza.Data.Data
             int menuId = 1;
 
             // start i end date u kojem ce se nasumicno generirat menus
-            var startDate = new DateOnly(2024, 12, 5);
-            var endDate = new DateOnly(2024, 12, 27);
+            var startDate = new DateOnly(2025, 12, 5);
+            var endDate = new DateOnly(2025, 12, 27);
 
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
             {
@@ -257,8 +257,8 @@ namespace SmartMenza.Data.Data
             var seedRelations = new List<DailyMenuDishDto>();
 
             int menuId = 1;
-            var startDate = new DateOnly(2024, 12, 5);
-            var endDate = new DateOnly(2024, 12, 27);
+            var startDate = new DateOnly(2025, 12, 5);
+            var endDate = new DateOnly(2025, 12, 27);
 
             int patternDay = 0;
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
