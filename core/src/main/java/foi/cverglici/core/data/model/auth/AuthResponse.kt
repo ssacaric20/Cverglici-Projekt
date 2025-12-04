@@ -1,4 +1,4 @@
-package foi.cverglici.mailauth.model
+package foi.cverglici.core.data.model.auth
 
 data class AuthResponse(
     val userId: Int,

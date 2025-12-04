@@ -1,4 +1,4 @@
-package foi.cverglici.mailauth.api
+package foi.cverglici.core.data.api.auth
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

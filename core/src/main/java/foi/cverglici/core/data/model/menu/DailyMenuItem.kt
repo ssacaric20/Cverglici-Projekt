@@ -1,4 +1,4 @@
-package foi.cverglici.core.menu.model
+package foi.cverglici.core.data.model.menu
 
 import com.google.gson.annotations.SerializedName
 
@@ -7,5 +7,5 @@ data class DailyMenuItem(
     val date: String,
     val dishId: Int,
     @SerializedName("jelo")  // backend "jelo", "dish" in code
-    val dish: Dish
+    val dish: DishMenuResponse
 )

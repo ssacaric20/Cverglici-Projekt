@@ -1,9 +1,8 @@
-package foi.cverglici.mailauth.api
+package foi.cverglici.core.data.api.auth
 
-import foi.cverglici.mailauth.model.AuthResponse
-import foi.cverglici.mailauth.model.LoginRequest
-import foi.cverglici.mailauth.model.RegistrationRequest
-import retrofit2.Call
+import foi.cverglici.core.data.model.auth.AuthResponse
+import foi.cverglici.core.data.model.auth.LoginRequest
+import foi.cverglici.core.data.model.auth.RegistrationRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

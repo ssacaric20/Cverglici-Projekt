@@ -11,8 +11,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import foi.cverglici.core.data.api.RetrofitDish
-import foi.cverglici.core.data.model.DishDetailsResponse
+import foi.cverglici.core.data.api.student.menu.RetrofitDish
+import foi.cverglici.core.data.model.menu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
 import kotlinx.coroutines.launch
 
@@ -34,6 +34,8 @@ class DishDetailDialog(
     private lateinit var fatValue: TextView
     private lateinit var proteinValue: TextView
     private lateinit var ingredientsChipGroup: ChipGroup
+    private lateinit var averageRating: TextView
+    private lateinit var ratingCount: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +67,8 @@ class DishDetailDialog(
         fatValue = findViewById(R.id.fatValue)
         proteinValue = findViewById(R.id.proteinValue)
         ingredientsChipGroup = findViewById(R.id.ingredientsChipGroup)
+        averageRating = findViewById(R.id.averageRating)
+        ratingCount = findViewById(R.id.ratingsCount)
     }
 
     private fun setupClickListeners() {
@@ -127,6 +131,9 @@ class DishDetailDialog(
         fiberValue.text = "0g" // Backend doesn't return fiber, set to 0 or remove
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
         proteinValue.text = context.getString(R.string.grams_format, dish.protein)
+        averageRating.text = dish.averageRating?.toString() ?: "0.0"
+        ratingCount.text = context.getString(R.string.reviews_label, dish.ratingsCount)
+
 
         // image - placeholder
         // TODO: Load image with Glide

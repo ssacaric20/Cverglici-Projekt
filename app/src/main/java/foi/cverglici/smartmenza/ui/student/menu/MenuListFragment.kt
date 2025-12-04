@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import foi.cverglici.core.data.api.RetrofitDish
-import foi.cverglici.core.menu.model.DailyMenuItem
+import foi.cverglici.core.data.api.student.menu.RetrofitDish
+import foi.cverglici.core.data.model.menu.DailyMenuItem
 import foi.cverglici.smartmenza.R
 import kotlinx.coroutines.launch
 
@@ -68,7 +68,7 @@ class MenuListFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitDish.menuService.getTodayMenu()
+                val response = RetrofitDish.menuService.getTodayMenu("lunch")
 
                 if (response.isSuccessful) {
                     val menuItems = response.body() ?: emptyList<DailyMenuItem>()

@@ -15,7 +15,7 @@
     <string name="google_login_option">Opcija prijave s Google računom</string>
     <string name="google_login_button">Google prijava</string>
     <string name="demo_access">Demo pristupni podaci:</string>
-    <string name="demo_student">Student: ana.kovac@student.hr / student123</string>
+    <string name="demo_student">Student: student@test.com / pass123</string>
     <string name="demo_employee">Zaposlenik: ivan.juric@menza.hr / employee123</string>
 
     <!-- NEW STRINGS - registration -->
@@ -30,7 +30,7 @@
     <string name="nutritional_values">Nutritivne Vrijednosti</string>
     <string name="macronutrients">Makronutrijenti</string>
     <string name="ingredients_label">Sastojci</string>
-    <string name="reviews_label">Recenzije (%d)</string>
+    <string name="reviews_label">(%d)</string>
     <string name="price_format">%.2f €</string>
     <string name="calories_detail">%d kcal</string>
     <string name="protein_label">Proteini</string>
@@ -56,7 +56,7 @@
     <string name="close">Close</string>
     <string name="dish_image">Dish image</string>
     <string name="favorite">Favoriti</string>
-    <string name="recenzije">Recenzija (0)</string>
+    <string name="recenzije">Recenzije</string>
     <string name="recenzije_unavailable">Pregled recenzija trenutno nije dostupan</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

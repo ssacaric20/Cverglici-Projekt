@@ -82,23 +82,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <!-- OCJENA + VIEWS -->
+            <!-- kalorije -->
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
                 android:layout_height="wrap_content">
-
-                 <!-- Ocjena -->
-                <TextView
-                    android:id="@+id/caloriesValue"
-                    android:text="520 cal"
-                    android:layout_marginStart="4dp"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
 
                 <!-- RAZMAK -->
                 <Space
@@ -108,8 +98,8 @@
 
                 <!-- Broj pregleda -->
                 <TextView
-                    android:id="@+id/ratingCount"
-                    android:text="4.5 (2)"
+                    android:id="@+id/caloriesValue"
+                    android:text="520 cal"
                     android:layout_marginStart="4dp"
                     android:textSize="14sp"
                     android:textColor="@android:color/black"

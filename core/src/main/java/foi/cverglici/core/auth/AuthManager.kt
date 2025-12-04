@@ -1,7 +1,5 @@
 package foi.cverglici.core.auth
 
-import foi.cverglici.core.auth.IAuthenticationHandler
-
 /**
  * manages multiple authentication handlers
  */

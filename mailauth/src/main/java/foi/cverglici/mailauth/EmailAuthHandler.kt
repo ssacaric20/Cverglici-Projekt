@@ -1,9 +1,9 @@
 package foi.cverglici.mailauth
 
 import android.content.Context
-import foi.cverglici.mailauth.api.RetrofitClient
-import foi.cverglici.mailauth.model.LoginRequest
-import foi.cverglici.mailauth.model.RegistrationRequest
+import foi.cverglici.core.data.api.auth.RetrofitClient
+import foi.cverglici.core.data.model.auth.LoginRequest
+import foi.cverglici.core.data.model.auth.RegistrationRequest
 import foi.cverglici.mailauth.ui.EmailAuthDialog
 import foi.cverglici.core.auth.IAuthenticationHandler
 import foi.cverglici.core.auth.model.AuthResult

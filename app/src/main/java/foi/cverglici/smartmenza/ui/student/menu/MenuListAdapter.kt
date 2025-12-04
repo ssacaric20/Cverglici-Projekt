@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import foi.cverglici.core.menu.model.DailyMenuItem
+import foi.cverglici.core.data.model.menu.DailyMenuItem
 import foi.cverglici.smartmenza.R
 import java.util.Locale
 
@@ -42,6 +42,8 @@ class MenuListAdapter(
             descriptionText.text = dish.description ?: "Nema opisa"
             priceText.text = String.format(Locale.getDefault(), "%.2f €", dish.price)
             caloriesText.text = "${dish.calories} kcal"
+
+
 
             itemView.setOnClickListener {
                 onItemClick(menuItem)
