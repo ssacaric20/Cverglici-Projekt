@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +19,7 @@ import foi.cverglici.smartmenza.R
 import kotlinx.coroutines.launch
 
 /**
- * Fragment for displaying daily menu list (Student view)
+ * display daily menu list (student view)
  */
 class MenuListFragment : Fragment() {
 
@@ -26,6 +27,13 @@ class MenuListFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyStateText: TextView
     private lateinit var adapter: MenuListAdapter
+
+    // tab views
+    private lateinit var tabLunch: TextView
+    private lateinit var tabDinner: TextView
+
+    // current selected category
+    private var currentCategory: String = "lunch"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +48,7 @@ class MenuListFragment : Fragment() {
 
         initializeViews(view)
         setupRecyclerView()
+        setupTabClickListeners()
         loadTodayMenu()
     }
 
@@ -47,6 +56,8 @@ class MenuListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.menuRecyclerView)
         progressBar = view.findViewById(R.id.progressBar)
         emptyStateText = view.findViewById(R.id.emptyStateText)
+        tabLunch = view.findViewById(R.id.tabLunch)
+        tabDinner = view.findViewById(R.id.tabDinner)
     }
 
     private fun setupRecyclerView() {
@@ -60,15 +71,33 @@ class MenuListFragment : Fragment() {
         }
     }
 
+    private fun setupTabClickListeners() {
+        tabLunch.setOnClickListener {
+            if (currentCategory != "lunch") {
+                currentCategory = "lunch"
+                updateTabSelection(isLunchActive = true)
+                loadTodayMenu()
+            }
+        }
+
+        tabDinner.setOnClickListener {
+            if (currentCategory != "dinner") {
+                currentCategory = "dinner"
+                updateTabSelection(isLunchActive = false)
+                loadTodayMenu()
+            }
+        }
+    }
+
     /**
-     * today menu from API
+     * today menu based on current category
      */
     private fun loadTodayMenu() {
         showLoading(true)
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitDish.menuService.getTodayMenu("lunch")
+                val response = RetrofitDish.menuService.getTodayMenu(currentCategory)
 
                 if (response.isSuccessful) {
                     val menuItems = response.body() ?: emptyList<DailyMenuItem>()
@@ -79,14 +108,37 @@ class MenuListFragment : Fragment() {
                         showMenuItems(menuItems)
                     }
                 } else {
-                    showError("Greška pri dohvaćanju jelovnika: ${'$'}{response.code()}")
+                    showError("Greška pri dohvaćanju jelovnika: ${response.code()}")
                 }
             } catch (e: Exception) {
                 Log.e("MenuListFragment", "Error loading menu", e)
-                showError("Mrežna greška: ${'$'}{e.message}")
+                showError("Mrežna greška: ${e.message}")
             } finally {
                 showLoading(false)
             }
+        }
+    }
+
+    /**
+     * update tab visual
+     */
+    private fun updateTabSelection(isLunchActive: Boolean) {
+        if (isLunchActive) {
+            // highlight lunch
+            tabLunch.setBackgroundResource(R.drawable.bg_segment_active)
+            tabLunch.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
+
+            // deactivate dinner
+            tabDinner.background = null
+            tabDinner.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
+        } else {
+            // highlight dinner
+            tabDinner.setBackgroundResource(R.drawable.bg_segment_active)
+            tabDinner.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
+
+            // deactivate lunch
+            tabLunch.background = null
+            tabLunch.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
         }
     }
 
@@ -115,7 +167,7 @@ class MenuListFragment : Fragment() {
     private fun onDishClicked(menuItem: DailyMenuItem) {
         Log.d("MenuListFragment", "Dish clicked: ${menuItem.dish.title} (ID: ${menuItem.dishId})")
 
-        // prikazi DishDetailDialog
+        // show DishDetailDialog
         val dialog = DishDetailDialog(
             requireContext(),
             viewLifecycleOwner,
