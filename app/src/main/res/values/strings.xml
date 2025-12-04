@@ -30,7 +30,7 @@
     <string name="nutritional_values">Nutritivne Vrijednosti</string>
     <string name="macronutrients">Makronutrijenti</string>
     <string name="ingredients_label">Sastojci</string>
-    <string name="reviews_label">(%d)</string>
+    <string name="reviews_total_format">(%d)</string>
     <string name="price_format">%.2f €</string>
     <string name="calories_detail">%d kcal</string>
     <string name="protein_label">Proteini</string>
@@ -38,6 +38,7 @@
     <string name="fat_label">Masti</string>
     <string name="fiber_label">Vlakna</string>
     <string name="grams_format">%.0fg</string>
+    <string name="average_rating_format">%.2f</string>
     <string name="loading">Učitavanje...</string>
     <string name="error_loading_dish">Greška pri učitavanju jela</string>
 
@@ -58,6 +59,4 @@
     <string name="favorite">Favoriti</string>
     <string name="recenzije">Recenzije</string>
     <string name="recenzije_unavailable">Pregled recenzija trenutno nije dostupan</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

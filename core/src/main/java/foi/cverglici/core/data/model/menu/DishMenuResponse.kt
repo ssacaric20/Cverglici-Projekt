@@ -9,6 +9,7 @@ data class DishMenuResponse(
     val protein: Double,
     val fat: Double,
     val carbohydrates: Double,
+    val fiber: Double,
     val imgPath: String?,
     val ingredients: List<String>
 )

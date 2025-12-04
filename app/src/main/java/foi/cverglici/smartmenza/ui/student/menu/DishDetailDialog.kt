@@ -128,11 +128,11 @@ class DishDetailDialog(
 
         // macronutrients
         carbsValue.text = context.getString(R.string.grams_format, dish.carbohydrates)
-        fiberValue.text = "0g" // Backend doesn't return fiber, set to 0 or remove
+        fiberValue.text = context.getString(R.string.grams_format, dish.fiber)
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
         proteinValue.text = context.getString(R.string.grams_format, dish.protein)
-        averageRating.text = dish.averageRating?.toString() ?: "0.0"
-        ratingCount.text = context.getString(R.string.reviews_label, dish.ratingsCount)
+        averageRating.text = context.getString(R.string.average_rating_format, dish.averageRating)
+        ratingCount.text = context.getString(R.string.reviews_total_format, dish.ratingsCount)
 
 
         // image - placeholder
