@@ -129,6 +129,7 @@ namespace SmartMenza.Data.Data
                     calories = 540,
                     protein = 35m,
                     carbohydrates = 50m,
+                    fiber = 30m,
                     fat = 12m,
                     imgPath = null
                 },
@@ -141,6 +142,7 @@ namespace SmartMenza.Data.Data
                     calories = 450,
                     protein = 15m,
                     carbohydrates = 70m,
+                    fiber = 30m,
                     fat = 8m,
                     imgPath = null
                 },
@@ -153,6 +155,7 @@ namespace SmartMenza.Data.Data
                     calories = 320,
                     protein = 40m,
                     carbohydrates = 5m,
+                    fiber = 0m,
                     fat = 10m,
                     imgPath = null
                 }
@@ -181,7 +184,10 @@ namespace SmartMenza.Data.Data
         {
             modelBuilder.Entity<DishRatingDto>().HasData(
                 new DishRatingDto { dishRatingId = 1, dishId = 1, rating = 5 },
-                new DishRatingDto { dishRatingId = 2, dishId = 2, rating = 4 }
+                new DishRatingDto { dishRatingId = 2, dishId = 2, rating = 4 },
+                new DishRatingDto { dishRatingId = 3, dishId = 3, rating = 3 },
+                new DishRatingDto { dishRatingId = 4, dishId = 3, rating = 4 },
+                new DishRatingDto { dishRatingId = 5, dishId = 3, rating = 4 }
             );
         }
 

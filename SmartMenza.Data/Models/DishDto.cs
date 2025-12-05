@@ -10,6 +10,7 @@
         public decimal protein { get; set; }
         public decimal fat { get; set; }
         public decimal carbohydrates { get; set; }
+        public decimal fiber { get; set; }
         public string? imgPath { get; set; }
 
         // navigacija

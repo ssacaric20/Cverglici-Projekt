@@ -46,6 +46,7 @@ namespace SmartMenza.Business.Services
                         Protein = dmd.dish.protein,
                         Fat = dmd.dish.fat,
                         Carbohydrates = dmd.dish.carbohydrates,
+                        Fiber = dmd.dish.fiber,
                         ImgPath = dmd.dish.imgPath
                     }
                 }))
@@ -89,6 +90,7 @@ namespace SmartMenza.Business.Services
                         Protein = dmd.dish.protein,
                         Fat = dmd.dish.fat,
                         Carbohydrates = dmd.dish.carbohydrates,
+                        Fiber = dmd.dish.fiber,
                         ImgPath = dmd.dish.imgPath
                     }
                 }))

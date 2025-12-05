@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartMenza.Data.Data;
 
@@ -11,9 +12,11 @@ using SmartMenza.Data.Data;
 namespace SmartMenza.Data.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251204181401_DodanaVlakna")]
+    partial class DodanaVlakna
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1150,24 +1153,6 @@ namespace SmartMenza.Data.Migrations
                         {
                             dishRatingId = 2,
                             dishId = 2,
-                            rating = 4
-                        },
-                        new
-                        {
-                            dishRatingId = 3,
-                            dishId = 3,
-                            rating = 3
-                        },
-                        new
-                        {
-                            dishRatingId = 4,
-                            dishId = 3,
-                            rating = 4
-                        },
-                        new
-                        {
-                            dishRatingId = 5,
-                            dishId = 3,
                             rating = 4
                         });
                 });

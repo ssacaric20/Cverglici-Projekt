@@ -50,6 +50,7 @@ namespace SmartMenza.Business.Services
                 Protein = dish.protein,
                 Fat = dish.fat,
                 Carbohydrates = dish.carbohydrates,
+                Fiber = dish.fiber,
                 ImgPath = dish.imgPath,
 
                 Ingredients = ingredientNames,
