@@ -124,13 +124,13 @@ namespace SmartMenza.UnitTests.Menu
         }
 
         [Fact]
-        public async Task GetMenuForDateAsync_WrongDateFormat_ReturnsBadRequest()
+        public async Task GetMenuForDateAsync_InvalidDateInput_ReturnsBadRequest()
         {
             // Arrange
-            string date = "22-01-2025"; // krivi format
+            string date = "22-01-202b"; // krivi format
 
             // Act
-            var result = await _dailyMenuController.GetMenuForDateAsync(date);
+            var result = await _dailyMenuController.GetMenuForDateAsync(date, null); 
 
             // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
