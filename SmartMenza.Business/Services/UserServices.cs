@@ -6,7 +6,7 @@ using SmartMenza.Core;
 using SmartMenza.Core.Enums;
 using SmartMenza.Data;
 using SmartMenza.Data.Data;
-using SmartMenza.Data.Data.Entities;
+using SmartMenza.Business.Models;
 using SmartMenza.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -15,11 +15,15 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using SmartMenza.Business.Services.Interfaces;
+using SmartMenza.Business.Models.Auth;
+using SmartMenza.Business.Models.Users;
+
 
 
 namespace SmartMenza.Business.Services
 {
-    public class UserServices
+    public class UserServices : IUserService
     {
         private readonly AppDBContext _context;
 
@@ -28,16 +32,24 @@ namespace SmartMenza.Business.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<UserDto>> GetUsersAsync()
+        public async Task<IEnumerable<UserListItemResponse>> GetUsersAsync()
         {
             var users = await _context.Users.ToListAsync();
 
             if (users == null || !users.Any())
             {
-                throw new Exception("No users found.");
+                // Umjesto Exceptiona vracamo praznu listu
+                return Enumerable.Empty<UserListItemResponse>();
             }
 
-            return users;
+            return users.Select(u => new UserListItemResponse
+            {
+                UserId = u.userId,
+                Email = u.email,
+                FirstName = u.firstName,
+                LastName = u.lastName,
+                RoleId = u.roleId
+            }).ToList();
         }
 
         public async Task<LoginResponse?> LoginUserAsync(LoginRequest request)
@@ -57,58 +69,111 @@ namespace SmartMenza.Business.Services
                 userId = user.userId,
                 message = "Login successful",
                 token = token,
-                roleId = (int)UserRole.Student
+                roleId = user.roleId
             };
 
             return loginResponse;
 
         }
 
-        public async Task<UserDto?> LoginGoogleAsync(GoogleLoginRequest request)
+        public async Task<LoginResponse?> RegisterUserAsync(RegistrationRequest request)
         {
-            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            if (string.IsNullOrWhiteSpace(request.name) ||
+                string.IsNullOrWhiteSpace(request.email) ||
+                string.IsNullOrWhiteSpace(request.password))
             {
-                // GOOGLE CLIENT ID FALI!!!!!!!!!!!!
+                return null;
+            }
+
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.email == request.email);
+
+            if (existingUser != null)
+            {
+                return null; 
+            }
+
+            var newUser = new UserDto
+            {
+                email = request.email,
+                firstName = request.name,   
+                lastName = string.Empty,
+                passwordHash = request.password, // Ovdje kasnije hashing možemo
+                roleId = (int)UserRole.Student // Trenutno registriramo samo studente
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            var token = GenerateJwtToken(newUser);
+
+            return new LoginResponse
+            {
+                userId = newUser.userId,
+                message = "Registration successful",
+                token = token,
+                roleId = newUser.roleId
+            };
+        }
+
+        public async Task<LoginResponse?> LoginGoogleAsync(GoogleLoginRequest request)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                // TODO: prebaciti pravi Google Client ID u konfiguraciju (appsettings.json)
                 Audience = new[] { "STAVITI GOOGLE CLIENT ID" }
             };
 
-            var payload = await GoogleJsonWebSignature.ValidateAsync(request.tokenId, settings);
+            GoogleJsonWebSignature.Payload payload;
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.email == payload.Email);
+            try
+            {
+                payload = await GoogleJsonWebSignature.ValidateAsync(request.tokenId, settings);
+            }
+            catch (InvalidJwtException)
+            {
+                return null;
+            }
+            
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.email == payload.Email);
 
             if (user == null)
             {
-
                 user = CreateUserForGoogleRegistration(payload);
-
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
             }
 
-            return user;
+            var token = GenerateJwtToken(user);
+
+            //vraćamo isti response kao i u mail login i registraciji
+            return new LoginResponse
+            {
+                userId = user.userId,
+                message = "Login successful",
+                token = token,
+                roleId = user.roleId   
+            };
         }
 
         private UserDto CreateUserForGoogleRegistration(GoogleJsonWebSignature.Payload payload)
         {
-            var user = new UserDto
+            return new UserDto
             {
                 email = payload.Email,
                 firstName = payload.GivenName,
                 lastName = payload.FamilyName,
-                passwordHash = "",
+                passwordHash = string.Empty,
                 roleId = (int)UserRole.Student
             };
-
-            return user;
         }
+
 
         public bool IsLoginInputEmpty(LoginRequest request)
         {
-            if (request.passwordHash == "" || request.email == "")
-            {
-                return true;
-            }
-            return false;
+            return string.IsNullOrWhiteSpace(request.email)
+                || string.IsNullOrWhiteSpace(request.passwordHash);
         }
 
         private string GenerateJwtToken(UserDto user)
@@ -120,10 +185,10 @@ namespace SmartMenza.Business.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-            new Claim(ClaimTypes.NameIdentifier, user.userId.ToString()),
-            new Claim(ClaimTypes.Email, user.email),
-            new Claim(ClaimTypes.Role, user.roleId.ToString())
-        }),
+                    new Claim(ClaimTypes.NameIdentifier, user.userId.ToString()),
+                    new Claim(ClaimTypes.Email, user.email),
+                    new Claim(ClaimTypes.Role, user.roleId.ToString())
+                }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),

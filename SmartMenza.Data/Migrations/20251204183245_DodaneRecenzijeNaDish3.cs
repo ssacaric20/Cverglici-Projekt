@@ -2,14 +2,14 @@
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+#pragma warning disable CA1814 
 
 namespace SmartMenza.Data.Migrations
 {
-    /// <inheritdoc />
+    
     public partial class DodaneRecenzijeNaDish3 : Migration
     {
-        /// <inheritdoc />
+        
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
@@ -23,7 +23,7 @@ namespace SmartMenza.Data.Migrations
                 });
         }
 
-        /// <inheritdoc />
+        
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(

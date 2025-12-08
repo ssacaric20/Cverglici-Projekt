@@ -2,50 +2,45 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SmartMenza.Business.Models.Auth;
+using SmartMenza.Business.Models.Users;
 using SmartMenza.Business.Services;
-using SmartMenza.Data.Data;
+using SmartMenza.Business.Services.Interfaces;
 using SmartMenza.Data.Models;
-using SmartMenza.Data.Data.Entities;
+
 
 namespace SmartMenza.API.Controllers
 {
-    [Route("api/[controller]")] // URL  /api/Korisnici
+    [Route("api/[controller]")] 
     [ApiController]
     public class UserController : ControllerBase
     {
 
-        private readonly UserServices _userServices;
+        private readonly IUserService _userServices;
 
-        public UserController(UserServices userServices)
+        public UserController(IUserService userServices)
         {
             _userServices = userServices;
         }
 
 
-        // 3. Action Method: GET all korisnici
-        // HTTP GET requesti na /api/Korisnici
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
+        public async Task<ActionResult<IEnumerable<UserListItemResponse>>> GetUsers()
         {
-
             try
             {
                 var users = await _userServices.GetUsersAsync();
-
-                return Ok(users);
-
-            } catch (Exception ex)
-            {
-
-                return StatusCode(500,new {message = "An error occurred while retrieving users.",error = ex.Message });
+                return Ok(users); 
             }
-
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error while fetching users.", error = ex.Message });
+            }
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequest request)
         {
-
             try
             {
                 var loginUser = await _userServices.LoginUserAsync(request);
@@ -53,7 +48,7 @@ namespace SmartMenza.API.Controllers
                 if (loginUser == null)
                     return Unauthorized(new { message = "Invalid Email or Password!" });
 
-                return StatusCode(200, loginUser);
+                return Ok(loginUser);
             } 
 
             catch (Exception ex) 
@@ -62,25 +57,50 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        [HttpPost("google-login")]
-        public async Task<IActionResult> LoginGoogleAsync([FromBody] GoogleLoginRequest request)
+        [HttpPost("register")]
+        public async Task<ActionResult<LoginResponse>> Register([FromBody] RegistrationRequest request)
         {
-
             try
             {
-                var googleLogin = await _userServices.LoginGoogleAsync(request);
+                var response = await _userServices.RegisterUserAsync(request);
 
-                if (googleLogin == null)
-                    return Unauthorized(new { message = "Invalid Google token!" });
+                if (response == null)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Invalid registration data or email already in use."
+                    });
+                }
 
-                return StatusCode(200, googleLogin);
-            } 
-            catch (Exception ex) 
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred during Google login.");
+                return StatusCode(500, new
+                {
+                    message = "Error occurred while registering user.",
+                    error = ex.Message
+                });
+            }
+        }
+
+
+        [HttpPost("google-login")]
+        public async Task<ActionResult<LoginResponse>> LoginGoogle([FromBody] GoogleLoginRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.tokenId))
+            {
+                return BadRequest(new { message = "Token is required." });
             }
 
-            
+            var result = await _userServices.LoginGoogleAsync(request);
+
+            if (result == null)
+            {
+                return Unauthorized(new { message = "Invalid Google token." });
+            }
+
+            return Ok(result);
         }
     }
 }

@@ -2,8 +2,6 @@
 {
     public class DishIngredientDto
     {
-        // veza vise-vise jelo-sastojak
-        // komponentni PK se definira u DbContextu, ovdje su samo FK
         // FK 1
         public int dishId { get; set; }
         public DishDto dish { get; set; } = null!;

@@ -30,7 +30,6 @@ namespace SmartMenza.UnitTests.Menu
 
         private void SeedTestData()
         {
-            // dishes
             var dish1 = new DishDto
             {
                 dishId = 1,
@@ -75,7 +74,7 @@ namespace SmartMenza.UnitTests.Menu
 
             _context.Dishes.AddRange(dish1, dish2, dish3);
 
-            // create lunch i dinner menu za danasnji dan
+            
             var todayLunchMenu = new DailyMenuDto
             {
                 dailyMenuId = 1,
@@ -90,7 +89,7 @@ namespace SmartMenza.UnitTests.Menu
                 category = (int)MenuCategory.Dinner
             };
 
-            // create lunch i dinner za neki odredjeni dan
+            
             var fixedLunchMenu = new DailyMenuDto
             {
                 dailyMenuId = 3,
@@ -108,7 +107,7 @@ namespace SmartMenza.UnitTests.Menu
             _context.DailyMenus.AddRange(todayLunchMenu, todayDinnerMenu, fixedLunchMenu, fixedDinnerMenu);
             _context.SaveChanges();
 
-            // dodijelit dish u meni
+            
             _context.DailyMenuDishes.AddRange(
                 new DailyMenuDishDto { dailyMenuId = 1, dishId = 1 },
                 new DailyMenuDishDto { dailyMenuId = 1, dishId = 2 },
@@ -126,28 +125,28 @@ namespace SmartMenza.UnitTests.Menu
             _context.SaveChanges();
         }
 
-        // TEST 1: get sve menije (lunch + dinner)
+        
 
         [Fact]
         public async Task GetTodaysMenuAsync_NoCategory_ReturnsBothLunchAndDinner()
         {
-            // act
+           
             var result = await _dailyMenuController.GetTodaysMenuAsync(null);
 
-            // assert
+           
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var menus = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
             var menuList = menus.ToList();
 
             Assert.NotNull(menuList);
-            Assert.Equal(4, menuList.Count); // 2 lunch + 2 dinner 
+            Assert.Equal(4, menuList.Count);
 
-            // verify da postoje obje kategorije
+            
             Assert.Contains(menuList, m => m.Category == "Lunch");
             Assert.Contains(menuList, m => m.Category == "Dinner");
         }
 
-        // TEST 2: get samo lunch 
+        
 
         [Fact]
         public async Task GetTodaysMenuAsync_LunchCategory_ReturnsOnlyLunchDishes()
@@ -162,12 +161,12 @@ namespace SmartMenza.UnitTests.Menu
             Assert.Equal(2, menuList.Count); 
             Assert.All(menuList, m => Assert.Equal("Lunch", m.Category));
 
-            // verify jela
+           
             Assert.Contains(menuList, m => m.Jelo.Title == "Chicken with rice");
             Assert.Contains(menuList, m => m.Jelo.Title == "Vegetarian pasta");
         }
 
-        // TEST 3: get samo dinner
+        
 
         [Fact]
         public async Task GetTodaysMenuAsync_DinnerCategory_ReturnsOnlyDinnerDishes()
@@ -186,7 +185,7 @@ namespace SmartMenza.UnitTests.Menu
             Assert.Contains(menuList, m => m.Jelo.Title == "Grilled fish");
         }
 
-        // TEST 4: invalid kategorija da vraca error
+        
 
         [Fact]
         public async Task GetTodaysMenuAsync_InvalidCategory_ReturnsBadRequest()
@@ -197,7 +196,7 @@ namespace SmartMenza.UnitTests.Menu
             Assert.NotNull(badRequestResult.Value);
         }
 
-        // TEST 5: greska kod unosa kategorije ovisno o velicini znaka
+        
 
         [Theory]
         [InlineData("lunch")]
@@ -216,7 +215,7 @@ namespace SmartMenza.UnitTests.Menu
             Assert.All(menuList, m => Assert.Equal("Lunch", m.Category));
         }
 
-        // TEST 6: get meni za specifican dan s odredjenom kategorijom
+       
 
         [Fact]
         public async Task GetMenuForDateAsync_WithLunchCategory_ReturnsOnlyLunch()
@@ -251,7 +250,7 @@ namespace SmartMenza.UnitTests.Menu
             Assert.Equal("Grilled fish", menuList.First().Jelo.Title);
         }
 
-        // TEST 7: da se vracaju meniji obje kategorija 
+       
 
         [Fact]
         public async Task GetTodaysMenusGroupedAsync_ReturnsSeparateLunchAndDinner()
@@ -259,24 +258,24 @@ namespace SmartMenza.UnitTests.Menu
             var result = await _dailyMenuController.GetTodaysMenusGroupedAsync();
 
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var grouped = Assert.IsType<MenusByCategory>(okResult.Value);
+            var grouped = Assert.IsType<MenusByCategoryResponse>(okResult.Value);
 
             Assert.NotNull(grouped);
             Assert.NotNull(grouped.Lunch);
             Assert.NotNull(grouped.Dinner);
 
-            // verify lunch 
+           
             Assert.Equal(2, grouped.Lunch.Count);
             Assert.Contains(grouped.Lunch, m => m.Jelo.Title == "Chicken with rice");
             Assert.Contains(grouped.Lunch, m => m.Jelo.Title == "Vegetarian pasta");
 
-            // verify dinner 
+            
             Assert.Equal(2, grouped.Dinner.Count);
             Assert.Contains(grouped.Dinner, m => m.Jelo.Title == "Vegetarian pasta");
             Assert.Contains(grouped.Dinner, m => m.Jelo.Title == "Grilled fish");
         }
 
-        // TEST 8: verify da se mogu jela pojavljivati korz obje kategorije
+       
 
         [Fact]
         public async Task VerifyDishCanAppearInBothLunchAndDinner()
@@ -297,12 +296,12 @@ namespace SmartMenza.UnitTests.Menu
             Assert.Single(pastaInDinner);
         }
 
-        // TEST 9: vracanje praznog rezultata ako kategorija nema ni jedno dodijeljeno jelo
+       
 
         [Fact]
         public async Task GetMenuForDateAsync_DateWithOnlyLunch_DinnerReturnsEmpty()
         {
-            // menu samo s lunch kategorijama jela
+            
             var onlyLunchMenu = new DailyMenuDto
             {
                 dailyMenuId = 5,
@@ -314,16 +313,16 @@ namespace SmartMenza.UnitTests.Menu
             _context.DailyMenuDishes.Add(new DailyMenuDishDto { dailyMenuId = 5, dishId = 1 });
             _context.SaveChanges();
 
-            // request dinner za taj datum
+            
             var result = await _dailyMenuController.GetMenuForDateAsync("2025-02-01", "dinner");
 
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var menus = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
 
-            Assert.Empty(menus); // nema dinner
+            Assert.Empty(menus);
         }
 
-        // TEST 10: field kategorije uvijek prisutan
+        
         [Fact]
         public async Task GetTodaysMenuAsync_ResponseAlwaysIncludesCategory()
         {

@@ -2,6 +2,8 @@
 using SmartMenza.Business.Services;
 using SmartMenza.Business.Models.DailyMenu;
 using SmartMenza.Core.Enums;
+using SmartMenza.Business.Services.Interfaces;
+
 
 namespace SmartMenza.API.Controllers
 {
@@ -9,14 +11,13 @@ namespace SmartMenza.API.Controllers
     [ApiController]
     public class DailyMenuController : ControllerBase
     {
-        private readonly DailyMenuServices _dailyMenuServices;
+        private readonly IDailyMenuService _dailyMenuServices;
 
-        public DailyMenuController(DailyMenuServices dailyMenuServices)
+        public DailyMenuController(IDailyMenuService dailyMenuServices)
         {
             _dailyMenuServices = dailyMenuServices;
         }
 
-        // get danasnji menu (sve kategorije il filter)
         [HttpGet("today")]
         public async Task<ActionResult<IEnumerable<DailyMenuListItemResponse>>> GetTodaysMenuAsync([FromQuery] string? category = null)
         {
@@ -46,9 +47,8 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        // get danasnji menu grupirano
         [HttpGet("today/grouped")]
-        public async Task<ActionResult<MenusByCategory>> GetTodaysMenusGroupedAsync()
+        public async Task<ActionResult<MenusByCategoryResponse>> GetTodaysMenusGroupedAsync()
         {
             try
             {
@@ -64,7 +64,6 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        // get menu za specifican datum (sve kategorije il filter prema rucak/vecera)
         [HttpGet("date")]
         public async Task<ActionResult<IEnumerable<DailyMenuListItemResponse>>> GetMenuForDateAsync(
             [FromQuery] string date,
