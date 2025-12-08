@@ -10,21 +10,21 @@ namespace SmartMenza.UnitTests.Menu
 {
     public class UnitTestDailyMenu
     {
-        // Postavljanje okoline za testiranje
+        
         private readonly AppDBContext _context;
         private readonly DailyMenuController _dailyMenuController;
         private readonly DailyMenuServices _dailyMenuServices;
 
         public UnitTestDailyMenu()
         {
-            // Svaki testni context dobije svoju in-memory bazu
+            
             var options = new DbContextOptionsBuilder<AppDBContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             _context = new AppDBContext(options);
 
-            // Seed testnih podataka
+            
             SeedTestData();
 
             _dailyMenuServices = new DailyMenuServices(_context);
@@ -33,7 +33,6 @@ namespace SmartMenza.UnitTests.Menu
 
         private void SeedTestData()
         {
-            // Jela
             var dish1 = new DishDto
             {
                 dishId = 1,
@@ -64,7 +63,7 @@ namespace SmartMenza.UnitTests.Menu
 
             _context.Dishes.AddRange(dish1, dish2);
 
-            // Dnevni meni za današnji dan
+          
             var todayMenu = new DailyMenuDto
             {
                 dailyMenuId = 1,
@@ -72,7 +71,7 @@ namespace SmartMenza.UnitTests.Menu
                 // REMOVED: dishId and dish navigation
             };
 
-            // Dnevni meni za fiksni datum (2025-01-22)
+           
             var fixedDateMenu = new DailyMenuDto
             {
                 dailyMenuId = 2,
@@ -95,44 +94,44 @@ namespace SmartMenza.UnitTests.Menu
         [Fact]
         public async Task GetTodaysMenuAsync_ReturnsOkAndListOfDailyMenuListItemResponse()
         {
-            // Act
+            
             var result = await _dailyMenuController.GetTodaysMenuAsync();
 
-            // Assert
+            
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var value = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
 
             Assert.NotNull(value);
-            Assert.NotEmpty(value);  // imamo seed za današnji dan
+            Assert.NotEmpty(value);  
         }
 
         [Fact]
         public async Task GetMenuForDateAsync_ValidDate_ReturnsOkAndList()
         {
-            // Arrange
+           
             string date = "2025-01-22";
 
-            // Act
+           
             var result = await _dailyMenuController.GetMenuForDateAsync(date);
 
-            // Assert
+            
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var value = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
 
             Assert.NotNull(value);
-            Assert.NotEmpty(value); // imamo seed za taj datum
+            Assert.NotEmpty(value); 
         }
 
         [Fact]
         public async Task GetMenuForDateAsync_InvalidDateInput_ReturnsBadRequest()
         {
-            // Arrange
-            string date = "22-01-202b"; // krivi format
+           
+            string date = "22-01-202b"; 
 
-            // Act
+            
             var result = await _dailyMenuController.GetMenuForDateAsync(date, null); 
 
-            // Assert
+            
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
             Assert.NotNull(badRequestResult.Value);
         }
@@ -140,18 +139,18 @@ namespace SmartMenza.UnitTests.Menu
         [Fact]
         public async Task GetMenuForDateAsync_DateWithoutMenu_ReturnsOkWithEmptyList()
         {
-            // Arrange – datum za koji nismo seedali meni
+            
             string date = "2030-01-01";
 
-            // Act
+          
             var result = await _dailyMenuController.GetMenuForDateAsync(date);
 
-            // Assert
+            
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var value = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
 
             Assert.NotNull(value);
-            Assert.Empty(value); // nema menija za taj datum
+            Assert.Empty(value); 
         }
     }
 }

@@ -6,13 +6,12 @@ namespace SmartMenza.Data.Data
 {
     public class AppDBContext : DbContext
     {
-        // konstruktor
+        
         public AppDBContext(DbContextOptions<AppDBContext> options)
             : base(options)
         {
         }
 
-        // za svaku tablicu u bp
         public DbSet<RoleDto> Roles { get; set; } = null!;
         public DbSet<UserDto> Users { get; set; } = null!;
         public DbSet<DishDto> Dishes { get; set; } = null!;
@@ -21,7 +20,7 @@ namespace SmartMenza.Data.Data
         public DbSet<DailyFoodIntakeDto> DailyFoodIntakes { get; set; } = null!;
         public DbSet<DailyMenuDto> DailyMenus { get; set; } = null!;
 
-        // vise-vise veze
+        
         public DbSet<DishIngredientDto> DishIngredients { get; set; } = null!;
         public DbSet<FavoriteDishDto> FavoriteDishes { get; set; } = null!;
         public DbSet<DishRatingDto> DishRatings { get; set; } = null!;
@@ -29,7 +28,7 @@ namespace SmartMenza.Data.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Primary keys
+            
             modelBuilder.Entity<RoleDto>().HasKey(r => r.roleId);
             modelBuilder.Entity<UserDto>().HasKey(u => u.userId);
             modelBuilder.Entity<IngredientDto>().HasKey(i => i.ingredientId);
@@ -39,7 +38,7 @@ namespace SmartMenza.Data.Data
             modelBuilder.Entity<DailyFoodIntakeDto>().HasKey(dfi => dfi.dailyFoodIntakeId);
             modelBuilder.Entity<DailyMenuDto>().HasKey(dm => dm.dailyMenuId);
 
-            // kompozitni
+            
             modelBuilder.Entity<DishIngredientDto>()
                 .HasKey(di => new { di.dishId, di.ingredientId });
 
@@ -49,7 +48,7 @@ namespace SmartMenza.Data.Data
             modelBuilder.Entity<DailyMenuDishDto>()
                 .HasKey(dmd => new { dmd.dailyMenuId, dmd.dishId });
 
-            // veze
+           
             modelBuilder.Entity<DailyMenuDishDto>()
                 .HasOne(dmd => dmd.dailyMenu)
                 .WithMany(dm => dm.dailyMenuDishes)
@@ -60,7 +59,7 @@ namespace SmartMenza.Data.Data
                 .WithMany(d => d.dailyMenuDishes)
                 .HasForeignKey(dmd => dmd.dishId);
 
-            // seedanje
+            
             SeedRoles(modelBuilder);
             SeedUsers(modelBuilder);
             SeedIngredients(modelBuilder);
@@ -74,7 +73,7 @@ namespace SmartMenza.Data.Data
             SeedDailyMenuDishes(modelBuilder);
         }
 
-        // seed metode
+        
         private void SeedRoles(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<RoleDto>().HasData(
@@ -238,7 +237,7 @@ namespace SmartMenza.Data.Data
 
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
             {
-                // rucak
+                
                 seedMenus.Add(new DailyMenuDto
                 {
                     dailyMenuId = menuId++,
@@ -246,7 +245,7 @@ namespace SmartMenza.Data.Data
                     category = (int)MenuCategory.Lunch
                 });
 
-                // vecera
+               
                 seedMenus.Add(new DailyMenuDto
                 {
                     dailyMenuId = menuId++,
@@ -262,34 +261,34 @@ namespace SmartMenza.Data.Data
         {
             var seedRelations = new List<DailyMenuDishDto>();
 
-            int menuId = 1;
+            int menuId = 1; // rucak
             var startDate = new DateOnly(2025, 12, 3);
             var endDate = new DateOnly(2025, 12, 27);
 
             int patternDay = 0;
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
             {
-                // rucak
+                
                 switch (patternDay % 5)
                 {
-                    case 0: // sva 3 jela
+                    case 0: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
                         break;
-                    case 1: // chicken pasta
+                    case 1: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         break;
-                    case 2: // pasta i fish
+                    case 2: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
                         break;
-                    case 3: // chicken i fish
+                    case 3: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
                         break;
-                    case 4: // sva 3 jela
+                    case 4: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
@@ -298,28 +297,28 @@ namespace SmartMenza.Data.Data
 
                 menuId++; // prijedji na veceru
 
-                // rucak menu
+                
                 switch (patternDay % 5)
                 {
-                    case 0: // pasta fish
+                    case 0: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
                         break;
-                    case 1: // sva 3 jela
+                    case 1: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
                         break;
-                    case 2: // chicken i fish
+                    case 2: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
                         break;
-                    case 3: // sva 3
+                    case 3: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
                         break;
-                    case 4: // chicken i pasta
+                    case 4: 
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
                         seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
                         break;

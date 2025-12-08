@@ -2,10 +2,12 @@
 using SmartMenza.Data.Data;
 using SmartMenza.Business.Models.DailyMenu;
 using SmartMenza.Core.Enums;
+using SmartMenza.Business.Services.Interfaces;
+
 
 namespace SmartMenza.Business.Services
 {
-    public class DailyMenuServices
+    public class DailyMenuServices : IDailyMenuService
     {
         private readonly AppDBContext _context;
 
@@ -14,17 +16,15 @@ namespace SmartMenza.Business.Services
             _context = context;
         }
 
-        // danasnji menu za odredjenu kategoriju
         public async Task<IReadOnlyList<DailyMenuListItemResponse>> GetTodaysMenuAsync(MenuCategory? category = null)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
             var query = _context.DailyMenus
                 .Include(dm => dm.dailyMenuDishes)
-                    .ThenInclude(dmd => dmd.dish)
+                .ThenInclude(dmd => dmd.dish)
                 .Where(dm => dm.date == today);
 
-            // filter prema kategoriji
             if (category.HasValue)
             {
                 query = query.Where(dm => dm.category == (int)category.Value);
@@ -55,7 +55,7 @@ namespace SmartMenza.Business.Services
             return dailyMenu;
         }
  
-        // menu za specifican dan, optional kategorija
+        
         public async Task<IReadOnlyList<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date, MenuCategory? category = null)
         {
             if (!DateOnly.TryParse(date, out DateOnly parsedDate))
@@ -65,10 +65,9 @@ namespace SmartMenza.Business.Services
 
             var query = _context.DailyMenus
                 .Include(dm => dm.dailyMenuDishes)
-                    .ThenInclude(dmd => dmd.dish)
+                .ThenInclude(dmd => dmd.dish)
                 .Where(dm => dm.date == parsedDate);
 
-            // filter by category if provided
             if (category.HasValue)
             {
                 query = query.Where(dm => dm.category == (int)category.Value);
@@ -99,8 +98,8 @@ namespace SmartMenza.Business.Services
             return menu;
         }
 
-        // get menu za rucak i veceru
-        public async Task<MenusByCategory> GetTodaysMenusGroupedAsync()
+        
+        public async Task<MenusByCategoryResponse> GetTodaysMenusGroupedAsync()
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
@@ -132,7 +131,7 @@ namespace SmartMenza.Business.Services
                 }))
                 .ToListAsync();
 
-            return new MenusByCategory
+            return new MenusByCategoryResponse
             {
                 Lunch = allMenus.Where(x => x.Category == 1).Select(x => x.Item).ToList(),
                 Dinner = allMenus.Where(x => x.Category == 2).Select(x => x.Item).ToList()
@@ -140,10 +139,5 @@ namespace SmartMenza.Business.Services
         }
     }
 
-    // novi response model 
-    public class MenusByCategory
-    {
-        public List<DailyMenuListItemResponse> Lunch { get; set; } = new();
-        public List<DailyMenuListItemResponse> Dinner { get; set; } = new();
-    }
+   
 }

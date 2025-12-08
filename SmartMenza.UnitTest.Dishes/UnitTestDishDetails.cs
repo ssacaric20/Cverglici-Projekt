@@ -64,13 +64,13 @@ namespace SmartMenza.UnitTest.Dishes
         [Fact]
         public async Task GetDishDetails_InvalidId_Returns404()
         {
-            // Arrange
+          
             int id = -1;
 
-            // Act
+            
             var result = await _dishController.GetDishDetails(id);
 
-            // Assert
+           
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result.Result);
             Assert.NotNull(notFoundResult.Value);
         }
@@ -78,13 +78,13 @@ namespace SmartMenza.UnitTest.Dishes
         [Fact]
         public async Task GetDishDetails_ValidId_ReturnsOkWithDishDetailsResponseDto()
         {
-            // Arrange
+           
             int id = 1;
 
-            // Act
+           
             var result = await _dishController.GetDishDetails(id);
 
-            // Assert
+           
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var dto = Assert.IsType<DishDetailsResponse>(okResult.Value);
 

@@ -19,7 +19,7 @@
         public ICollection<DishRatingDto> dishRatings { get; set; } = new List<DishRatingDto>();
         public ICollection<DailyFoodIntakeDto> dailyFoodIntakes { get; set; } = new List<DailyFoodIntakeDto>();
 
-        // veza vise-vise *NOVO
+        // veza vise-vise 
         public ICollection<DailyMenuDishDto> dailyMenuDishes { get; set; } = new List<DailyMenuDishDto>();
     }
 }

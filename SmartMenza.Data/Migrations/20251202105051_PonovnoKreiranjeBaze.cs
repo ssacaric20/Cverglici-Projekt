@@ -4,10 +4,10 @@
 
 namespace SmartMenza.Data.Migrations
 {
-    /// <inheritdoc />
+    
     public partial class PonovnoKreiranjeBaze : Migration
     {
-        /// <inheritdoc />
+        
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
@@ -15,7 +15,7 @@ namespace SmartMenza.Data.Migrations
                 table: "Dishes");
         }
 
-        /// <inheritdoc />
+        
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(

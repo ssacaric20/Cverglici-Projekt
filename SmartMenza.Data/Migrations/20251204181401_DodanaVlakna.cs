@@ -4,10 +4,10 @@
 
 namespace SmartMenza.Data.Migrations
 {
-    /// <inheritdoc />
+    
     public partial class DodanaVlakna : Migration
     {
-        /// <inheritdoc />
+        
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<decimal>(
@@ -39,7 +39,7 @@ namespace SmartMenza.Data.Migrations
                 value: 0m);
         }
 
-        /// <inheritdoc />
+        
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(

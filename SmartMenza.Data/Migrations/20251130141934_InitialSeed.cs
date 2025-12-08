@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SmartMenza.Data.Migrations
 {
-    /// <inheritdoc />
+    
     public partial class InitialSeed : Migration
     {
-        /// <inheritdoc />
+        
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.UpdateData(
@@ -26,7 +26,7 @@ namespace SmartMenza.Data.Migrations
                 value: new DateOnly(2025, 11, 30));
         }
 
-        /// <inheritdoc />
+        
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.UpdateData(

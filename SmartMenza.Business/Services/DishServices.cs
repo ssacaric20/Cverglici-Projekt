@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartMenza.Data.Data;
 using SmartMenza.Business.Models.Dishes;
+using SmartMenza.Business.Services.Interfaces;
+
 
 namespace SmartMenza.Business.Services
 {
-    public class DishServices
+    public class DishServices : IDishService
     {
         private readonly AppDBContext _context;
 
@@ -13,25 +15,24 @@ namespace SmartMenza.Business.Services
             _context = context;
         }
 
-        // Standardizirani endpoint za detalje jela
         public async Task<DishDetailsResponse?> GetDishDetailsAsync(int id)
         {
             var dish = await _context.Dishes
                 .Include(d => d.dishIngredients)
-                    .ThenInclude(di => di.ingredient)
+                .ThenInclude(di => di.ingredient)
                 .Include(d => d.dishRatings)
                 .FirstOrDefaultAsync(d => d.dishId == id);
 
             if (dish == null)
                 return null;
 
-            // Sastojci -> List<string> (nazivi)
+          
             var ingredientNames = dish.dishIngredients
                 .Select(di => di.ingredient.name)
                 .Distinct()
                 .ToList();
 
-            // Prosječna ocjena i broj ocjena
+            
             int ratingsCount = dish.dishRatings?.Count ?? 0;
             double? averageRating = null;
 
