@@ -169,3 +169,6 @@ $tf/
 .externalNativeBuild
 .cxx
 local.properties
+README.md
+/.idea/misc.xml
+markdown.xml
