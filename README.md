@@ -17,7 +17,9 @@ Upute za pokretanje Frontend dijela projekta:
 
 Ako se sve izvede kao zamišljeno, trebali biste vidjeti početni ekran za prijavu korisnika. Ako se aplikacija samostalno ne otvori, potrebno je među listom aplikacija pronaći aplikaciju pod nazivom "SmartMenza".
 Bit će vidljiva dva fragmenta: login i register fragmenti koji se izmijenjuju prilikom klika na svaki pojedinačni tab button ("Prijava"/"Registracija").
-Demo mock podaci za prijavu su (ime/email/lozinka): Ana, ana.kovac@student.hr, student123.
+Možete registrirati vlastiti račun, a možete i koristiti već gotove podatke za prijavu (email/pass): student@test.com, pass123. 
+
+Prije svega, potrebno je pokrenuti backend dio projekta. To činite tako što otvorite .sln projekt u Visual Studiu. U Developer Powershellu unutar VS-a, prebacite se u folder gdje se nalazi Project.cs preko komande "cd SmartMenza", i zatim pokrenete komandu "dotnet run". To je ukoliko odličite pokretati projekt lokalno.
 
 Za pokretanje Backend dijela projekta:
 1. Otvoriti Visual Studio
@@ -33,14 +35,14 @@ Za pokretanje Backend dijela projekta:
 Kako bi Backend dio aplikacije radio, potrebno je imati instaliran sql express server i uspostavljenu bazu podataka.
 Pokretanjem aplikacije pokrenut će se browser u koji omogućuje testiranje API endpointa uz pomoć swaggera.
 
-## Funkcionalnosti
-- Registracija korisnika
-- Prijava korisnika
-- Dodjela uloge po korisničkom računu (razina studenta ili zaposlenika)
+## Funkcionalnosti koje će do finalne predaje biti implementirane:
+* [x] Registracija korisnika 
+* [x] Prijava korisnika 
+* [x] Dodjela uloge po korisničkom računu (razina studenta ili zaposlenika)
 
 ### Student:
-- Pregled dnevnog menija
-- Pregled detalja o jelu 
+* [x] Pregled dnevnog menija 
+* [x] Pregled detalja o jelu
 - Dodavanje ciljeva
 - Ažuriranje ciljeva
 - Brisanje ciljeva
@@ -57,21 +59,12 @@ Pokretanjem aplikacije pokrenut će se browser u koji omogućuje testiranje API 
 - Pregled osnovne statistike
 - Generiranje slike jela putem AI
 
+* [x] - je oznaka koja određuje da je funkcionalnost obavljena
+
 ## Tehnologije
 - ASP.NET Core Web API
 - Entity Framework (Code-First)
-- Azure DevOps, Azure Pipelines
-- Azure AI Services, Blob Storage
-- SQL Server
+- Azure DevOps
+- SQL Server, SSMS, Swagger
 
-## Deployment
-Aplikacija se gradi putem Azure Pipelinea
 
-## Struktura repozitorija
-Prijedlog strukture:<br>
-API	- Za rukovanje HTTP zahtjevima, endpointima, validacijom inputa<br>
-App	- Poslovna logika i komunikacija između slojeva<br>
-Domena - Sadrži čiste entitete i pravila domene (klase, enums)<br>
-Infrastruktura -	Implementacija servisa, baze podataka, pristup AI API-jima<br>
-Shared -	Helperi, exception handleri, i zajedničke klase<br>
-Testovi	- Pokriva unit i integration testove
