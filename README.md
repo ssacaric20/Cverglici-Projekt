@@ -4,6 +4,32 @@ Predložak za SmartMenzu<br>
 Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u personalizaciji obroka, praćenju nutritivnih vrijednosti, i postavljanju ciljeva vezanih uz prehranu.
 
 Za pokretanje Backend dijela projekta:
+Nije potrebno ništa pokretati.
+Server je hostan na Azure-u.
+
+Kako bi provjerili funkcionalnost backend-a, otvorite ovaj URL u tražilici po izboru:
+https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/swagger
+
+Također možete dohvaćati resurse sa iste putanje unutar tražilice:
+Npr:
+https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/api/User
+
+Dostupne putanje i podržani zahtjevi:
+Za DailyMenu
+GET .../api/DailyMenu/today
+GET .../api/DailyMenu/today/grouped
+GET .../api/DailyMenu/{yyyy-mm-dd}
+
+Za Dish
+GET .../api/Dish/{id}
+
+Za User
+GET .../api/User
+POST .../api/User/login
+POST .../api/User/register
+POST .../api/User/google-login
+
+Za pokretanje Backend dijela projekta lokalno:
 1. Otvoriti Visual Studio
 2. Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
 3. Unutar Visual Studia, odabrati opciju za kloniranje repozitorija.
