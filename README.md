@@ -22,6 +22,32 @@ Možete registrirati vlastiti račun, a možete i koristiti već gotove podatke 
 Prije svega, potrebno je pokrenuti backend dio projekta. To činite tako što otvorite .sln projekt u Visual Studiu. U Developer Powershellu unutar VS-a, prebacite se u folder gdje se nalazi Project.cs preko komande "cd SmartMenza", i zatim pokrenete komandu "dotnet run". To je ukoliko odličite pokretati projekt lokalno.
 
 Za pokretanje Backend dijela projekta:
+Nije potrebno ništa pokretati.
+Server je hostan na Azure-u.
+
+Kako bi provjerili funkcionalnost backend-a, otvorite ovaj URL u tražilici po izboru:
+https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/swagger
+
+Također možete dohvaćati resurse sa iste putanje unutar tražilice:
+Npr:
+https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/api/User
+
+Dostupne putanje i podržani zahtjevi:
+Za DailyMenu
+GET .../api/DailyMenu/today
+GET .../api/DailyMenu/today/grouped
+GET .../api/DailyMenu/{yyyy-mm-dd}
+
+Za Dish
+GET .../api/Dish/{id}
+
+Za User
+GET .../api/User
+POST .../api/User/login
+POST .../api/User/register
+POST .../api/User/google-login
+
+Za pokretanje Backend dijela projekta lokalno:
 1. Otvoriti Visual Studio
 2. Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
 3. Unutar Visual Studia, odabrati opciju za kloniranje repozitorija.
