@@ -10,7 +10,7 @@ Upute za pokretanje Frontend dijela projekta:
 3. Unutar Android Studia, odabrati opciju za kloniranje repozitorija.
 4. Kada se prikaže mogućnost za to, unjeti prethodno kopirati URL za kloniranje i odabrati prazan folder.
 5. Dozvoliti da se aplikacija izgradi i potpuno učita.
-6. Prebaciti na granu "Frontend" preko "Checkout" opcije.
+6. Prebaciti na granu **"main_backup"** preko "Checkout" opcije.
 7. Pričekati ako je potrebno, prihvatiti opcije ukoliko dođu upozorenja o potrebnom ažuriranju.
 8. Ako još nije vidljiva mogućnost za debuggiranjem ili pokretanjem aplikacije, zatvoriti i ponovno pokrenuti Android Studio.
 9. U suprotnome, pokrenuti aplikaciju.
@@ -18,8 +18,6 @@ Upute za pokretanje Frontend dijela projekta:
 Ako se sve izvede kao zamišljeno, trebali biste vidjeti početni ekran za prijavu korisnika. Ako se aplikacija samostalno ne otvori, potrebno je među listom aplikacija pronaći aplikaciju pod nazivom "SmartMenza".
 Bit će vidljiva dva fragmenta: login i register fragmenti koji se izmijenjuju prilikom klika na svaki pojedinačni tab button ("Prijava"/"Registracija").
 Možete registrirati vlastiti račun, a možete i koristiti već gotove podatke za prijavu (email/pass): student@test.com, pass123. 
-
-Prije svega, potrebno je pokrenuti backend dio projekta. To činite tako što otvorite .sln projekt u Visual Studiu. U Developer Powershellu unutar VS-a, prebacite se u folder gdje se nalazi Project.cs preko komande "cd SmartMenza", i zatim pokrenete komandu "dotnet run". To je ukoliko odličite pokretati projekt lokalno.
 
 Za pokretanje Backend dijela projekta:
 Nije potrebno ništa pokretati.
@@ -47,7 +45,8 @@ POST .../api/User/login
 POST .../api/User/register
 POST .../api/User/google-login
 
-Za pokretanje Backend dijela projekta lokalno:
+Za pokretanje Backend dijela projekta **lokalno**:
+
 1. Otvoriti Visual Studio
 2. Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
 3. Unutar Visual Studia, odabrati opciju za kloniranje repozitorija.
