@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SmartMenza.Data.Data;
-using SmartMenza.Data.Models;
 using SmartMenza.Business.Services;
+using SmartMenza.Business.Models.DailyMenu;
+using SmartMenza.Core.Enums;
+using SmartMenza.Business.Services.Interfaces;
+
 
 namespace SmartMenza.API.Controllers
 {
@@ -10,34 +11,79 @@ namespace SmartMenza.API.Controllers
     [ApiController]
     public class DailyMenuController : ControllerBase
     {
-        private readonly DailyMenuServices _dailyMenuServices;
+        private readonly IDailyMenuService _dailyMenuServices;
 
-        public DailyMenuController(DailyMenuServices dailyMenuServices)
+        public DailyMenuController(IDailyMenuService dailyMenuServices)
         {
             _dailyMenuServices = dailyMenuServices;
         }
 
         [HttpGet("today")]
-        public async Task<ActionResult<IEnumerable<object>>> GetTodaysMenuAsync()
+        public async Task<ActionResult<IEnumerable<DailyMenuListItemResponse>>> GetTodaysMenuAsync([FromQuery] string? category = null)
         {
             try
             {
-                var dailyMenu = await _dailyMenuServices.GetTodaysMenuAsync();
+                MenuCategory? categoryEnum = null;
 
+                if (!string.IsNullOrEmpty(category))
+                {
+                    if (category.ToLower() == "lunch")
+                        categoryEnum = MenuCategory.Lunch;
+                    else if (category.ToLower() == "dinner")
+                        categoryEnum = MenuCategory.Dinner;
+                    else
+                        return BadRequest(new { message = "Invalid category! Use 'lunch' or 'dinner'" });
+                }
+
+                var dailyMenu = await _dailyMenuServices.GetTodaysMenuAsync(categoryEnum);
                 return Ok(dailyMenu);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error occured while fetching the menu!", error = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Error occurred while fetching the menu!",
+                    error = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("today/grouped")]
+        public async Task<ActionResult<MenusByCategoryResponse>> GetTodaysMenusGroupedAsync()
+        {
+            try
+            {
+                var menus = await _dailyMenuServices.GetTodaysMenusGroupedAsync();
+                return Ok(menus);
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Error occurred while fetching the menu!",
+                    error = ex.Message
+                });
             }
         }
 
         [HttpGet("date")]
-        public async Task<ActionResult<IEnumerable<object>>> GetMenuForDateAsync([FromQuery] string date)
+        public async Task<ActionResult<IEnumerable<DailyMenuListItemResponse>>> GetMenuForDateAsync(
+            [FromQuery] string date,
+            [FromQuery] string? category = null)
         {
             try
             {
-                var menu = await _dailyMenuServices.GetMenuForDateAsync(date);
+                MenuCategory? categoryEnum = null;
+
+                if (!string.IsNullOrEmpty(category))
+                {
+                    if (category.ToLower() == "lunch")
+                        categoryEnum = MenuCategory.Lunch;
+                    else if (category.ToLower() == "dinner")
+                        categoryEnum = MenuCategory.Dinner;
+                    else
+                        return BadRequest(new { message = "Invalid category! Use 'lunch' or 'dinner'" });
+                }
+
+                var menu = await _dailyMenuServices.GetMenuForDateAsync(date, categoryEnum);
 
                 if (menu == null)
                 {
@@ -45,10 +91,13 @@ namespace SmartMenza.API.Controllers
                 }
 
                 return Ok(menu);
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error occured while fetching the menu!", error = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Error occurred while fetching the menu!",
+                    error = ex.Message
+                });
             }
         }
     }

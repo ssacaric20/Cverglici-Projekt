@@ -1,0 +1,7 @@
+package foi.cverglici.core.data.model.auth
+
+data class RegistrationRequest(
+    val name: String,
+    val email: String,
+    val password: String
+)

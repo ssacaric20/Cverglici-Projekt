@@ -1,33 +1,53 @@
 # Cverglici-Projekt
 
+## !!! **VAŽNO**: već više od 10 ljudi je tražilo pristup organizaciji, a dozvoljeno je maksimalno 5 licenci. Ako želite pristupiti **repositoriju** projekta molim vas kontaktirajte osobu kako navodi dokument koji ste dobili na moodlu. U suprotnom nećete moći vidjeti programski/praktični dio ove organizacije, nego samo dokumentacijski dio !!!
+
 Predložak za SmartMenzu<br>
 Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u personalizaciji obroka, praćenju nutritivnih vrijednosti, i postavljanju ciljeva vezanih uz prehranu.
+U donjim sekcijama ovog dokumenta, može se vidjeti zamišljeni popis glavnih funkcionalnosti prema ulogama, kao i upute pokretanja određenog dijela projekta. 
 
-# UPUTE ZA POKRETANJE
-Za **Frontend** dio:
+Upute za pokretanje Frontend dijela projekta:
 1. Otvoriti Android Studio
 2. Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
 3. Unutar Android Studia, odabrati opciju za kloniranje repozitorija.
 4. Kada se prikaže mogućnost za to, unjeti prethodno kopirati URL za kloniranje i odabrati prazan folder.
 5. Dozvoliti da se aplikacija izgradi i potpuno učita.
-6. Prebaciti na granu "Frontend" preko "Checkout" opcije.
-7. Pričekati ako je potrebno, prihvatiti opciju ukoliko dođe upozorenja o potrebnom ažuriranju (Reload).
+6. Prebaciti na granu **"main_backup"** preko "Checkout" opcije.
+7. Pričekati ako je potrebno, prihvatiti opcije ukoliko dođu upozorenja o potrebnom ažuriranju.
 8. Ako još nije vidljiva mogućnost za debuggiranjem ili pokretanjem aplikacije, zatvoriti i ponovno pokrenuti Android Studio.
-
-### Ako imate imate **Gradle problema**...
-Nekada zbog cashe memorije izbacuje grešku za Gradle Sync projekta. Ukoliko Vam čak i nakon čekanja automatski ne postavi projekt, pokušajte:
-1. pod Build Tools omogućiti Auto-Sync ("Project Sync mode: Always Sync projects automatically")
-2. pod "File>Sync Project with Gradle files"
-3. ako ne radi, pod "File>Invalidate cashes" pritisnuti "Invalidate and Restart" opciju.
-4. ponoviti korak 3.
-Ako ni to ne radi, probajte:
-5. u Gradle settings omogućiti "Enable Parallel Gradle model fetching" i "Download external annotations for dependencies". 
+9. U suprotnome, pokrenuti aplikaciju.
 
 Ako se sve izvede kao zamišljeno, trebali biste vidjeti početni ekran za prijavu korisnika. Ako se aplikacija samostalno ne otvori, potrebno je među listom aplikacija pronaći aplikaciju pod nazivom "SmartMenza".
 Bit će vidljiva dva fragmenta: login i register fragmenti koji se izmijenjuju prilikom klika na svaki pojedinačni tab button ("Prijava"/"Registracija").
-Demo mock podaci za prijavu su (ime/email/lozinka): Ana, ana.kovac@student.hr, student123.
+Možete registrirati vlastiti račun, a možete i koristiti već gotove podatke za prijavu (email/pass): student@test.com, pass123. 
 
 Za pokretanje Backend dijela projekta:
+Nije potrebno ništa pokretati.
+Server je hostan na Azure-u.
+
+Kako bi provjerili funkcionalnost backend-a, otvorite ovaj URL u tražilici po izboru:
+https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/swagger
+
+Također možete dohvaćati resurse sa iste putanje unutar tražilice:
+Npr:
+https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/api/User
+
+Dostupne putanje i podržani zahtjevi:
+Za DailyMenu
+GET .../api/DailyMenu/today
+GET .../api/DailyMenu/today/grouped
+GET .../api/DailyMenu/{yyyy-mm-dd}
+
+Za Dish
+GET .../api/Dish/{id}
+
+Za User
+GET .../api/User
+POST .../api/User/login
+POST .../api/User/register
+POST .../api/User/google-login
+
+Za pokretanje Backend dijela projekta **lokalno**:
 
 1. Otvoriti Visual Studio
 2. Preko Azure Repos, potrebno je kopirati URL za kloniranje repozitorija.
@@ -42,14 +62,14 @@ Za pokretanje Backend dijela projekta:
 Kako bi Backend dio aplikacije radio, potrebno je imati instaliran sql express server i uspostavljenu bazu podataka.
 Pokretanjem aplikacije pokrenut će se browser u koji omogućuje testiranje API endpointa uz pomoć swaggera.
 
-## Funkcionalnosti
-- Registracija korisnika
-- Prijava korisnika
-- Dodjela uloge po korisničkom računu (razina studenta ili zaposlenika)
+## Funkcionalnosti koje će do finalne predaje biti implementirane:
+* [x] Registracija korisnika 
+* [x] Prijava korisnika 
+* [x] Dodjela uloge po korisničkom računu (razina studenta ili zaposlenika)
 
 ### Student:
-- Pregled dnevnog menija
-- Pregled detalja o jelu 
+* [x] Pregled dnevnog menija 
+* [x] Pregled detalja o jelu
 - Dodavanje ciljeva
 - Ažuriranje ciljeva
 - Brisanje ciljeva
@@ -66,21 +86,12 @@ Pokretanjem aplikacije pokrenut će se browser u koji omogućuje testiranje API 
 - Pregled osnovne statistike
 - Generiranje slike jela putem AI
 
+* [x] - je oznaka koja određuje da je funkcionalnost obavljena
+
 ## Tehnologije
 - ASP.NET Core Web API
-- Entity Framework
-- Azure DevOps, Azure Pipelines
-- Azure AI Services, Blob Storage
-- SQL Server
+- Entity Framework (Code-First)
+- Azure DevOps
+- SQL Server, SSMS, Swagger
 
-## Deployment
-Aplikacija se gradi putem Azure Pipelinea
 
-## Struktura repozitorija
-Prijedlog strukture:<br>
-API	- Za rukovanje HTTP zahtjevima, endpointima, validacijom inputa<br>
-App	- Poslovna logika i komunikacija između slojeva<br>
-Domena - Sadrži čiste entitete i pravila domene (klase, enums)<br>
-Infrastruktura -	Implementacija servisa, baze podataka, pristup AI API-jima<br>
-Shared -	Helperi, exception handleri, i zajedničke klase<br>
-Testovi	- Pokriva unit i integration testove

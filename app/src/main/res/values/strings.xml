@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- LOGIN STRINGS -->
+    <string name="app_name">Smart Menza</string>
+    <string name="app_description">Dnevne ponude pri dohvatu ruke</string>
+    <string name="welcome_message">Dobrodošli!</string>
+    <string name="login_prompt">Prijavite se na svoj Smart Menza račun</string>
+    <string name="tab_login">Prijava</string>
+    <string name="tab_register">Registracija</string>
+    <string name="email_label">Email</string>
+    <string name="email_hint">ime.prezime@student.hr</string>
+    <string name="password_label">Zaporka</string>
+    <string name="password_hint">Lozinka</string>
+    <string name="button_login">Prijavi se</string>
+    <string name="google_login_option">Opcija prijave s Google računom</string>
+    <string name="google_login_button">Google prijava</string>
+    <string name="demo_access">Demo pristupni podaci:</string>
+    <string name="demo_student">Student: student@test.com / pass123</string>
+    <string name="demo_employee">Zaposlenik: ivan.juric@menza.hr / employee123</string>
+
+    <!-- NEW STRINGS - registration -->
+    <string name="register_prompt">Stvorite novi Smart Menza račun</string>
+    <string name="name_label">Ime</string>
+    <string name="name_hint">Ana Kovač</string>
+    <string name="button_register">Registriraj se</string>
+    <string name="already_have_account">Već imate račun? Prijavite se</string>
+
+    <!-- DISH DETAIL -->
+    <string name="dish_detail_subtitle">Detalji o jelu, nutritivne vrijednosti i recenzije</string>
+    <string name="nutritional_values">Nutritivne Vrijednosti</string>
+    <string name="macronutrients">Makronutrijenti</string>
+    <string name="ingredients_label">Sastojci</string>
+    <string name="reviews_total_format">(%d)</string>
+    <string name="price_format">%.2f €</string>
+    <string name="calories_detail">%d kcal</string>
+    <string name="protein_label">Proteini</string>
+    <string name="carbs_label">Ugljikohidrati</string>
+    <string name="fat_label">Masti</string>
+    <string name="fiber_label">Vlakna</string>
+    <string name="grams_format">%.0fg</string>
+    <string name="average_rating_format">%.2f</string>
+    <string name="loading">Učitavanje...</string>
+    <string name="error_loading_dish">Greška pri učitavanju jela</string>
+
+    <!--MENU LIST -->
+    <string name="lunch">Ručak</string>
+    <string name="dinner">Večera</string>
+    <string name="todays_offer">Današnja ponuda</string>
+    <string name="date_example">19. listopada 2025.</string>
+
+    <!-- Menu ITEM -->
+    <string name="menu_list_title">Popis jela</string>
+    <string name="dish_name">Naziv jela</string>
+    <string name="dish_description">Opis jela</string>
+    <string name="dish_price">Cijena</string>
+
+    <string name="close">Close</string>
+    <string name="dish_image">Dish image</string>
+    <string name="favorite">Favoriti</string>
+    <string name="recenzije">Recenzije</string>
+    <string name="recenzije_unavailable">Pregled recenzija trenutno nije dostupan</string>
+</resources>

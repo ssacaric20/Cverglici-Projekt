@@ -4,18 +4,18 @@ using Microsoft.IdentityModel.Tokens;
 using SmartMenza.Business.Services;
 using SmartMenza.Data.Data;
 using System.Text;
+using SmartMenza.Business.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// servisi u kontejner
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddScoped<UserServices>();
-builder.Services.AddScoped<DailyMenuServices>();
-builder.Services.AddScoped<DishServices>();
+builder.Services.AddScoped<IUserService, UserServices>();
+builder.Services.AddScoped<IDailyMenuService, DailyMenuServices>();
+builder.Services.AddScoped<IDishService, DishServices>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -49,12 +49,12 @@ var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 

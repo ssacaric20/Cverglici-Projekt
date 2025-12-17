@@ -1,130 +1,156 @@
-using SmartMenza.Data.Data;
-using SmartMenza.API.Controllers;
-using SmartMenza.Data.Models;
-using SmartMenza.Business.Services;
-using SmartMenza.Core.Enums;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SmartMenza.API.Controllers;
+using SmartMenza.Business.Models.DailyMenu;
+using SmartMenza.Business.Services;
+using SmartMenza.Data.Data;
+using SmartMenza.Data.Models;
 
 namespace SmartMenza.UnitTests.Menu
 {
     public class UnitTestDailyMenu
     {
-        // Postavljanje okoline za testiranje
+        
         private readonly AppDBContext _context;
         private readonly DailyMenuController _dailyMenuController;
         private readonly DailyMenuServices _dailyMenuServices;
 
         public UnitTestDailyMenu()
         {
-            // Postavljanje privremene baze
+            
             var options = new DbContextOptionsBuilder<AppDBContext>()
-                .UseInMemoryDatabase(databaseName: "SmartMenzaTestDB")
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            // Deklaracija baze
             _context = new AppDBContext(options);
 
-            // Dodavanje testnih korisnika u bazu
-            //_context.DailyMenus.Add(
-            //    new DailyMenuDto
-            //    {
-            //        dailyMenuId = 1,
-            //        date = DateOnly.FromDateTime(DateTime.Now),
-            //        dishId = 1,
-            //        dish = new DishDto
-            //        {
-            //            dishId = 1,
-            //            title = "Chicken with rice",
-            //            description = "Boiled chicken with white rice",
-            //            price = 3.20m,
-            //            calories = 540,
-            //            protein = 35m,
-            //            carbohydrates = 50m,
-            //            fat = 12m,
-            //            imgPath = null,
-            //            nutricionalValueId = 1
-            //        }
-            //    }
+            
+            SeedTestData();
 
-            //    );
-            //_context.DailyMenus.Add(
-            //    new DailyMenuDto
-            //    {
-            //        dailyMenuId = 2,
-            //        date = new DateOnly(2025, 1, 22),
-            //        dishId = 1,
-            //        dish = new DishDto
-            //        {
-            //            dishId = 2,
-            //            title = "Vegetarian pasta",
-            //            description = "Pasta with vegetables",
-            //            price = 2.80m,
-            //            calories = 450,
-            //            protein = 15m,
-            //            carbohydrates = 70m,
-            //            fat = 8m,
-            //            imgPath = null,
-            //            nutricionalValueId = 1
-            //        }
-            //    });
-
-            // Spremanje korisnika u bazu
-            _context.SaveChanges();
-
-            // Instanciranje kontrolera sa privremenom bazom kako bi se mogle testirati funkcije
             _dailyMenuServices = new DailyMenuServices(_context);
             _dailyMenuController = new DailyMenuController(_dailyMenuServices);
         }
 
-        [Fact]
-        public async Task GetTodaysMenuAsync_ReturnsTodaysMenu()
+        private void SeedTestData()
         {
-            // Arrange
+            var dish1 = new DishDto
+            {
+                dishId = 1,
+                title = "Chicken with rice",
+                description = "Boiled chicken with white rice",
+                price = 3.20m,
+                calories = 540,
+                protein = 35m,
+                carbohydrates = 50m,
+                fat = 12m,
+                imgPath = null
+                // REMOVED: nutricionalValueId
+            };
 
-            // Act
+            var dish2 = new DishDto
+            {
+                dishId = 2,
+                title = "Vegetarian pasta",
+                description = "Pasta with vegetables",
+                price = 2.80m,
+                calories = 450,
+                protein = 15m,
+                carbohydrates = 70m,
+                fat = 8m,
+                imgPath = null
+                // REMOVED: nutricionalValueId
+            };
+
+            _context.Dishes.AddRange(dish1, dish2);
+
+          
+            var todayMenu = new DailyMenuDto
+            {
+                dailyMenuId = 1,
+                date = DateOnly.FromDateTime(DateTime.Today)
+                // REMOVED: dishId and dish navigation
+            };
+
+           
+            var fixedDateMenu = new DailyMenuDto
+            {
+                dailyMenuId = 2,
+                date = new DateOnly(2025, 1, 22)
+                // REMOVED: dishId and dish navigation
+            };
+
+            _context.DailyMenus.AddRange(todayMenu, fixedDateMenu);
+            _context.SaveChanges();
+
+            // NOVO: Many-to-many veze kroz DailyMenuDish
+            _context.DailyMenuDishes.AddRange(
+                new DailyMenuDishDto { dailyMenuId = 1, dishId = 1 },
+                new DailyMenuDishDto { dailyMenuId = 2, dishId = 2 }
+            );
+
+            _context.SaveChanges();
+        }
+
+        [Fact]
+        public async Task GetTodaysMenuAsync_ReturnsOkAndListOfDailyMenuListItemResponse()
+        {
+            
             var result = await _dailyMenuController.GetTodaysMenuAsync();
 
-            // Assert
-            var okResult = Assert.IsType<Microsoft.AspNetCore.Mvc.OkObjectResult>(result.Result);
+            
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var value = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
+
+            Assert.NotNull(value);
+            Assert.NotEmpty(value);  
         }
 
         [Fact]
-        public async Task GetMenuForDateAsync_DateIs2025_1_22_ReturnsMenuForGivenDate()
+        public async Task GetMenuForDateAsync_ValidDate_ReturnsOkAndList()
         {
-            // Arrange
+           
             string date = "2025-01-22";
 
-            // Act
+           
             var result = await _dailyMenuController.GetMenuForDateAsync(date);
 
-            // Assert
-            var okResult = Assert.IsType<Microsoft.AspNetCore.Mvc.OkObjectResult>(result.Result);
+            
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var value = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
+
+            Assert.NotNull(value);
+            Assert.NotEmpty(value); 
         }
 
         [Fact]
-        public async Task GetMenuForDateAsync_WrongDateFormat_ReturnsBadRequest()
+        public async Task GetMenuForDateAsync_InvalidDateInput_ReturnsBadRequest()
         {
-            // Arrange
-            string date = "22-01-2025";
+           
+            string date = "22-01-202b"; 
 
-            // Act
-            var result = await _dailyMenuController.GetMenuForDateAsync(date);
+            
+            var result = await _dailyMenuController.GetMenuForDateAsync(date, null); 
 
-            // Assert
-            var badRequestResult = Assert.IsType<Microsoft.AspNetCore.Mvc.BadRequestObjectResult>(result.Result);
+            
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            Assert.NotNull(badRequestResult.Value);
         }
 
         [Fact]
-        public async Task GetMenuForDateAsync_DateOutOfRange_ReturnsBadRequest()
+        public async Task GetMenuForDateAsync_DateWithoutMenu_ReturnsOkWithEmptyList()
         {
-            // Arrange
-            string date = "1111-1111-1111";
+            
+            string date = "2030-01-01";
 
-            // Act
+          
             var result = await _dailyMenuController.GetMenuForDateAsync(date);
 
-            // Assert
-            var badRequestResult = Assert.IsType<Microsoft.AspNetCore.Mvc.BadRequestObjectResult>(result.Result);
+            
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var value = Assert.IsAssignableFrom<IEnumerable<DailyMenuListItemResponse>>(okResult.Value);
+
+            Assert.NotNull(value);
+            Assert.Empty(value); 
         }
     }
 }
