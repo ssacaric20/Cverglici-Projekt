@@ -1,7 +1,6 @@
 # Cverglici-Projekt
 
-## !!! **VAŽNO**: već više od 10 ljudi je tražilo pristup organizaciji, a dozvoljeno je maksimalno 5 licenci. Ako želite pristupiti **repositoriju** projekta molim vas kontaktirajte osobu kako navodi dokument koji ste dobili na moodlu. U suprotnom nećete moći vidjeti programski/praktični dio ove organizacije, nego samo dokumentacijski dio !!!
-
+## !!! **VAŽNO**: već više od 10 ljudi je tražilo pristup organizaciji, a dozvoljeno je maksimalno 5 licenci. Ako vidite repozitorij to znači da imate licencu s punim pristupom. Druge licence ne nude pristup repozitoriju. Kada završite molim da javite preko kontakt podataka koji su zapisani u dokumentu na moodlu kako bi se moglo osloboditi mjesto za druge kolege !!!
 Predložak za SmartMenzu<br>
 Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u personalizaciji obroka, praćenju nutritivnih vrijednosti, i postavljanju ciljeva vezanih uz prehranu.
 U donjim sekcijama ovog dokumenta, može se vidjeti zamišljeni popis glavnih funkcionalnosti prema ulogama, kao i upute pokretanja određenog dijela projekta. 
