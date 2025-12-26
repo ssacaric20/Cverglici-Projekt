@@ -59,4 +59,43 @@
     <string name="favorite">Favoriti</string>
     <string name="recenzije">Recenzije</string>
     <string name="recenzije_unavailable">Pregled recenzija trenutno nije dostupan</string>
+
+    <string name="add_new_dish">Dodaj novo jelo</string>
+    <string name="edit_dish">Uredi jelo</string>
+    <string name="dish_form_subtitle">Ispunite sve podatke o jelu</string>
+
+    <!-- Image -->
+    <string name="dish_image_label">Slika jela</string>
+    <string name="image_placeholder_text">Slika jela će biti dostupna uskoro\n(Upload/AI generiranje)</string>
+
+    <!-- Category -->
+    <string name="category_label">Kategorija</string>
+
+    <!-- Basic Info -->
+    <string name="dish_title_label">Naziv jela</string>
+    <string name="dish_title_hint">Npr. Pečena piletina s rižom</string>
+    <string name="description_label">Opis</string>
+    <string name="description_hint">Kratak opis jela...</string>
+    <string name="price_label">Cijena</string>
+    <string name="price_hint">0.00</string>
+
+    <!-- Nutritional Values -->
+    <string name="calories_label">Kalorije</string>
+    <string name="calories_hint">npr. 520</string>
+
+    <!-- Ingredients -->
+    <string name="ingredients_hint">Piletina, riža, povrće, maslac...</string>
+    <string name="ingredients_hint_helper">Odvojite sastojke zarezom (,)</string>
+
+    <!-- Buttons -->
+    <string name="save_dish">Spremi jelo</string>
+    <string name="cancel">Odustani</string>
+
+    <!-- Errors -->
+    <string name="error_title_required">Naziv jela je obavezan</string>
+    <string name="error_price_required">Cijena je obavezna</string>
+
+    <!-- Employee Menu List -->
+    <string name="employee_menu_title">Upravljanje jelima</string>
+    <string name="empty_state_employee">Nema dostupnih jela za danas.\nDodajte nova jela klikom na + gumb.</string>
 </resources>

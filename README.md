@@ -1,7 +1,5 @@
 # Cverglici-Projekt
 
-## !!! **VAŽNO**: već više od 10 ljudi je tražilo pristup organizaciji, a dozvoljeno je maksimalno 5 licenci. Ako želite pristupiti **repositoriju** projekta molim vas kontaktirajte osobu kako navodi dokument koji ste dobili na moodlu. U suprotnom nećete moći vidjeti programski/praktični dio ove organizacije, nego samo dokumentacijski dio !!!
-
 Predložak za SmartMenzu<br>
 Razvoj mobilne aplikacije u sklopu JCC-a koja studentima pomaže u personalizaciji obroka, praćenju nutritivnih vrijednosti, i postavljanju ciljeva vezanih uz prehranu.
 U donjim sekcijama ovog dokumenta, može se vidjeti zamišljeni popis glavnih funkcionalnosti prema ulogama, kao i upute pokretanja određenog dijela projekta. 
@@ -12,7 +10,7 @@ Upute za pokretanje Frontend dijela projekta:
 3. Unutar Android Studia, odabrati opciju za kloniranje repozitorija.
 4. Kada se prikaže mogućnost za to, unjeti prethodno kopirati URL za kloniranje i odabrati prazan folder.
 5. Dozvoliti da se aplikacija izgradi i potpuno učita.
-6. Prebaciti na granu **"main_backup"** preko "Checkout" opcije.
+6. Prebaciti na granu "main_backup" ili "main" preko "Checkout" opcije.
 7. Pričekati ako je potrebno, prihvatiti opcije ukoliko dođu upozorenja o potrebnom ažuriranju.
 8. Ako još nije vidljiva mogućnost za debuggiranjem ili pokretanjem aplikacije, zatvoriti i ponovno pokrenuti Android Studio.
 9. U suprotnome, pokrenuti aplikaciju.
