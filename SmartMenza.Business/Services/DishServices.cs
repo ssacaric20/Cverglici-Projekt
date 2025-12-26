@@ -33,14 +33,14 @@ namespace SmartMenza.Business.Services
                 .Distinct()
                 .ToList();
 
-            
+
             int ratingsCount = dish.dishRatings?.Count ?? 0;
             double? averageRating = null;
-
-            if (ratingsCount > 0)
+            if (ratingsCount > 0 && dish.dishRatings != null)
             {
                 averageRating = dish.dishRatings.Average(r => (double)r.rating);
             }
+
 
             return new DishDetailsResponse
             {
