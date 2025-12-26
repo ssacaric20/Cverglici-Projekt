@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartMenza.Data.Data;
 using SmartMenza.Business.Models.Dishes;
 using SmartMenza.Business.Services.Interfaces;
+using SmartMenza.Data.Data;
+using SmartMenza.Data.Models;
 
 
 namespace SmartMenza.Business.Services
@@ -75,6 +76,67 @@ namespace SmartMenza.Business.Services
                 .ToListAsync();
 
             return dishes;
+        }
+
+        public async Task<DishDetailsResponse?> CreateDishAsync(CreateDishRequest request)
+        {
+            var newDish = new DishDto
+            {
+                title = request.Title,
+                price = request.Price,
+                description = request.Description,
+                calories = request.Calories,
+                protein = request.Protein,
+                fat = request.Fat,
+                carbohydrates = request.Carbohydrates,
+                fiber = request.Fiber,
+                imgPath = request.ImgPath
+            };
+
+            _context.Dishes.Add(newDish);
+            await _context.SaveChangesAsync();
+
+            return await GetDishDetailsAsync(newDish.dishId);
+        }
+
+        public async Task<DishDetailsResponse?> UpdateDishAsync(int id, UpdateDishRequest request)
+        {
+            var dish = await _context.Dishes.FindAsync(id);
+
+            if (dish == null)
+            {
+                return null;
+            }
+
+            dish.title = request.Title;
+            dish.price = request.Price;
+            dish.description = request.Description;
+            dish.calories = request.Calories;
+            dish.protein = request.Protein;
+            dish.fat = request.Fat;
+            dish.carbohydrates = request.Carbohydrates;
+            dish.fiber = request.Fiber;
+            dish.imgPath = request.ImgPath;
+
+            _context.Dishes.Update(dish);
+            await _context.SaveChangesAsync();
+
+            return await GetDishDetailsAsync(dish.dishId);
+        }
+
+        public async Task<bool> DeleteDishAsync(int id)
+        {
+            var dish = await _context.Dishes.FindAsync(id);
+
+            if (dish == null)
+            {
+                return false;
+            }
+
+            _context.Dishes.Remove(dish);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
     }
