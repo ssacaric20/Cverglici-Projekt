@@ -59,5 +59,23 @@ namespace SmartMenza.Business.Services
                 RatingsCount = ratingsCount
             };
         }
+
+        public async Task<IEnumerable<DishListResponse>> GetAllDishesAsync()
+        {
+            var dishes = await _context.Dishes
+                .Select(d => new DishListResponse
+                {
+                    DishId = d.dishId,
+                    Title = d.title,
+                    Price = d.price,
+                    Description = d.description,
+                    Calories = d.calories,
+                    ImgPath = d.imgPath
+                })
+                .ToListAsync();
+
+            return dishes;
+        }
+
     }
 }
