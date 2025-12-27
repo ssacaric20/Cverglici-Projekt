@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_employee_menu"
+        android:icon="@drawable/ic_menu_placeholder"
+        android:title="Meni" />
+
+    <item
+        android:id="@+id/nav_statistics"
+        android:icon="@drawable/ic_statistics_placeholder"
+        android:title="Statistika" />
+
+    <item
+        android:id="@+id/nav_ai_tools"
+        android:icon="@drawable/ic_ai_placeholder"
+        android:title="AI Alati" />
+</menu>
