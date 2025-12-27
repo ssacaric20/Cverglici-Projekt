@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<IDailyMenuService, DailyMenuServices>();
 builder.Services.AddScoped<IDishService, DishServices>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
