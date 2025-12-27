@@ -28,10 +28,15 @@ class FavoritesAdapter(
 
     inner class FavoriteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.dishTitle)
+            ?: throw IllegalStateException("dishTitle not found in layout")
         private val descriptionText: TextView = itemView.findViewById(R.id.dishDescription)
+            ?: throw IllegalStateException("dishDescription not found in layout")
         private val priceText: TextView = itemView.findViewById(R.id.dishPrice)
-        private val caloriesText: TextView = itemView.findViewById(R.id.caloriesValue)
+            ?: throw IllegalStateException("dishPrice not found in layout")
+        private val caloriesText: TextView = itemView.findViewById(R.id.dishCalories)
+            ?: throw IllegalStateException("dishCalories not found in layout")
         private val removeButton: ImageButton = itemView.findViewById(R.id.removeFavoriteButton)
+            ?: throw IllegalStateException("removeFavoriteButton not found in layout")
 
         fun bind(dish: FavoriteDish) {
             titleText.text = dish.title

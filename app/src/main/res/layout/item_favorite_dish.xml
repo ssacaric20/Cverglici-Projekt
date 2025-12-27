@@ -20,7 +20,7 @@
             android:text="Dish Title"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
+            android:textColor="#000000"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/removeFavoriteButton" />
@@ -29,10 +29,9 @@
             android:id="@+id/removeFavoriteButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_favorite_filled"
+            android:src="@android:drawable/ic_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Remove from favorites"
-            app:tint="@color/fat_bg"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -43,7 +42,7 @@
             android:layout_marginTop="4dp"
             android:text="Description"
             android:textSize="14sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="#666666"
             android:maxLines="2"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/dishTitle"
@@ -58,7 +57,7 @@
             android:text="0.00 €"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/orange_primary"
             app:layout_constraintTop_toBottomOf="@id/dishDescription"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -69,7 +68,7 @@
             android:layout_marginStart="16dp"
             android:text="0 kcal"
             android:textSize="14sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="#666666"
             app:layout_constraintTop_toTopOf="@id/dishPrice"
             app:layout_constraintBottom_toBottomOf="@id/dishPrice"
             app:layout_constraintStart_toEndOf="@id/dishPrice" />
