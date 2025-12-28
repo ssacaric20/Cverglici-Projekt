@@ -11,13 +11,14 @@ namespace SmartMenza.API.Controllers
     public class DishController : ControllerBase
     {
         private readonly IDishService _dishServices;
+        private readonly IImageService _imageService;
 
-        public DishController(IDishService dishServices)
+        public DishController(IDishService dishServices, IImageService imageService)
         {
             _dishServices = dishServices;
+            _imageService = imageService;
         }
 
-        
         [HttpGet("{id}")]
         public async Task<ActionResult<DishDetailsResponse>> GetDishDetails(int id)
         {
@@ -146,5 +147,68 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [HttpPost("{id}/upload-image")]
+        public async Task<IActionResult> UploadDishImage(int id, IFormFile image)
+        {
+            try
+            {
+                if (image == null || image.Length == 0)
+                {
+                    return BadRequest(new { message = "Slika nije odabrana." });
+                }
+
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var extension = Path.GetExtension(image.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    return BadRequest(new { message = "Nevažeći format slike. Dozvoljeni formati: JPG, PNG, GIF, WEBP" });
+                }
+
+                if (image.Length > 5 * 1024 * 1024)
+                {
+                    return BadRequest(new { message = "Slika je prevelika. Maksimalna veličina je 5MB." });
+                }
+
+                var dish = await _dishServices.GetDishDetailsAsync(id);
+                if (dish == null)
+                {
+                    return NotFound(new { message = "Jelo nije pronađeno." });
+                }
+
+                using var stream = image.OpenReadStream();
+                var imageUrl = await _imageService.UploadImageAsync(stream, image.FileName);
+
+                var updateRequest = new UpdateDishRequest
+                {
+                    Title = dish.Title,
+                    Price = dish.Price,
+                    Description = dish.Description ?? string.Empty,
+                    Calories = dish.Calories,
+                    Protein = dish.Protein,
+                    Fat = dish.Fat,
+                    Carbohydrates = dish.Carbohydrates,
+                    Fiber = dish.Fiber,
+                    ImgPath = imageUrl
+                };
+
+                var updatedDish = await _dishServices.UpdateDishAsync(id, updateRequest);
+
+                return Ok(new
+                {
+                    message = "Slika uspješno uploadovana.",
+                    imageUrl = imageUrl,
+                    dish = updatedDish
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom uploada slike.",
+                    error = ex.Message
+                });
+            }
+        }
     }
 }
