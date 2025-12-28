@@ -14,6 +14,7 @@ import com.google.android.material.chip.ChipGroup
 import foi.cverglici.core.data.api.student.menu.RetrofitDish
 import foi.cverglici.core.data.model.menu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.ui.student.favorites.FavoriteManager
 import kotlinx.coroutines.launch
 
 class DishDetailDialog(
@@ -37,6 +38,8 @@ class DishDetailDialog(
     private lateinit var averageRating: TextView
     private lateinit var ratingCount: TextView
 
+    private lateinit var favoriteManager: FavoriteManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -52,6 +55,10 @@ class DishDetailDialog(
         initializeViews()
         setupClickListeners()
         loadDishDetails()
+
+        // Initialize FavoriteManager
+        favoriteManager = FavoriteManager(context, lifecycleOwner, favoriteIcon, dishId)
+        favoriteManager.initialize()
     }
 
     private fun initializeViews() {
@@ -75,17 +82,8 @@ class DishDetailDialog(
         closeButton.setOnClickListener {
             dismiss()
         }
-
-        // Favorite icon - just visual for now, no functionality
-        favoriteIcon.setOnClickListener {
-            // TODO: Implement add to favorites
-            Toast.makeText(context, "Dodavanje u favorite uskoro!", Toast.LENGTH_SHORT).show()
-        }
     }
 
-    /**
-     * load dish details
-     */
     private fun loadDishDetails() {
         lifecycleOwner.lifecycleScope.launch {
             try {
@@ -114,19 +112,13 @@ class DishDetailDialog(
         }
     }
 
-    /**
-     * dish data on UI
-     */
     private fun displayDishDetails(dish: DishDetailsResponse) {
-        // basic information
         dishTitle.text = dish.title
         dishDescription.text = dish.description
         dishPrice.text = context.getString(R.string.price_format, dish.price)
 
-        // calories
         caloriesValue.text = context.getString(R.string.calories_detail, dish.calories)
 
-        // macronutrients
         carbsValue.text = context.getString(R.string.grams_format, dish.carbohydrates)
         fiberValue.text = context.getString(R.string.grams_format, dish.fiber)
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
@@ -134,13 +126,8 @@ class DishDetailDialog(
         averageRating.text = context.getString(R.string.average_rating_format, dish.averageRating)
         ratingCount.text = context.getString(R.string.reviews_total_format, dish.ratingsCount)
 
-
-        // image - placeholder
-        // TODO: Load image with Glide
-        // Glide.with(context).load(dish.imgPath).into(dishImage)
         dishImage.setImageResource(R.drawable.ic_restaurant)
 
-        // ingredients - chips
         ingredientsChipGroup.removeAllViews()
         dish.ingredients.forEach { ingredient ->
             val chip = Chip(context)

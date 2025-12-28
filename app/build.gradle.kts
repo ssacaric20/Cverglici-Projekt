@@ -60,6 +60,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":googleauth"))
     implementation(project(":mailauth"))
+    implementation(project(":navigation"))
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.compose.runtime.saved.instance.state)
