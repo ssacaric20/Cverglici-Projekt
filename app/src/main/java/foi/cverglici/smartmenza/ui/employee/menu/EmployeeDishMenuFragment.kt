@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.R
+import androidx.activity.result.contract.ActivityResultContracts
 
 /**
  * ua adding ili editing
@@ -34,6 +35,7 @@ class EmployeeDishFormFragment : Fragment() {
     private lateinit var ingredientsInput: TextInputEditText
     private lateinit var saveDishButton: Button
     private lateinit var cancelButton: Button
+    private lateinit var uploadDishImageButton: Button
 
     private var dishId: Int? = null
     private var isEditMode: Boolean = false
@@ -59,6 +61,14 @@ class EmployeeDishFormFragment : Fragment() {
             }
         }
     }
+
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                dishImagePreview.setImageURI(uri)
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +121,7 @@ class EmployeeDishFormFragment : Fragment() {
         ingredientsInput = view.findViewById(R.id.ingredientsInput)
         saveDishButton = view.findViewById(R.id.saveDishButton)
         cancelButton = view.findViewById(R.id.cancelButton)
+        uploadDishImageButton = view.findViewById(R.id.uploadDishImageButton)
     }
 
     private fun setupCategorySpinner() {
@@ -135,6 +146,10 @@ class EmployeeDishFormFragment : Fragment() {
 
         cancelButton.setOnClickListener {
             handleCancel()
+        }
+
+        uploadDishImageButton.setOnClickListener {
+            pickImage.launch("image/*")
         }
     }
 
