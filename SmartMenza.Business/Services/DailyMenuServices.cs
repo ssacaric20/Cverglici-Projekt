@@ -33,6 +33,7 @@ namespace SmartMenza.Business.Services
             var dailyMenu = await query
                 .SelectMany(dm => dm.dailyMenuDishes.Select(dmd => new DailyMenuListItemResponse
                 {
+                    DailyMenuId = dm.dailyMenuId,
                     DishId = dmd.dishId,
                     Date = dm.date,
                     Category = dm.category == 1 ? "Lunch" : "Dinner",
@@ -76,6 +77,7 @@ namespace SmartMenza.Business.Services
             var menu = await query
                 .SelectMany(dm => dm.dailyMenuDishes.Select(dmd => new DailyMenuListItemResponse
                 {
+                    DailyMenuId = dm.dailyMenuId,
                     DishId = dmd.dishId,
                     Date = dm.date,
                     Category = dm.category == 1 ? "Lunch" : "Dinner",
@@ -112,6 +114,7 @@ namespace SmartMenza.Business.Services
                     Category = dm.category,
                     Item = new DailyMenuListItemResponse
                     {
+                        DailyMenuId = dm.dailyMenuId,
                         DishId = dmd.dishId,
                         Date = dm.date,
                         Category = dm.category == 1 ? "Lunch" : "Dinner",
