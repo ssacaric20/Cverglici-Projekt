@@ -264,5 +264,22 @@ namespace SmartMenza.Business.Services
             return await GetDailyMenuByIdAsync(menu.dailyMenuId);
         }
 
+        public async Task<bool> DeleteDailyMenuAsync(int id)
+        {
+            var menu = await _context.DailyMenus
+                .Include(dm => dm.dailyMenuDishes)
+                .FirstOrDefaultAsync(dm => dm.dailyMenuId == id);
+
+            if (menu == null)
+            {
+                return false;
+            }
+
+            _context.DailyMenuDishes.RemoveRange(menu.dailyMenuDishes);
+            _context.DailyMenus.Remove(menu);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
