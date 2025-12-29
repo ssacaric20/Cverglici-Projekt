@@ -17,7 +17,7 @@ namespace SmartMenza.Business.Services
             _context = context;
         }
 
-        public async Task<IReadOnlyList<DailyMenuListItemResponse>> GetTodaysMenuAsync(MenuCategory? category = null)
+        public async Task<List<DailyMenuListItemResponse>> GetTodaysMenuAsync(MenuCategory? category = null)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
@@ -57,7 +57,7 @@ namespace SmartMenza.Business.Services
         }
  
         
-        public async Task<IReadOnlyList<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date, MenuCategory? category = null)
+        public async Task<List<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date, MenuCategory? category = null)
         {
             if (!DateOnly.TryParse(date, out DateOnly parsedDate))
             {
