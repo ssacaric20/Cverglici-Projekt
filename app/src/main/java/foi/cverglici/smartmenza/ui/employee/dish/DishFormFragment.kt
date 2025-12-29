@@ -1,4 +1,4 @@
-package foi.cverglici.smartmenza.ui.employee.menu
+package foi.cverglici.smartmenza.ui.employee.dish
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -17,7 +17,7 @@ import foi.cverglici.core.data.model.dish.CreateDishRequest
 import foi.cverglici.core.data.model.dish.UpdateDishRequest
 import foi.cverglici.smartmenza.R
 
-class EmployeeDishFormFragment : Fragment() {
+class DishFormFragment : Fragment() {
 
     private lateinit var formTitle: TextView
     private lateinit var dishImagePreview: ImageView
@@ -42,12 +42,12 @@ class EmployeeDishFormFragment : Fragment() {
     companion object {
         private const val ARG_DISH_ID = "dish_id"
 
-        fun newInstance(): EmployeeDishFormFragment {
-            return EmployeeDishFormFragment()
+        fun newInstance(): DishFormFragment {
+            return DishFormFragment()
         }
 
-        fun newInstance(dishId: Int): EmployeeDishFormFragment {
-            return EmployeeDishFormFragment().apply {
+        fun newInstance(dishId: Int): DishFormFragment {
+            return DishFormFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_DISH_ID, dishId)
                 }

@@ -1,4 +1,4 @@
-package foi.cverglici.smartmenza.ui.employee.menu
+package foi.cverglici.smartmenza.ui.employee.dish
 
 import android.content.Context
 import android.util.Log

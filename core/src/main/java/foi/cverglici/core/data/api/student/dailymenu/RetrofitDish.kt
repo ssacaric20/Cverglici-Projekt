@@ -1,4 +1,4 @@
-package foi.cverglici.core.data.api.student.menu
+package foi.cverglici.core.data.api.student.dailymenu
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

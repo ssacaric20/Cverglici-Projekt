@@ -1,4 +1,4 @@
-package foi.cverglici.core.data.api.student.menu
+package foi.cverglici.core.data.api.student.dailymenu
 
 import foi.cverglici.core.data.model.menu.DishDetailsResponse
 import foi.cverglici.core.data.model.menu.DailyMenuItem
