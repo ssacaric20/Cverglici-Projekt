@@ -5,6 +5,8 @@ using SmartMenza.Business.Models.Dishes;
 using SmartMenza.Business.Services;
 using SmartMenza.Data.Data;
 using SmartMenza.Data.Models;
+using SmartMenza.Business.Services.Interfaces;
+using Moq;
 
 namespace SmartMenza.UnitTest.Dishes
 {
@@ -25,7 +27,9 @@ namespace SmartMenza.UnitTest.Dishes
             SeedTestData();
 
             _dishServices = new DishServices(_context);
-            _dishController = new DishController(_dishServices);
+
+            var mockImageService = new Mock<IImageService>();
+            _dishController = new DishController(_dishServices, mockImageService.Object);
         }
 
         private void SeedTestData()

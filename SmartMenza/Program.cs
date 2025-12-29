@@ -12,10 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(connectionString));
-
+builder.Services.AddScoped<IFoodAnalyzer, RuleBasedFoodAnalyzer>();
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<IDailyMenuService, DailyMenuServices>();
 builder.Services.AddScoped<IDishService, DishServices>();
+builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

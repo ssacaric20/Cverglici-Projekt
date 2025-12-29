@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartMenza.Data.Data;
 using SmartMenza.Business.Models.DailyMenu;
-using SmartMenza.Core.Enums;
 using SmartMenza.Business.Services.Interfaces;
+using SmartMenza.Core.Enums;
+using SmartMenza.Data.Data;
+using SmartMenza.Data.Models;
 
 
 namespace SmartMenza.Business.Services
@@ -16,7 +17,7 @@ namespace SmartMenza.Business.Services
             _context = context;
         }
 
-        public async Task<IReadOnlyList<DailyMenuListItemResponse>> GetTodaysMenuAsync(MenuCategory? category = null)
+        public async Task<List<DailyMenuListItemResponse>> GetTodaysMenuAsync(MenuCategory? category = null)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
 
@@ -56,7 +57,7 @@ namespace SmartMenza.Business.Services
         }
  
         
-        public async Task<IReadOnlyList<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date, MenuCategory? category = null)
+        public async Task<List<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date, MenuCategory? category = null)
         {
             if (!DateOnly.TryParse(date, out DateOnly parsedDate))
             {
@@ -137,7 +138,148 @@ namespace SmartMenza.Business.Services
                 Dinner = allMenus.Where(x => x.Category == 2).Select(x => x.Item).ToList()
             };
         }
-    }
 
-   
+        public async Task<DailyMenuDetailsResponse?> GetDailyMenuByIdAsync(int id)
+        {
+            var menu = await _context.DailyMenus
+                .Include(dm => dm.dailyMenuDishes)
+                    .ThenInclude(dmd => dmd.dish)
+                .FirstOrDefaultAsync(dm => dm.dailyMenuId == id);
+
+            if (menu == null)
+                return null;
+
+            return new DailyMenuDetailsResponse
+            {
+                DailyMenuId = menu.dailyMenuId,
+                Date = menu.date,
+                Category = menu.category == 1 ? "Lunch" : "Dinner",
+                Dishes = menu.dailyMenuDishes.Select(dmd => new DailyMenuDishListItemResponse
+                {
+                    DishId = dmd.dish.dishId,
+                    Title = dmd.dish.title,
+                    Price = dmd.dish.price,
+                    Description = dmd.dish.description,
+                    Calories = dmd.dish.calories,
+                    Protein = dmd.dish.protein,
+                    Fat = dmd.dish.fat,
+                    Carbohydrates = dmd.dish.carbohydrates,
+                    Fiber = dmd.dish.fiber,
+                    ImgPath = dmd.dish.imgPath
+                }).ToList()
+            };
+        }
+
+        public async Task<DailyMenuDetailsResponse?> CreateDailyMenuAsync(CreateDailyMenuRequest request)
+        {
+            if (!DateOnly.TryParse(request.Date, out DateOnly parsedDate))
+            {
+                return null;
+            }
+
+            var existingMenu = await _context.DailyMenus
+                .FirstOrDefaultAsync(dm => dm.date == parsedDate && dm.category == request.Category);
+
+            if (existingMenu != null)
+            {
+                return null;
+            }
+
+            var dishes = await _context.Dishes
+                .Where(d => request.DishIds.Contains(d.dishId))
+                .ToListAsync();
+
+            if (dishes.Count != request.DishIds.Count)
+            {
+                return null;
+            }
+
+            var newMenu = new DailyMenuDto
+            {
+                date = parsedDate,
+                category = request.Category
+            };
+
+            _context.DailyMenus.Add(newMenu);
+            await _context.SaveChangesAsync();
+
+            foreach (var dishId in request.DishIds)
+            {
+                var dailyMenuDish = new DailyMenuDishDto
+                {
+                    dailyMenuId = newMenu.dailyMenuId,
+                    dishId = dishId
+                };
+                _context.DailyMenuDishes.Add(dailyMenuDish);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return await GetDailyMenuByIdAsync(newMenu.dailyMenuId);
+        }
+
+        public async Task<DailyMenuDetailsResponse?> UpdateDailyMenuAsync(int id, UpdateDailyMenuRequest request)
+        {
+            var menu = await _context.DailyMenus
+                .Include(dm => dm.dailyMenuDishes)
+                .FirstOrDefaultAsync(dm => dm.dailyMenuId == id);
+
+            if (menu == null)
+            {
+                return null;
+            }
+
+            if (!DateOnly.TryParse(request.Date, out DateOnly parsedDate))
+            {
+                return null;
+            }
+
+            var dishes = await _context.Dishes
+                .Where(d => request.DishIds.Contains(d.dishId))
+                .ToListAsync();
+
+            if (dishes.Count != request.DishIds.Count)
+            {
+                return null;
+            }
+
+            menu.date = parsedDate;
+            menu.category = request.Category;
+
+            _context.DailyMenuDishes.RemoveRange(menu.dailyMenuDishes);
+
+            foreach (var dishId in request.DishIds)
+            {
+                var dailyMenuDish = new DailyMenuDishDto
+                {
+                    dailyMenuId = menu.dailyMenuId,
+                    dishId = dishId
+                };
+                _context.DailyMenuDishes.Add(dailyMenuDish);
+            }
+
+            _context.DailyMenus.Update(menu);
+            await _context.SaveChangesAsync();
+
+            return await GetDailyMenuByIdAsync(menu.dailyMenuId);
+        }
+
+        public async Task<bool> DeleteDailyMenuAsync(int id)
+        {
+            var menu = await _context.DailyMenus
+                .Include(dm => dm.dailyMenuDishes)
+                .FirstOrDefaultAsync(dm => dm.dailyMenuId == id);
+
+            if (menu == null)
+            {
+                return false;
+            }
+
+            _context.DailyMenuDishes.RemoveRange(menu.dailyMenuDishes);
+            _context.DailyMenus.Remove(menu);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+    }
 }

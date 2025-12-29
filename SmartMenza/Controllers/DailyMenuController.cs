@@ -100,5 +100,111 @@ namespace SmartMenza.API.Controllers
                 });
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DailyMenuDetailsResponse>> GetDailyMenuById(int id)
+        {
+            try
+            {
+                var menu = await _dailyMenuServices.GetDailyMenuByIdAsync(id);
+                if (menu == null)
+                {
+                    return NotFound(new { message = "Meni nije pronađen." });
+                }
+
+                return Ok(menu);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom dohvaćanja menija.",
+                    error = ex.Message
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<DailyMenuDetailsResponse>> CreateDailyMenu([FromBody] CreateDailyMenuRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var createdMenu = await _dailyMenuServices.CreateDailyMenuAsync(request);
+                if (createdMenu == null)
+                {
+                    return BadRequest(new { message = "Greška prilikom kreiranja menija. Provjerite da li meni za taj datum i kategoriju već postoji ili da li sva jela postoje." });
+                }
+
+                return CreatedAtAction(
+                    nameof(GetDailyMenuById),
+                    new { id = createdMenu.DailyMenuId },
+                    createdMenu
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom kreiranja menija.",
+                    error = ex.Message
+                });
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<DailyMenuDetailsResponse>> UpdateDailyMenu(int id, [FromBody] UpdateDailyMenuRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var updatedMenu = await _dailyMenuServices.UpdateDailyMenuAsync(id, request);
+                if (updatedMenu == null)
+                {
+                    return NotFound(new { message = "Meni nije pronađen ili podaci nisu validni." });
+                }
+
+                return Ok(updatedMenu);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom ažuriranja menija.",
+                    error = ex.Message
+                });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteDailyMenu(int id)
+        {
+            try
+            {
+                var result = await _dailyMenuServices.DeleteDailyMenuAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Meni nije pronađen." });
+                }
+
+                return Ok(new { message = "Meni uspješno obrisan." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom brisanja menija.",
+                    error = ex.Message
+                });
+            }
+        }
     }
 }

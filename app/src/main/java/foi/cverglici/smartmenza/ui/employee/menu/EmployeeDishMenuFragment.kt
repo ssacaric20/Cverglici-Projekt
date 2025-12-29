@@ -1,5 +1,6 @@
 package foi.cverglici.smartmenza.ui.employee.menu
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +13,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
+import foi.cverglici.core.data.model.dish.CreateDishRequest
+import foi.cverglici.core.data.model.dish.UpdateDishRequest
 import foi.cverglici.smartmenza.R
 
-/**
- * ua adding ili editing
- */
 class EmployeeDishFormFragment : Fragment() {
 
-    // view components
     private lateinit var formTitle: TextView
     private lateinit var dishImagePreview: ImageView
     private lateinit var categorySpinner: Spinner
@@ -34,23 +33,19 @@ class EmployeeDishFormFragment : Fragment() {
     private lateinit var ingredientsInput: TextInputEditText
     private lateinit var saveDishButton: Button
     private lateinit var cancelButton: Button
+    private lateinit var deleteButton: Button
 
     private var dishId: Int? = null
     private var isEditMode: Boolean = false
+    private lateinit var dishManager: DishManager
 
     companion object {
         private const val ARG_DISH_ID = "dish_id"
 
-        /**
-         * create new instance for adding
-         */
         fun newInstance(): EmployeeDishFormFragment {
             return EmployeeDishFormFragment()
         }
 
-        /**
-         * create new instance for editing
-         */
         fun newInstance(dishId: Int): EmployeeDishFormFragment {
             return EmployeeDishFormFragment().apply {
                 arguments = Bundle().apply {
@@ -63,7 +58,6 @@ class EmployeeDishFormFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // get dish ID from arguments if editing
         arguments?.let {
             if (it.containsKey(ARG_DISH_ID)) {
                 dishId = it.getInt(ARG_DISH_ID)
@@ -83,16 +77,19 @@ class EmployeeDishFormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        dishManager = DishManager(requireContext(), viewLifecycleOwner)
+
         initializeViews(view)
         setupCategorySpinner()
         setupClickListeners()
 
-        // update title based on mode
         if (isEditMode) {
             formTitle.text = getString(R.string.edit_dish)
-            // TODO: Load dish data from API (Task 2)
+            deleteButton.visibility = View.VISIBLE
+            dishId?.let { loadDishData(it) }
         } else {
             formTitle.text = getString(R.string.add_new_dish)
+            deleteButton.visibility = View.GONE
         }
     }
 
@@ -111,6 +108,7 @@ class EmployeeDishFormFragment : Fragment() {
         ingredientsInput = view.findViewById(R.id.ingredientsInput)
         saveDishButton = view.findViewById(R.id.saveDishButton)
         cancelButton = view.findViewById(R.id.cancelButton)
+        deleteButton = view.findViewById(R.id.deleteButton)
     }
 
     private fun setupCategorySpinner() {
@@ -136,87 +134,164 @@ class EmployeeDishFormFragment : Fragment() {
         cancelButton.setOnClickListener {
             handleCancel()
         }
+
+        deleteButton.setOnClickListener {
+            handleDeleteDish()
+        }
     }
 
-    /**
-     * handle save dish action
-     * TODO: This will be implemented in Task 2 (CRUD logic)
-     */
+    private fun loadDishData(dishId: Int) {
+        showLoading(true)
+
+        dishManager.loadDishDetails(
+            dishId = dishId,
+            onSuccess = { dish ->
+                displayDishData(dish)
+                showLoading(false)
+            },
+            onError = { error ->
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                showLoading(false)
+                navigateBack()
+            }
+        )
+    }
+
+    private fun displayDishData(dish: foi.cverglici.core.data.model.menu.DishDetailsResponse) {
+        titleInput.setText(dish.title)
+        descriptionInput.setText(dish.description)
+        priceInput.setText(dish.price.toString())
+        caloriesInput.setText(dish.calories?.toString() ?: "")
+        carbsInput.setText(dish.carbohydrates?.toString() ?: "")
+        fiberInput.setText(dish.fiber?.toString() ?: "")
+        fatInput.setText(dish.fat?.toString() ?: "")
+        proteinInput.setText(dish.protein?.toString() ?: "")
+    }
+
     private fun handleSaveDish() {
-        // Basic validation (detailed validation in Task 3)
-        if (titleInput.text.isNullOrBlank()) {
-            titleInput.error = getString(R.string.error_title_required)
+        if (!validateInputs()) {
             return
-        }
-
-        if (priceInput.text.isNullOrBlank()) {
-            priceInput.error = getString(R.string.error_price_required)
-            return
-        }
-
-        // get form data
-        val category = when (categorySpinner.selectedItemPosition) {
-            0 -> "lunch"
-            1 -> "dinner"
-            else -> "lunch"
         }
 
         val title = titleInput.text.toString().trim()
         val description = descriptionInput.text.toString().trim()
         val price = priceInput.text.toString().toDoubleOrNull() ?: 0.0
-        val calories = caloriesInput.text.toString().toIntOrNull() ?: 0
-        val carbs = carbsInput.text.toString().toDoubleOrNull() ?: 0.0
-        val fiber = fiberInput.text.toString().toDoubleOrNull() ?: 0.0
-        val fat = fatInput.text.toString().toDoubleOrNull() ?: 0.0
-        val protein = proteinInput.text.toString().toDoubleOrNull() ?: 0.0
+        val calories = caloriesInput.text.toString().toIntOrNull()
+        val carbs = carbsInput.text.toString().toDoubleOrNull()
+        val fiber = fiberInput.text.toString().toDoubleOrNull()
+        val fat = fatInput.text.toString().toDoubleOrNull()
+        val protein = proteinInput.text.toString().toDoubleOrNull()
 
-        // Parse ingredients (comma-separated)
-        val ingredientsText = ingredientsInput.text.toString().trim()
-        val ingredients = if (ingredientsText.isNotBlank()) {
-            ingredientsText.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        showLoading(true)
+
+        if (isEditMode && dishId != null) {
+            val updateRequest = UpdateDishRequest(
+                title = title,
+                description = description,
+                price = price,
+                calories = calories,
+                protein = protein,
+                fat = fat,
+                carbohydrates = carbs,
+                fiber = fiber,
+                imgPath = null
+            )
+
+            dishManager.updateDish(
+                dishId = dishId!!,
+                request = updateRequest,
+                onSuccess = {
+                    showLoading(false)
+                    navigateBack()
+                },
+                onError = { error ->
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                    showLoading(false)
+                }
+            )
         } else {
-            emptyList()
-        }
+            val createRequest = CreateDishRequest(
+                title = title,
+                description = description,
+                price = price,
+                calories = calories,
+                protein = protein,
+                fat = fat,
+                carbohydrates = carbs,
+                fiber = fiber,
+                imgPath = null
+            )
 
-        // TODO: Task 2 - API call to save/update dish
-        Toast.makeText(
-            requireContext(),
-            "Spremanje jela - TODO: API integracija",
-            Toast.LENGTH_SHORT
-        ).show()
-
-        // For now, just show placeholder message
-        if (isEditMode) {
-            Toast.makeText(requireContext(), "Izmjena jela ID: $dishId", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Dodavanje novog jela", Toast.LENGTH_SHORT).show()
-
-            // Clear form after adding new dish (so user can add more)
-            clearForm()
+            dishManager.createDish(
+                request = createRequest,
+                onSuccess = {
+                    showLoading(false)
+                    navigateBack()
+                },
+                onError = { error ->
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                    showLoading(false)
+                }
+            )
         }
     }
 
-    /**
-     * clear all input fields
-     */
-    private fun clearForm() {
-        titleInput.text?.clear()
-        descriptionInput.text?.clear()
-        priceInput.text?.clear()
-        caloriesInput.text?.clear()
-        carbsInput.text?.clear()
-        fiberInput.text?.clear()
-        fatInput.text?.clear()
-        proteinInput.text?.clear()
-        ingredientsInput.text?.clear()
-        categorySpinner.setSelection(0)
+    private fun handleDeleteDish() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Brisanje jela")
+            .setMessage("Jeste li sigurni da želite obrisati ovo jelo?")
+            .setPositiveButton("Da") { _, _ ->
+                dishId?.let { id ->
+                    showLoading(true)
+
+                    dishManager.deleteDish(
+                        dishId = id,
+                        onSuccess = {
+                            showLoading(false)
+                            navigateBack()
+                        },
+                        onError = { error ->
+                            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                            showLoading(false)
+                        }
+                    )
+                }
+            }
+            .setNegativeButton("Ne", null)
+            .show()
     }
 
-    /**
-     * handle cancel action
-     */
+    private fun validateInputs(): Boolean {
+        if (titleInput.text.isNullOrBlank()) {
+            titleInput.error = getString(R.string.error_title_required)
+            return false
+        }
+
+        if (priceInput.text.isNullOrBlank()) {
+            priceInput.error = getString(R.string.error_price_required)
+            return false
+        }
+
+        val price = priceInput.text.toString().toDoubleOrNull()
+        if (price == null || price <= 0) {
+            priceInput.error = "Cijena mora biti veća od 0"
+            return false
+        }
+
+        return true
+    }
+
     private fun handleCancel() {
-        // Go back to previous screen
+        navigateBack()
+    }
+
+    private fun navigateBack() {
         parentFragmentManager.popBackStack()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        saveDishButton.isEnabled = !isLoading
+        deleteButton.isEnabled = !isLoading
+        cancelButton.isEnabled = !isLoading
     }
 }

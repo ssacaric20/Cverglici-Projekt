@@ -453,8 +453,19 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:cornerRadius="8dp"
-            android:layout_marginBottom="16dp" />
+            app:cornerRadius="8dp" />
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Obriši jelo"
+            android:backgroundTint="@color/orange_primary"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/saveDishButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Cancel Button -->
         <Button
@@ -464,7 +475,9 @@
             android:layout_height="56dp"
             android:text="@string/cancel"
             android:textColor="@color/text_secondary"
+            android:backgroundTint="@color/gray_light"
             android:textSize="14sp"
+            app:cornerRadius="8dp"
             android:layout_marginBottom="16dp" />
 
     </LinearLayout>
