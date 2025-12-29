@@ -1,7 +1,7 @@
 package foi.cverglici.core.data.api.student.dailymenu
 
-import foi.cverglici.core.data.model.menu.DishDetailsResponse
-import foi.cverglici.core.data.model.menu.DailyMenuItem
+import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
+import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

@@ -9,9 +9,8 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import foi.cverglici.core.data.api.employee.dish.RetrofitEmployeeDish
-import foi.cverglici.core.data.model.employee.dailymenu.CreateDailyMenuRequest
 import foi.cverglici.core.data.model.employee.dailymenu.UpdateDailyMenuRequest
-import foi.cverglici.core.data.model.dish.DishListItem
+import foi.cverglici.core.data.model.employee.dish.DishListItem
 import foi.cverglici.smartmenza.R
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat

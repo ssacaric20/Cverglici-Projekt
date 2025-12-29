@@ -13,8 +13,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
-import foi.cverglici.core.data.model.dish.CreateDishRequest
-import foi.cverglici.core.data.model.dish.UpdateDishRequest
+import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
+import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
+import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
 
 class DishFormFragment : Fragment() {
@@ -157,7 +158,7 @@ class DishFormFragment : Fragment() {
         )
     }
 
-    private fun displayDishData(dish: foi.cverglici.core.data.model.menu.DishDetailsResponse) {
+    private fun displayDishData(dish: DishDetailsResponse) {
         titleInput.setText(dish.title)
         descriptionInput.setText(dish.description)
         priceInput.setText(dish.price.toString())

@@ -6,9 +6,9 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import foi.cverglici.core.data.api.employee.dish.RetrofitEmployeeDish
-import foi.cverglici.core.data.model.dish.CreateDishRequest
-import foi.cverglici.core.data.model.dish.UpdateDishRequest
-import foi.cverglici.core.data.model.menu.DishDetailsResponse
+import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
+import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
+import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import kotlinx.coroutines.launch
 
 class DishManager(

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import foi.cverglici.core.data.model.menu.DailyMenuItem
+import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import foi.cverglici.smartmenza.R
 import java.util.Locale
 

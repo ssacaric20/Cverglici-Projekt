@@ -3,7 +3,7 @@ package foi.cverglici.core.data.api.employee.dailymenu
 import foi.cverglici.core.data.model.employee.dailymenu.CreateDailyMenuRequest
 import foi.cverglici.core.data.model.employee.dailymenu.DailyMenuDetailsResponse
 import foi.cverglici.core.data.model.employee.dailymenu.UpdateDailyMenuRequest
-import foi.cverglici.core.data.model.menu.DailyMenuItem
+import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import retrofit2.Response
 import retrofit2.http.*
 

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
-import foi.cverglici.core.data.model.menu.DailyMenuItem
+import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.ui.employee.dish.DishFormFragment
 import kotlinx.coroutines.launch

@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import foi.cverglici.core.data.api.student.favorite.RetrofitFavorite
-import foi.cverglici.core.data.model.student.dailymenu.favorite.FavoriteDish
+import foi.cverglici.core.data.model.student.favorite.FavoriteDish
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.session.SessionManager
 import foi.cverglici.smartmenza.ui.student.menu.DishDetailDialog
