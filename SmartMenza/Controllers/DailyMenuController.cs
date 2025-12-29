@@ -123,5 +123,39 @@ namespace SmartMenza.API.Controllers
                 });
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult<DailyMenuDetailsResponse>> CreateDailyMenu([FromBody] CreateDailyMenuRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var createdMenu = await _dailyMenuServices.CreateDailyMenuAsync(request);
+                if (createdMenu == null)
+                {
+                    return BadRequest(new { message = "Greška prilikom kreiranja menija. Provjerite da li meni za taj datum i kategoriju već postoji ili da li sva jela postoje." });
+                }
+
+                return CreatedAtAction(
+                    nameof(GetDailyMenuById),
+                    new { id = createdMenu.DailyMenuId },
+                    createdMenu
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom kreiranja menija.",
+                    error = ex.Message
+                });
+            }
+        }
+
+
     }
 }
