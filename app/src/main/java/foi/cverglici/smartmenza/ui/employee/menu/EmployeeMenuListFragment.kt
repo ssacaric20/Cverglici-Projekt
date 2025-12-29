@@ -79,7 +79,7 @@ class EmployeeMenuListFragment : Fragment() {
 
     private fun initializeViews(view: View) {
         recyclerView = view.findViewById(R.id.menuRecyclerView)
-        progressBar = view.findViewById(R.id.progressBar)
+        progressBar = view.findViewById(R.id.dishesLoadingIndicator)
         emptyStateText = view.findViewById(R.id.emptyStateText)
         tabLunch = view.findViewById(R.id.tabLunch)
         tabDinner = view.findViewById(R.id.tabDinner)
@@ -204,6 +204,7 @@ class EmployeeMenuListFragment : Fragment() {
     }
 
     private fun showMenuItems(items: List<DailyMenuItem>) {
+        progressBar.visibility = View.GONE
         emptyStateText.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
 
@@ -212,6 +213,7 @@ class EmployeeMenuListFragment : Fragment() {
     }
 
     private fun showEmptyState() {
+        progressBar.visibility = View.GONE
         adapter.submitList(emptyList())
         recyclerView.visibility = View.GONE
         emptyStateText.visibility = View.VISIBLE
@@ -219,11 +221,17 @@ class EmployeeMenuListFragment : Fragment() {
     }
 
     private fun showLoading(isLoading: Boolean) {
-        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        recyclerView.visibility = if (isLoading) View.GONE else View.VISIBLE
+        if (isLoading) {
+            progressBar.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+            emptyStateText.visibility = View.GONE
+        } else {
+            progressBar.visibility = View.GONE
+        }
     }
 
     private fun showError(message: String) {
+        progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         showEmptyState()
     }
