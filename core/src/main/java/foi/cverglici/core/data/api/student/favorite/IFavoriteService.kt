@@ -1,8 +1,8 @@
 package foi.cverglici.core.data.api.student.favorite
 
-import foi.cverglici.core.data.model.favorite.AddFavoriteRequest
-import foi.cverglici.core.data.model.favorite.FavoriteDish
-import foi.cverglici.core.data.model.favorite.FavoriteStatusResponse
+import foi.cverglici.core.data.model.student.dailymenu.favorite.AddFavoriteRequest
+import foi.cverglici.core.data.model.student.dailymenu.favorite.FavoriteDish
+import foi.cverglici.core.data.model.student.dailymenu.favorite.FavoriteStatusResponse
 import retrofit2.Response
 import retrofit2.http.*
 

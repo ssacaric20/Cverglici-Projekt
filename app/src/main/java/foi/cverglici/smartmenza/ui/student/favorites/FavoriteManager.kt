@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import foi.cverglici.core.data.api.student.favorite.RetrofitFavorite
-import foi.cverglici.core.data.model.favorite.AddFavoriteRequest
+import foi.cverglici.core.data.model.student.dailymenu.favorite.AddFavoriteRequest
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.session.SessionManager
 import kotlinx.coroutines.launch
