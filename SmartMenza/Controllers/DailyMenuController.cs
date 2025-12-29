@@ -156,6 +156,34 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<DailyMenuDetailsResponse>> UpdateDailyMenu(int id, [FromBody] UpdateDailyMenuRequest request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var updatedMenu = await _dailyMenuServices.UpdateDailyMenuAsync(id, request);
+                if (updatedMenu == null)
+                {
+                    return NotFound(new { message = "Meni nije pronađen ili podaci nisu validni." });
+                }
+
+                return Ok(updatedMenu);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom ažuriranja menija.",
+                    error = ex.Message
+                });
+            }
+        }
+
 
     }
 }
