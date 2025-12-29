@@ -5,9 +5,13 @@ namespace SmartMenza.Business.Services.Interfaces
 {
     public interface IDailyMenuService
     {
-        Task<IReadOnlyList<DailyMenuListItemResponse>> GetTodaysMenuAsync(MenuCategory? category = null);
-        Task<IReadOnlyList<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date, MenuCategory? category = null);
+        Task<List<DailyMenuListItemResponse>> GetTodaysMenuAsync(MenuCategory? category = null);
+        Task<List<DailyMenuListItemResponse>?> GetMenuForDateAsync(string date, MenuCategory? category = null);
         Task<MenusByCategoryResponse> GetTodaysMenusGroupedAsync();
+
+        Task<DailyMenuDetailsResponse?> GetDailyMenuByIdAsync(int id);
+        Task<DailyMenuDetailsResponse?> CreateDailyMenuAsync(CreateDailyMenuRequest request);
+        Task<DailyMenuDetailsResponse?> UpdateDailyMenuAsync(int id, UpdateDailyMenuRequest request);
+        Task<bool> DeleteDailyMenuAsync(int id);
     }
 }
-
