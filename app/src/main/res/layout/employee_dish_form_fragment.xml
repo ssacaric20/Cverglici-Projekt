@@ -68,6 +68,16 @@
 
         </FrameLayout>
 
+        <Button
+            android:id="@+id/uploadDishImageButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Upload slike"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/orange_primary"
+            android:textColor="@color/white"
+            app:cornerRadius="8dp" />
+
         <!-- Category Selection -->
         <TextView
             android:layout_width="wrap_content"
