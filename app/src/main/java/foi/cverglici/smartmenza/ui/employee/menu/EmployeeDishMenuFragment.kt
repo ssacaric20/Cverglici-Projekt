@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.smartmenza.R
 import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
 
 /**
  * ua adding ili editing
@@ -36,9 +37,11 @@ class EmployeeDishFormFragment : Fragment() {
     private lateinit var saveDishButton: Button
     private lateinit var cancelButton: Button
     private lateinit var uploadDishImageButton: Button
+    private lateinit var dishImagePlaceholderText: TextView
 
     private var dishId: Int? = null
     private var isEditMode: Boolean = false
+    private var selectedImageUri: Uri? = null
 
     companion object {
         private const val ARG_DISH_ID = "dish_id"
@@ -66,6 +69,8 @@ class EmployeeDishFormFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri != null) {
                 dishImagePreview.setImageURI(uri)
+                dishImagePlaceholderText.visibility = View.GONE
+                selectedImageUri = uri
             }
         }
 
@@ -122,6 +127,7 @@ class EmployeeDishFormFragment : Fragment() {
         saveDishButton = view.findViewById(R.id.saveDishButton)
         cancelButton = view.findViewById(R.id.cancelButton)
         uploadDishImageButton = view.findViewById(R.id.uploadDishImageButton)
+        dishImagePlaceholderText = view.findViewById(R.id.dishImagePlaceholderText)
     }
 
     private fun setupCategorySpinner() {
@@ -225,6 +231,9 @@ class EmployeeDishFormFragment : Fragment() {
         proteinInput.text?.clear()
         ingredientsInput.text?.clear()
         categorySpinner.setSelection(0)
+        selectedImageUri = null
+        dishImagePreview.setImageResource(R.drawable.ic_restaurant)
+        dishImagePlaceholderText.visibility = View.VISIBLE
     }
 
     /**

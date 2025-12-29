@@ -57,6 +57,7 @@
                 android:contentDescription="@string/dish_image" />
 
             <TextView
+                android:id="@+id/dishImagePlaceholderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -72,7 +73,7 @@
             android:id="@+id/uploadDishImageButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Upload slike"
+            android:text="@string/upload_button"
             android:layout_marginBottom="24dp"
             android:backgroundTint="@color/orange_primary"
             android:textColor="@color/white"
