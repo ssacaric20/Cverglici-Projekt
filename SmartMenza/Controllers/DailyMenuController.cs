@@ -184,6 +184,27 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteDailyMenu(int id)
+        {
+            try
+            {
+                var result = await _dailyMenuServices.DeleteDailyMenuAsync(id);
+                if (!result)
+                {
+                    return NotFound(new { message = "Meni nije pronađen." });
+                }
 
+                return Ok(new { message = "Meni uspješno obrisan." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom brisanja menija.",
+                    error = ex.Message
+                });
+            }
+        }
     }
 }
