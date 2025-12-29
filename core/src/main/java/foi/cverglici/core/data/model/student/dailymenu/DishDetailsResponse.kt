@@ -1,6 +1,6 @@
-package foi.cverglici.core.data.model.menu
+package foi.cverglici.core.data.model.student.dailymenu
 
-data class DishMenuResponse(
+data class DishDetailsResponse(
     val dishId: Int,
     val title: String,
     val description: String,
@@ -11,5 +11,7 @@ data class DishMenuResponse(
     val carbohydrates: Double,
     val fiber: Double,
     val imgPath: String?,
-    val ingredients: List<String>
+    val ingredients: List<String>,
+    val averageRating: Double?,
+    val ratingsCount: Int
 )

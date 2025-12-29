@@ -14,28 +14,33 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import foi.cverglici.core.data.api.student.menu.RetrofitDish
-import foi.cverglici.core.data.model.menu.DailyMenuItem
+import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
+import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.ui.employee.dish.DishFormFragment
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import foi.cverglici.core.data.api.employee.dailymenu.RetrofitEmployeeMenu
+import java.util.*
 
-/**
- * fragment za view zaposlenika, manage daily menu
- */
 class EmployeeMenuListFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyStateText: TextView
-    private lateinit var adapter: EmployeeMenuListAdapter
+    private lateinit var adapter: EmployeeMenuAdapter
     private lateinit var fabAddDish: FloatingActionButton
+    private lateinit var fabAddMenu: FloatingActionButton
 
-    // tab views
     private lateinit var tabLunch: TextView
     private lateinit var tabDinner: TextView
 
-    // current selected category
     private var currentCategory: String = "lunch"
+    private var currentMenuId: Int? = null
+
+    companion object {
+        private const val KEY_CURRENT_CATEGORY = "current_category"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,11 +53,28 @@ class EmployeeMenuListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        savedInstanceState?.let {
+            currentCategory = it.getString(KEY_CURRENT_CATEGORY, "lunch")
+        }
+
         initializeViews(view)
         setupRecyclerView()
         setupTabClickListeners()
-        setupFabClickListener()
+        setupFabClickListeners()
+
+        updateTabSelection(isLunchActive = currentCategory == "lunch")
         loadTodayMenu()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateTabSelection(isLunchActive = currentCategory == "lunch")
+        loadTodayMenu()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_CURRENT_CATEGORY, currentCategory)
     }
 
     private fun initializeViews(view: View) {
@@ -62,12 +84,15 @@ class EmployeeMenuListFragment : Fragment() {
         tabLunch = view.findViewById(R.id.tabLunch)
         tabDinner = view.findViewById(R.id.tabDinner)
         fabAddDish = view.findViewById(R.id.fabAddDish)
+        fabAddMenu = view.findViewById(R.id.fabAddMenu)
     }
 
     private fun setupRecyclerView() {
-        adapter = EmployeeMenuListAdapter { menuItem ->
-            onDishClicked(menuItem)
-        }
+        adapter = EmployeeMenuAdapter(
+            onMenuClicked = { menuItem ->
+                onMenuClicked(menuItem)
+            }
+        )
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -79,6 +104,7 @@ class EmployeeMenuListFragment : Fragment() {
         tabLunch.setOnClickListener {
             if (currentCategory != "lunch") {
                 currentCategory = "lunch"
+                currentMenuId = null
                 updateTabSelection(isLunchActive = true)
                 loadTodayMenu()
             }
@@ -87,21 +113,23 @@ class EmployeeMenuListFragment : Fragment() {
         tabDinner.setOnClickListener {
             if (currentCategory != "dinner") {
                 currentCategory = "dinner"
+                currentMenuId = null
                 updateTabSelection(isLunchActive = false)
                 loadTodayMenu()
             }
         }
     }
 
-    private fun setupFabClickListener() {
+    private fun setupFabClickListeners() {
         fabAddDish.setOnClickListener {
             navigateToAddDish()
         }
+
+        fabAddMenu.setOnClickListener {
+            navigateToAddMenu()
+        }
     }
 
-    /**
-     * load today menu prema trenutnoj kategoriji
-     */
     private fun loadTodayMenu() {
         showLoading(true)
 
@@ -110,12 +138,14 @@ class EmployeeMenuListFragment : Fragment() {
                 val response = RetrofitDish.menuService.getTodayMenu(currentCategory)
 
                 if (response.isSuccessful) {
-                    val menuItems = response.body() ?: emptyList<DailyMenuItem>()
+                    val menuItems = response.body() ?: emptyList()
 
-                    if (menuItems.isEmpty()) {
-                        showEmptyState()
-                    } else {
+                    if (menuItems.isNotEmpty()) {
+                        currentMenuId = findMenuIdFromItems(menuItems)
                         showMenuItems(menuItems)
+                    } else {
+                        currentMenuId = null
+                        showEmptyState()
                     }
                 } else {
                     showError("Greška pri dohvaćanju jelovnika: ${response.code()}")
@@ -129,24 +159,45 @@ class EmployeeMenuListFragment : Fragment() {
         }
     }
 
-    /**
-     * update tab visual selection
-     */
+    private suspend fun findMenuIdFromItems(items: List<DailyMenuItem>): Int? {
+        if (items.isEmpty()) return null
+
+        val todayDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val categoryString = currentCategory
+
+        for (i in 1..200) {
+            try {
+                val response = RetrofitEmployeeMenu
+                    .menuService.getMenuById(i)
+
+                if (response.isSuccessful) {
+                    val menu = response.body()
+                    if (menu != null &&
+                        menu.date == todayDate &&
+                        menu.category.lowercase() == categoryString) {
+                        Log.d("EmployeeMenuListFragment", "Found menuId: ${menu.dailyMenuId}")
+                        return menu.dailyMenuId
+                    }
+                }
+            } catch (e: Exception) {
+                break
+            }
+        }
+
+        return null
+    }
+
     private fun updateTabSelection(isLunchActive: Boolean) {
         if (isLunchActive) {
-            // highlight lunch
             tabLunch.setBackgroundResource(R.drawable.bg_segment_active)
             tabLunch.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
 
-            // deactivate dinner
             tabDinner.background = null
             tabDinner.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
         } else {
-            // highlight dinner
             tabDinner.setBackgroundResource(R.drawable.bg_segment_active)
             tabDinner.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
 
-            // deactivate lunch
             tabLunch.background = null
             tabLunch.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
         }
@@ -155,10 +206,13 @@ class EmployeeMenuListFragment : Fragment() {
     private fun showMenuItems(items: List<DailyMenuItem>) {
         emptyStateText.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
+
+        adapter.submitList(null)
         adapter.submitList(items)
     }
 
     private fun showEmptyState() {
+        adapter.submitList(emptyList())
         recyclerView.visibility = View.GONE
         emptyStateText.visibility = View.VISIBLE
         emptyStateText.text = "Nema dostupnih jela za danas.\nDodajte nova jela klikom na + gumb."
@@ -174,11 +228,8 @@ class EmployeeMenuListFragment : Fragment() {
         showEmptyState()
     }
 
-    /**
-     * navigate to add new dish
-     */
     private fun navigateToAddDish() {
-        val fragment = EmployeeDishFormFragment.newInstance()
+        val fragment = DishFormFragment.newInstance()
 
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
@@ -186,13 +237,27 @@ class EmployeeMenuListFragment : Fragment() {
             .commit()
     }
 
-    /**
-     * handle dish click - navigate to edit
-     */
-    private fun onDishClicked(menuItem: DailyMenuItem) {
-        Log.d("EmployeeMenuListFragment", "Dish clicked: ${menuItem.dish.title} (ID: ${menuItem.dishId})")
+    private fun navigateToAddMenu() {
+        val fragment = if (currentMenuId != null) {
+            MenuFormFragment.newInstance(currentMenuId!!)
+        } else {
+            MenuFormFragment.newInstance()
+        }
 
-        val fragment = EmployeeDishFormFragment.newInstance(menuItem.dishId)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun onMenuClicked(menuItem: DailyMenuItem) {
+        Log.d("EmployeeMenuListFragment", "Menu clicked: ${menuItem.dish.title}")
+
+        val fragment = if (currentMenuId != null) {
+            MenuFormFragment.newInstance(currentMenuId!!)
+        } else {
+            MenuFormFragment.newInstance()
+        }
 
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)

@@ -1,4 +1,4 @@
-package foi.cverglici.core.data.model.menu
+package foi.cverglici.core.data.model.student.dailymenu
 
 import com.google.gson.annotations.SerializedName
 

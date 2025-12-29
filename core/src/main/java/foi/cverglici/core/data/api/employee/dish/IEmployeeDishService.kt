@@ -1,9 +1,9 @@
 package foi.cverglici.core.data.api.employee.dish
 
-import foi.cverglici.core.data.model.dish.CreateDishRequest
-import foi.cverglici.core.data.model.dish.DishListItem
-import foi.cverglici.core.data.model.dish.UpdateDishRequest
-import foi.cverglici.core.data.model.menu.DishDetailsResponse
+import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
+import foi.cverglici.core.data.model.employee.dish.DishListItem
+import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
+import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import retrofit2.Response
 import retrofit2.http.*
 

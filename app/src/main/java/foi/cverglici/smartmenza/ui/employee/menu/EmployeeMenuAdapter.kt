@@ -7,21 +7,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import foi.cverglici.core.data.model.menu.DailyMenuItem
+import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import foi.cverglici.smartmenza.R
 import java.util.Locale
 
-/**
- * adapter za display menu itema
- */
-class EmployeeMenuListAdapter(
-    private val onItemClick: (DailyMenuItem) -> Unit
-) : ListAdapter<DailyMenuItem, EmployeeMenuListAdapter.MenuViewHolder>(DiffCallback()) {
+class EmployeeMenuAdapter(
+    private val onMenuClicked: (DailyMenuItem) -> Unit
+) : ListAdapter<DailyMenuItem, EmployeeMenuAdapter.MenuViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_employee_menu_dish, parent, false)
-        return MenuViewHolder(view, onItemClick)
+        return MenuViewHolder(view, onMenuClicked)
     }
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
@@ -30,7 +27,7 @@ class EmployeeMenuListAdapter(
 
     class MenuViewHolder(
         itemView: View,
-        private val onItemClick: (DailyMenuItem) -> Unit
+        private val onMenuClicked: (DailyMenuItem) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val titleText: TextView = itemView.findViewById(R.id.dishTitle)
@@ -47,11 +44,10 @@ class EmployeeMenuListAdapter(
             priceText.text = String.format(Locale.getDefault(), "%.2f €", dish.price)
             caloriesText.text = "${dish.calories} kcal"
 
-            // edit indicator
             categoryBadge.text = "Uredi"
 
             itemView.setOnClickListener {
-                onItemClick(menuItem)
+                onMenuClicked(menuItem)
             }
         }
     }

@@ -1,12 +1,12 @@
-package foi.cverglici.core.data.model.dish
+package foi.cverglici.core.data.model.student.favorite
 
 import com.google.gson.annotations.SerializedName
 
-data class DishListItem(
+data class FavoriteDish(
     @SerializedName("dishId") val dishId: Int,
     @SerializedName("title") val title: String,
-    @SerializedName("price") val price: Double,
     @SerializedName("description") val description: String?,
+    @SerializedName("price") val price: Double,
     @SerializedName("calories") val calories: Int?,
     @SerializedName("imgPath") val imgPath: String?
 )

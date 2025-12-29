@@ -11,8 +11,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import foi.cverglici.core.data.api.student.menu.RetrofitDish
-import foi.cverglici.core.data.model.menu.DishDetailsResponse
+import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
+import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.ui.student.favorites.FavoriteManager
 import kotlinx.coroutines.launch

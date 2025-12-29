@@ -1,8 +1,8 @@
-package foi.cverglici.core.data.model.dish
+package foi.cverglici.core.data.model.employee.dish
 
 import com.google.gson.annotations.SerializedName
 
-data class UpdateDishRequest(
+data class CreateDishRequest(
     @SerializedName("title") val title: String,
     @SerializedName("description") val description: String?,
     @SerializedName("price") val price: Double,

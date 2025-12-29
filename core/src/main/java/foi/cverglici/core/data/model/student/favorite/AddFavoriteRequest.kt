@@ -1,4 +1,4 @@
-package foi.cverglici.core.data.model.favorite
+package foi.cverglici.core.data.model.student.favorite
 
 import com.google.gson.annotations.SerializedName
 

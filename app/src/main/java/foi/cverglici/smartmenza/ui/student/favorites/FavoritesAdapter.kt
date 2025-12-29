@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import foi.cverglici.core.data.model.favorite.FavoriteDish
+import foi.cverglici.core.data.model.student.favorite.FavoriteDish
 import foi.cverglici.smartmenza.R
 
 class FavoritesAdapter(
