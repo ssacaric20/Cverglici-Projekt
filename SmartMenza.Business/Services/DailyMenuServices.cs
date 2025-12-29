@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartMenza.Data.Data;
 using SmartMenza.Business.Models.DailyMenu;
-using SmartMenza.Core.Enums;
 using SmartMenza.Business.Services.Interfaces;
+using SmartMenza.Core.Enums;
+using SmartMenza.Data.Data;
+using SmartMenza.Data.Models;
 
 
 namespace SmartMenza.Business.Services
@@ -137,7 +138,38 @@ namespace SmartMenza.Business.Services
                 Dinner = allMenus.Where(x => x.Category == 2).Select(x => x.Item).ToList()
             };
         }
-    }
 
-   
+        public async Task<DailyMenuDetailsResponse?> GetDailyMenuByIdAsync(int id)
+        {
+            var menu = await _context.DailyMenus
+                .Include(dm => dm.dailyMenuDishes)
+                    .ThenInclude(dmd => dmd.dish)
+                .FirstOrDefaultAsync(dm => dm.dailyMenuId == id);
+
+            if (menu == null)
+                return null;
+
+            return new DailyMenuDetailsResponse
+            {
+                DailyMenuId = menu.dailyMenuId,
+                Date = menu.date,
+                Category = menu.category == 1 ? "Lunch" : "Dinner",
+                Dishes = menu.dailyMenuDishes.Select(dmd => new DailyMenuDishListItemResponse
+                {
+                    DishId = dmd.dish.dishId,
+                    Title = dmd.dish.title,
+                    Price = dmd.dish.price,
+                    Description = dmd.dish.description,
+                    Calories = dmd.dish.calories,
+                    Protein = dmd.dish.protein,
+                    Fat = dmd.dish.fat,
+                    Carbohydrates = dmd.dish.carbohydrates,
+                    Fiber = dmd.dish.fiber,
+                    ImgPath = dmd.dish.imgPath
+                }).ToList()
+            };
+        }
+
+
+    }
 }
