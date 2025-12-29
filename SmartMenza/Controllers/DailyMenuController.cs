@@ -100,5 +100,28 @@ namespace SmartMenza.API.Controllers
                 });
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DailyMenuDetailsResponse>> GetDailyMenuById(int id)
+        {
+            try
+            {
+                var menu = await _dailyMenuServices.GetDailyMenuByIdAsync(id);
+                if (menu == null)
+                {
+                    return NotFound(new { message = "Meni nije pronađen." });
+                }
+
+                return Ok(menu);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Greška prilikom dohvaćanja menija.",
+                    error = ex.Message
+                });
+            }
+        }
     }
 }
