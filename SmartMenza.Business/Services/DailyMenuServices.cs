@@ -218,5 +218,51 @@ namespace SmartMenza.Business.Services
             return await GetDailyMenuByIdAsync(newMenu.dailyMenuId);
         }
 
+        public async Task<DailyMenuDetailsResponse?> UpdateDailyMenuAsync(int id, UpdateDailyMenuRequest request)
+        {
+            var menu = await _context.DailyMenus
+                .Include(dm => dm.dailyMenuDishes)
+                .FirstOrDefaultAsync(dm => dm.dailyMenuId == id);
+
+            if (menu == null)
+            {
+                return null;
+            }
+
+            if (!DateOnly.TryParse(request.Date, out DateOnly parsedDate))
+            {
+                return null;
+            }
+
+            var dishes = await _context.Dishes
+                .Where(d => request.DishIds.Contains(d.dishId))
+                .ToListAsync();
+
+            if (dishes.Count != request.DishIds.Count)
+            {
+                return null;
+            }
+
+            menu.date = parsedDate;
+            menu.category = request.Category;
+
+            _context.DailyMenuDishes.RemoveRange(menu.dailyMenuDishes);
+
+            foreach (var dishId in request.DishIds)
+            {
+                var dailyMenuDish = new DailyMenuDishDto
+                {
+                    dailyMenuId = menu.dailyMenuId,
+                    dishId = dishId
+                };
+                _context.DailyMenuDishes.Add(dailyMenuDish);
+            }
+
+            _context.DailyMenus.Update(menu);
+            await _context.SaveChangesAsync();
+
+            return await GetDailyMenuByIdAsync(menu.dailyMenuId);
+        }
+
     }
 }
