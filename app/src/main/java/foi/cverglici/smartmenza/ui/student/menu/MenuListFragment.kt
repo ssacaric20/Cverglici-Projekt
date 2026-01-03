@@ -171,6 +171,7 @@ class MenuListFragment : Fragment() {
         val dialog = DishDetailDialog(
             requireContext(),
             viewLifecycleOwner,
+            parentFragmentManager,
             menuItem.dishId
         )
         dialog.show()

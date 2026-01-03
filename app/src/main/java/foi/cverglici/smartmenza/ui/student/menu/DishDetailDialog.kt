@@ -7,6 +7,7 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class DishDetailDialog(
     context: Context,
     private val lifecycleOwner: LifecycleOwner,
+    private val fragmentManager: FragmentManager,
     private val dishId: Int
 ) : Dialog(context) {
 
@@ -36,6 +38,7 @@ class DishDetailDialog(
     private lateinit var ingredientsChipGroup: ChipGroup
     private lateinit var averageRating: TextView
     private lateinit var ratingCount: TextView
+    private lateinit var aiAnalyzeButton: com.google.android.material.button.MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +72,7 @@ class DishDetailDialog(
         ingredientsChipGroup = findViewById(R.id.ingredientsChipGroup)
         averageRating = findViewById(R.id.averageRating)
         ratingCount = findViewById(R.id.ratingsCount)
+        aiAnalyzeButton = findViewById(R.id.aiAnalyzeButton)
     }
 
     private fun setupClickListeners() {
@@ -80,6 +84,12 @@ class DishDetailDialog(
         favoriteIcon.setOnClickListener {
             // TODO: Implement add to favorites
             Toast.makeText(context, "Dodavanje u favorite uskoro!", Toast.LENGTH_SHORT).show()
+        }
+
+        aiAnalyzeButton.setOnClickListener {
+            val text = dishDescription.text?.toString().orEmpty()
+            val sheet = AiAnalysisBottomSheetFragment.newInstance(text)
+            sheet.show(fragmentManager, "AiAnalysis")
         }
     }
 
