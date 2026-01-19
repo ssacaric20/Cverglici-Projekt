@@ -5,7 +5,7 @@
         public int DailyMenuId { get; set; } 
         public int DishId { get; set; }
         public DateOnly Date { get; set; }
-        public string Category { get; set; }
-        public DailyMenuDishListItemResponse Jelo { get; set; }
+        public string Category { get; set; } = string.Empty;
+        public DailyMenuDishListItemResponse Jelo { get; set; } = new();
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SmartMenza.API.Helpers;
 using SmartMenza.Business.Models.Favorites;
 using SmartMenza.Business.Services.Interfaces;
 
@@ -6,7 +8,8 @@ namespace SmartMenza.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FavoriteController : ControllerBase
+    [Authorize]
+    public sealed class FavoriteController : ControllerBase
     {
         private readonly IFavoriteService _favoriteService;
 
@@ -15,86 +18,42 @@ namespace SmartMenza.API.Controllers
             _favoriteService = favoriteService;
         }
 
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<List<FavoriteDishResponse>>> GetUserFavorites(int userId)
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<FavoriteDishResponse>>> GetMyFavorites()
         {
-            try
-            {
-                var favorites = await _favoriteService.GetUserFavoritesAsync(userId);
-                return Ok(favorites);
-            } catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Error fetching favorites",
-                    error = ex.Message
-                });
-            }
+            var userId = User.GetUserId();
+            return Ok(await _favoriteService.GetUserFavoritesAsync(userId));
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddFavorite([FromBody] AddFavoriteRequest request)
         {
-            try
-            {
-                var result = await _favoriteService.AddFavoriteAsync(request.UserId, request.DishId);
+            var userId = User.GetUserId();
 
-                if (!result)
-                    return BadRequest(new { message = "Favorite already exists" });
+            var ok = await _favoriteService.AddFavoriteAsync(userId, request.DishId);
+            if (!ok) return BadRequest(new { message = "Favorite already exists" });
 
-                return Ok(new { message = "Favorite added successfully" });
-            } catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Error adding favorite",
-                    error = ex.Message
-                });
-            }
+            return Ok(new { message = "Favorite added successfully" });
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> RemoveFavorite([FromQuery] int userId, [FromQuery] int dishId)
+        [HttpDelete("{dishId:int}")]
+        public async Task<IActionResult> RemoveFavorite(int dishId)
         {
-            try
-            {
-                var result = await _favoriteService.RemoveFavoriteAsync(userId, dishId);
+            var userId = User.GetUserId();
 
-                if (!result)
-                    return NotFound(new { message = "Favorite not found" });
+            var ok = await _favoriteService.RemoveFavoriteAsync(userId, dishId);
+            if (!ok) return NotFound(new { message = "Favorite not found" });
 
-                return Ok(new { message = "Favorite removed successfully" });
-            } catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Error removing favorite",
-                    error = ex.Message
-                });
-            }
+            return Ok(new { message = "Favorite removed successfully" });
         }
 
-        [HttpGet("check")]
-        public async Task<ActionResult<bool>> IsFavorite([FromQuery] int userId, [FromQuery] int dishId)
+        [HttpGet("check/{dishId:int}")]
+        public async Task<IActionResult> IsFavorite(int dishId)
         {
-            try
-            {
-                var isFavorite = await _favoriteService.IsFavoriteAsync(userId, dishId);
-                return Ok(new { isFavorite });
-            } catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    message = "Error checking favorite status",
-                    error = ex.Message
-                });
-            }
+            var userId = User.GetUserId();
+            return Ok(new { isFavorite = await _favoriteService.IsFavoriteAsync(userId, dishId) });
         }
-    }
-
-    public class AddFavoriteRequest
-    {
-        public int UserId { get; set; }
-        public int DishId { get; set; }
     }
 }

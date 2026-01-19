@@ -1,68 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using SmartMenza.Business.Services.Interfaces;
+using SmartMenza.Core.Settings;
 
 namespace SmartMenza.Business.Services
 {
-    public class ImageService : IImageService
+    public sealed class AzureBlobImageService : IImageService
     {
-        private readonly BlobContainerClient _containerClient;
+        private readonly BlobContainerClient _container;
 
-        public ImageService(IConfiguration configuration)
+        public AzureBlobImageService(BlobServiceClient blobServiceClient, IOptions<AzureStorageSettings> options)
         {
-            var connectionString = configuration["AzureStorage:ConnectionString"];
-            var containerName = configuration["AzureStorage:ContainerName"];
+            var s = options.Value;
 
-            var blobServiceClient = new BlobServiceClient(connectionString);
-            _containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            if (string.IsNullOrWhiteSpace(s.ContainerName))
+                throw new InvalidOperationException("AzureStorage:ContainerName is missing.");
+
+            _container = blobServiceClient.GetBlobContainerClient(s.ContainerName);
+
+            // radi jednom po instanci (Scoped)
+            _container.CreateIfNotExists(PublicAccessType.Blob);
         }
+
+
         public async Task<string> UploadImageAsync(Stream imageStream, string fileName)
         {
+            if (imageStream is null) throw new ArgumentNullException(nameof(imageStream));
+            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException("FileName is required.", nameof(fileName));
+
+            await _container.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
             var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
-            var blobClient = _containerClient.GetBlobClient(uniqueFileName);
+            var blobClient = _container.GetBlobClient(uniqueFileName);
 
-            var blobHttpHeaders = new BlobHttpHeaders
-            {
-                ContentType = GetContentType(fileName)
-            };
+            var headers = new BlobHttpHeaders { ContentType = GetContentType(fileName) };
 
-            await blobClient.UploadAsync(imageStream, new BlobUploadOptions
-            {
-                HttpHeaders = blobHttpHeaders
-            });
+            await blobClient.UploadAsync(imageStream, new BlobUploadOptions { HttpHeaders = headers });
 
             return blobClient.Uri.ToString();
         }
 
         public async Task<bool> DeleteImageAsync(string imageUrl)
         {
-            try
-            {
+            if (string.IsNullOrWhiteSpace(imageUrl)) return false;
 
-                var uri = new Uri(imageUrl);
-                var blobName = uri.Segments[^1];
+            var uri = new Uri(imageUrl);
+            var blobName = string.Join("", uri.Segments.Skip(2));
 
-                var blobClient = _containerClient.GetBlobClient(blobName);
-                await blobClient.DeleteIfExistsAsync();
+            var blobClient = _container.GetBlobClient(blobName);
+            var result = await blobClient.DeleteIfExistsAsync();
 
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return result.Value;
         }
 
         private static string GetContentType(string fileName)
         {
-            var extension = Path.GetExtension(fileName).ToLowerInvariant();
-            return extension switch
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            return ext switch
             {
                 ".jpg" or ".jpeg" => "image/jpeg",
                 ".png" => "image/png",

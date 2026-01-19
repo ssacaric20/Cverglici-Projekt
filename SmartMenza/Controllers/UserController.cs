@@ -1,12 +1,8 @@
-﻿using Google.Apis.Auth;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SmartMenza.Business.Models.Auth;
 using SmartMenza.Business.Models.Users;
-using SmartMenza.Business.Services;
 using SmartMenza.Business.Services.Interfaces;
-using SmartMenza.Data.Models;
 
 
 namespace SmartMenza.API.Controllers
@@ -24,6 +20,7 @@ namespace SmartMenza.API.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserListItemResponse>>> GetUsers()
         {
@@ -38,6 +35,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> LoginUserAsync([FromBody] LoginRequest request)
         {
@@ -53,10 +51,15 @@ namespace SmartMenza.API.Controllers
 
             catch (Exception ex) 
             {
-                return StatusCode(500, "An error occurred during login.");
+                return StatusCode(500, new
+                {
+                    message = "Error occurred during login.",
+                    error = ex.Message
+                });
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<LoginResponse>> Register([FromBody] RegistrationRequest request)
         {
@@ -84,11 +87,11 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-
+        [AllowAnonymous]
         [HttpPost("google-login")]
         public async Task<ActionResult<LoginResponse>> LoginGoogle([FromBody] GoogleLoginRequest request)
         {
-            if (request == null || string.IsNullOrWhiteSpace(request.tokenId))
+            if (request == null || string.IsNullOrWhiteSpace(request.TokenId))
             {
                 return BadRequest(new { message = "Token is required." });
             }
