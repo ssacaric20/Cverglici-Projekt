@@ -8,34 +8,42 @@ namespace SmartMenza.Business.Services
 {
     public sealed class AzureBlobImageService : IImageService
     {
-        private readonly BlobContainerClient _container;
+        private readonly BlobServiceClient? _blobServiceClient;
+        private readonly AzureStorageSettings _settings;
 
-        public AzureBlobImageService(BlobServiceClient blobServiceClient, IOptions<AzureStorageSettings> options)
+        public AzureBlobImageService(BlobServiceClient? blobServiceClient, IOptions<AzureStorageSettings> options)
         {
-            var s = options.Value;
+            _blobServiceClient = blobServiceClient;
+            _settings = options.Value;
 
-            if (string.IsNullOrWhiteSpace(s.ContainerName))
+            if (string.IsNullOrWhiteSpace(_settings.ContainerName))
                 throw new InvalidOperationException("AzureStorage:ContainerName is missing.");
-
-            _container = blobServiceClient.GetBlobContainerClient(s.ContainerName);
-
-            // radi jednom po instanci (Scoped)
-            _container.CreateIfNotExists(PublicAccessType.Blob);
         }
 
+        private BlobContainerClient GetContainerOrThrow()
+        {
+            if (_blobServiceClient is null)
+                throw new InvalidOperationException(
+                    "Azure Blob Storage is not configured. " +
+                    "For local dev start Azurite and set AzureStorage:ConnectionString in appsettings.Development.json. " +
+                    "For Azure set AzureStorage:ConnectionString in App Service configuration."
+                );
+
+            return _blobServiceClient.GetBlobContainerClient(_settings.ContainerName);
+        }
 
         public async Task<string> UploadImageAsync(Stream imageStream, string fileName)
         {
             if (imageStream is null) throw new ArgumentNullException(nameof(imageStream));
             if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException("FileName is required.", nameof(fileName));
 
-            await _container.CreateIfNotExistsAsync(PublicAccessType.Blob);
+            var container = GetContainerOrThrow();
+            await container.CreateIfNotExistsAsync(PublicAccessType.Blob);
 
             var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
-            var blobClient = _container.GetBlobClient(uniqueFileName);
+            var blobClient = container.GetBlobClient(uniqueFileName);
 
             var headers = new BlobHttpHeaders { ContentType = GetContentType(fileName) };
-
             await blobClient.UploadAsync(imageStream, new BlobUploadOptions { HttpHeaders = headers });
 
             return blobClient.Uri.ToString();
@@ -45,10 +53,12 @@ namespace SmartMenza.Business.Services
         {
             if (string.IsNullOrWhiteSpace(imageUrl)) return false;
 
+            var container = GetContainerOrThrow();
+
             var uri = new Uri(imageUrl);
             var blobName = string.Join("", uri.Segments.Skip(2));
 
-            var blobClient = _container.GetBlobClient(blobName);
+            var blobClient = container.GetBlobClient(blobName);
             var result = await blobClient.DeleteIfExistsAsync();
 
             return result.Value;

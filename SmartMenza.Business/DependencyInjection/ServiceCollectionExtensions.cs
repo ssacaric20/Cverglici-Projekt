@@ -27,12 +27,12 @@ namespace SmartMenza.Business.DependencyInjection
             services.Configure<AzureStorageSettings>(config.GetSection("AzureStorage"));
 
             // Azure Blob
-            services.AddSingleton(sp =>
+            services.AddSingleton<BlobServiceClient?>(sp =>
             {
                 var s = sp.GetRequiredService<IOptions<AzureStorageSettings>>().Value;
 
                 if (string.IsNullOrWhiteSpace(s.ConnectionString))
-                    throw new InvalidOperationException("AzureStorage:ConnectionString is missing.");
+                    return null;
 
                 return new BlobServiceClient(s.ConnectionString);
             });
