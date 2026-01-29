@@ -66,10 +66,13 @@
 
     <!-- Image -->
     <string name="dish_image_label">Slika jela</string>
-    <string name="image_placeholder_text">Slika jela će biti dostupna uskoro\n(Upload/AI generiranje)</string>
+    <string name="image_placeholder_text">Unesite sliku iz galerije</string>
 
     <!-- Category -->
     <string name="category_label">Kategorija</string>
+
+    <!-- Upload -->
+    <string name="upload_button">Unesi sliku</string>
 
     <!-- Basic Info -->
     <string name="dish_title_label">Naziv jela</string>

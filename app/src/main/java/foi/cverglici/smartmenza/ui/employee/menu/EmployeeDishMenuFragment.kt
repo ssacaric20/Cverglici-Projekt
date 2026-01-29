@@ -17,6 +17,8 @@ import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
 import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
 import foi.cverglici.smartmenza.ui.employee.dish.DishManager
 
 class EmployeeDishMenuFragment : Fragment() {
@@ -36,10 +38,13 @@ class EmployeeDishMenuFragment : Fragment() {
     private lateinit var saveDishButton: Button
     private lateinit var cancelButton: Button
     private lateinit var deleteButton: Button
+    private lateinit var uploadDishImageButton: Button
+    private lateinit var dishImagePlaceholderText: TextView
 
     private var dishId: Int? = null
     private var isEditMode: Boolean = false
     private lateinit var dishManager: DishManager
+    private var selectedImageUri: Uri? = null
 
     companion object {
         private const val ARG_DISH_ID = "dish_id"
@@ -56,6 +61,16 @@ class EmployeeDishMenuFragment : Fragment() {
             }
         }
     }
+
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                dishImagePreview.setImageURI(uri)
+                dishImagePlaceholderText.visibility = View.GONE
+                selectedImageUri = uri
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +126,8 @@ class EmployeeDishMenuFragment : Fragment() {
         saveDishButton = view.findViewById(R.id.saveDishButton)
         cancelButton = view.findViewById(R.id.cancelButton)
         deleteButton = view.findViewById(R.id.deleteButton)
+        uploadDishImageButton = view.findViewById(R.id.uploadDishImageButton)
+        dishImagePlaceholderText = view.findViewById(R.id.dishImagePlaceholderText)
     }
 
     private fun setupCategorySpinner() {
@@ -168,6 +185,10 @@ class EmployeeDishMenuFragment : Fragment() {
         fiberInput.setText(dish.fiber?.toString() ?: "")
         fatInput.setText(dish.fat?.toString() ?: "")
         proteinInput.setText(dish.protein?.toString() ?: "")
+
+        uploadDishImageButton.setOnClickListener {
+            pickImage.launch("image/*")
+        }
     }
 
     private fun handleSaveDish() {
@@ -261,7 +282,7 @@ class EmployeeDishMenuFragment : Fragment() {
             }
             .setNegativeButton("Ne", null)
             .show()
-    }
+        }
 
     private fun validateInputs(): Boolean {
         if (titleInput.text.isNullOrBlank()) {
