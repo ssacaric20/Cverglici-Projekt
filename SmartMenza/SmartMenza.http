@@ -1,6 +1,65 @@
-@SmartMenza_HostAddress = http://localhost:5166
+@host = http://localhost:5166
+@token = PUT_TOKEN_HERE
 
-GET {{SmartMenza_HostAddress}}/weatherforecast/
+### Swagger test - health (ako imaš)
+# GET {{host}}/weatherforecast/
+# Accept: application/json
+
+### --------------------
+### AUTH
+### --------------------
+POST {{host}}/api/User/login
+Content-Type: application/json
+
+{
+  "email": "existing@test.com",
+  "password": "pass123"
+}
+
+### --------------------
+### DISH (public)
+### --------------------
+GET {{host}}/api/Dish
 Accept: application/json
 
 ###
+GET {{host}}/api/Dish/1
+Accept: application/json
+
+### --------------------
+### DAILY MENU (public)
+### --------------------
+GET {{host}}/api/DailyMenu/today
+Accept: application/json
+
+###
+GET {{host}}/api/DailyMenu/today?category=lunch
+Accept: application/json
+
+###
+GET {{host}}/api/DailyMenu/today/grouped
+Accept: application/json
+
+###
+GET {{host}}/api/DailyMenu/date?date=2026-01-19
+Accept: application/json
+
+### --------------------
+### FAVORITES (auth)
+### --------------------
+GET {{host}}/api/Favorite
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+POST {{host}}/api/Favorite
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dishId": 1
+}
+
+###
+DELETE {{host}}/api/Favorite/1
+Authorization: Bearer {{token}}

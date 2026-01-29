@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartMenza.Business.Models;
 using SmartMenza.Business.Models.FoodAnalysis;
 using SmartMenza.Business.Services.Interfaces;
 
-namespace SmartMenza.Api.Controllers;
+namespace SmartMenza.API.Controllers;
 
 [ApiController]
 [Route("api/food")]

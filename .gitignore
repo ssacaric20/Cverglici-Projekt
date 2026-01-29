@@ -172,3 +172,9 @@ local.properties
 README.md
 /.idea/misc.xml
 markdown.xml
+
+# Azurite
+AzuriteConfig
+AzuriteConfig/
+__azurite_db_*.json
+

@@ -1,75 +1,63 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartMenza.Business.Models.Favorites;
+﻿using SmartMenza.Business.Models.Favorites;
 using SmartMenza.Business.Services.Interfaces;
-using SmartMenza.Data.Data;
-using SmartMenza.Data.Models;
+using SmartMenza.Data.Entities;
+using SmartMenza.Data.Repositories.Interfaces;
 
 namespace SmartMenza.Business.Services
 {
-    public class FavoriteService : IFavoriteService
+    public sealed class FavoriteService : IFavoriteService
     {
-        private readonly AppDBContext _context;
+        private readonly IFavoriteRepository _favorites;
 
-        public FavoriteService(AppDBContext context)
+        public FavoriteService(IFavoriteRepository favorites)
         {
-            _context = context;
+            _favorites = favorites;
         }
 
         public async Task<List<FavoriteDishResponse>> GetUserFavoritesAsync(int userId)
         {
-            var favorites = await _context.FavoriteDishes
-                .Where(f => f.userId == userId)
-                .Include(f => f.dish)
-                .Select(f => new FavoriteDishResponse
-                {
-                    DishId = f.dish.dishId,
-                    Title = f.dish.title,
-                    Description = f.dish.description,
-                    Price = f.dish.price,
-                    Calories = f.dish.calories,
-                    ImgPath = f.dish.imgPath
-                })
-                .ToListAsync();
+            var favorites = await _favorites.GetByUserIdAsync(userId);
 
-            return favorites;
+            if (favorites == null || favorites.Count == 0)
+                return new List<FavoriteDishResponse>();
+
+            return favorites.Select(f => new FavoriteDishResponse
+            {
+                DishId = f.Dish.DishId,
+                Title = f.Dish.Title,
+                Description = f.Dish.Description,
+                Price = f.Dish.Price,
+                Calories = f.Dish.Calories,
+                ImgPath = f.Dish.ImgPath
+            }).ToList();
         }
 
         public async Task<bool> AddFavoriteAsync(int userId, int dishId)
         {
-            var existingFavorite = await _context.FavoriteDishes
-                .FirstOrDefaultAsync(f => f.userId == userId && f.dishId == dishId);
-
-            if (existingFavorite != null)
+            if (await _favorites.ExistsAsync(userId, dishId))
                 return false;
 
-            var favorite = new FavoriteDishDto
+            await _favorites.AddAsync(new FavoriteDish
             {
-                userId = userId,
-                dishId = dishId
-            };
+                UserId = userId,
+                DishId = dishId
+            });
 
-            _context.FavoriteDishes.Add(favorite);
-            await _context.SaveChangesAsync();
+            await _favorites.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> RemoveFavoriteAsync(int userId, int dishId)
         {
-            var favorite = await _context.FavoriteDishes
-                .FirstOrDefaultAsync(f => f.userId == userId && f.dishId == dishId);
+            var fav = await _favorites.GetAsync(userId, dishId);
+            if (fav == null) return false;
 
-            if (favorite == null)
-                return false;
-
-            _context.FavoriteDishes.Remove(favorite);
-            await _context.SaveChangesAsync();
+            _favorites.Remove(fav);
+            await _favorites.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> IsFavoriteAsync(int userId, int dishId)
-        {
-            return await _context.FavoriteDishes
-                .AnyAsync(f => f.userId == userId && f.dishId == dishId);
-        }
+        public Task<bool> IsFavoriteAsync(int userId, int dishId)
+            => _favorites.ExistsAsync(userId, dishId);
     }
 }

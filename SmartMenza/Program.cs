@@ -1,42 +1,36 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using SmartMenza.Business.Services;
-using SmartMenza.Data.Data;
-using System.Text;
-using SmartMenza.Business.Services.Interfaces;
+using Microsoft.OpenApi.Models;
+using SmartMenza.API.Configuration;
+using SmartMenza.Business.DependencyInjection;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddBusinessLayer(builder.Configuration);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddScoped<IFoodAnalyzer, RuleBasedFoodAnalyzer>();
-builder.Services.AddScoped<IUserService, UserServices>();
-builder.Services.AddScoped<IDailyMenuService, DailyMenuServices>();
-builder.Services.AddScoped<IDishService, DishServices>();
-builder.Services.AddScoped<IImageService, ImageService>();
-builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "SmartMenza API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.ASCII.GetBytes("f17ca2eec6a314d8f6d80fddb6bd4135a2a5a5a715700e463f788465a221f099")
-            ),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Unesi token ovako: Bearer {token}"
     });
 
-// CORS konfiguracija
+
+    // "Lock" samo na endpointima koji imaju [Authorize]
+    c.OperationFilter<SmartMenza.API.Configuration.AuthorizeOperationFilter>();
+});
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -47,19 +41,19 @@ builder.Services.AddCors(options =>
     });
 });
 
+
+builder.Services.AddJwtAuthentication();
+
 var app = builder.Build();
-app.UseAuthentication();
-app.UseAuthorization();
 
-
-//if (app.Environment.IsDevelopment())
-//{
 app.UseSwagger();
 app.UseSwaggerUI();
-//}
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowAll");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

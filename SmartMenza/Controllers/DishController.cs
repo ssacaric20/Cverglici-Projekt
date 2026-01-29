@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartMenza.Business.Models.Dishes;
-using SmartMenza.Business.Services;
 using SmartMenza.Business.Services.Interfaces;
 
 
@@ -61,6 +61,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateDish([FromBody] CreateDishRequest request)
         {
@@ -94,6 +95,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDish(int id, [FromBody] UpdateDishRequest request)
         {
@@ -123,6 +125,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDish(int id)
         {
@@ -147,6 +150,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("{id}/upload-image")]
         public async Task<IActionResult> UploadDishImage(int id, IFormFile image)
         {

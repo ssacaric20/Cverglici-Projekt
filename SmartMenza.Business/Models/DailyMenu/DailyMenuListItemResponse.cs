@@ -2,9 +2,10 @@
 {
     public class DailyMenuListItemResponse
     {
+        public int DailyMenuId { get; set; } 
         public int DishId { get; set; }
         public DateOnly Date { get; set; }
-        public string Category { get; set; } = string.Empty; 
-        public DailyMenuDishListItemResponse Jelo { get; set; } = null!;
+        public string Category { get; set; } = string.Empty;
+        public DailyMenuDishListItemResponse Jelo { get; set; } = new();
     }
 }

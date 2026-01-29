@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SmartMenza.Business.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartMenza.Business.Models.DailyMenu;
-using SmartMenza.Core.Enums;
 using SmartMenza.Business.Services.Interfaces;
+using SmartMenza.Core.Enums;
 
 
 namespace SmartMenza.API.Controllers
@@ -124,6 +124,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<DailyMenuDetailsResponse>> CreateDailyMenu([FromBody] CreateDailyMenuRequest request)
         {
@@ -156,6 +157,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<DailyMenuDetailsResponse>> UpdateDailyMenu(int id, [FromBody] UpdateDailyMenuRequest request)
         {
@@ -184,6 +186,7 @@ namespace SmartMenza.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteDailyMenu(int id)
         {
