@@ -17,7 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
 import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import foi.cverglici.smartmenza.R
-import foi.cverglici.smartmenza.ui.employee.dish.DishFormFragment
+import foi.cverglici.smartmenza.ui.employee.dish.DishMenuFragment
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import foi.cverglici.core.data.api.employee.dailymenu.RetrofitEmployeeMenu
@@ -237,7 +237,7 @@ class EmployeeMenuListFragment : Fragment() {
     }
 
     private fun navigateToAddDish() {
-        val fragment = DishFormFragment.newInstance()
+        val fragment = DishMenuFragment.newInstance()
 
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)

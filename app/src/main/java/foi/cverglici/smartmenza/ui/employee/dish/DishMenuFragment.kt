@@ -1,6 +1,7 @@
 package foi.cverglici.smartmenza.ui.employee.dish
 
 import android.app.AlertDialog
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
@@ -18,7 +20,7 @@ import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
 
-class DishFormFragment : Fragment() {
+class DishMenuFragment : Fragment() {
 
     private lateinit var formTitle: TextView
     private lateinit var dishImagePreview: ImageView
@@ -35,26 +37,39 @@ class DishFormFragment : Fragment() {
     private lateinit var saveDishButton: Button
     private lateinit var cancelButton: Button
     private lateinit var deleteButton: Button
+    private lateinit var uploadDishImageButton: Button
+    private lateinit var dishImagePlaceholderText: TextView
 
     private var dishId: Int? = null
     private var isEditMode: Boolean = false
     private lateinit var dishManager: DishManager
+    private var selectedImageUri: Uri? = null
 
     companion object {
         private const val ARG_DISH_ID = "dish_id"
 
-        fun newInstance(): DishFormFragment {
-            return DishFormFragment()
+        fun newInstance(): DishMenuFragment {
+            return DishMenuFragment()
         }
 
-        fun newInstance(dishId: Int): DishFormFragment {
-            return DishFormFragment().apply {
+        fun newInstance(dishId: Int): DishMenuFragment {
+            return DishMenuFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_DISH_ID, dishId)
                 }
             }
         }
     }
+
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                dishImagePreview.setImageURI(uri)
+                dishImagePlaceholderText.visibility = View.GONE
+                selectedImageUri = uri
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +125,8 @@ class DishFormFragment : Fragment() {
         saveDishButton = view.findViewById(R.id.saveDishButton)
         cancelButton = view.findViewById(R.id.cancelButton)
         deleteButton = view.findViewById(R.id.deleteButton)
+        uploadDishImageButton = view.findViewById(R.id.uploadDishImageButton)
+        dishImagePlaceholderText = view.findViewById(R.id.dishImagePlaceholderText)
     }
 
     private fun setupCategorySpinner() {
@@ -139,6 +156,10 @@ class DishFormFragment : Fragment() {
         deleteButton.setOnClickListener {
             handleDeleteDish()
         }
+
+        uploadDishImageButton.setOnClickListener {
+            pickImage.launch("image/*")
+        }
     }
 
     private fun loadDishData(dishId: Int) {
@@ -167,6 +188,10 @@ class DishFormFragment : Fragment() {
         fiberInput.setText(dish.fiber?.toString() ?: "")
         fatInput.setText(dish.fat?.toString() ?: "")
         proteinInput.setText(dish.protein?.toString() ?: "")
+
+        uploadDishImageButton.setOnClickListener {
+            pickImage.launch("image/*")
+        }
     }
 
     private fun handleSaveDish() {
@@ -280,6 +305,22 @@ class DishFormFragment : Fragment() {
         }
 
         return true
+    }
+
+    private fun clearForm() {
+        titleInput.text?.clear()
+        descriptionInput.text?.clear()
+        priceInput.text?.clear()
+        caloriesInput.text?.clear()
+        carbsInput.text?.clear()
+        fiberInput.text?.clear()
+        fatInput.text?.clear()
+        proteinInput.text?.clear()
+        ingredientsInput.text?.clear()
+        categorySpinner.setSelection(0)
+        selectedImageUri = null
+        dishImagePreview.setImageResource(R.drawable.ic_restaurant)
+        dishImagePlaceholderText.visibility = View.VISIBLE
     }
 
     private fun handleCancel() {
