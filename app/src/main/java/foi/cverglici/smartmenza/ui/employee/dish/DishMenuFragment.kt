@@ -1,6 +1,7 @@
-package foi.cverglici.smartmenza.ui.employee.menu
+package foi.cverglici.smartmenza.ui.employee.dish
 
 import android.app.AlertDialog
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +12,15 @@ import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
 import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
-import androidx.activity.result.contract.ActivityResultContracts
-import android.net.Uri
-import foi.cverglici.smartmenza.ui.employee.dish.DishManager
 
-class EmployeeDishMenuFragment : Fragment() {
+class DishMenuFragment : Fragment() {
 
     private lateinit var formTitle: TextView
     private lateinit var dishImagePreview: ImageView
@@ -49,12 +48,12 @@ class EmployeeDishMenuFragment : Fragment() {
     companion object {
         private const val ARG_DISH_ID = "dish_id"
 
-        fun newInstance(): EmployeeDishMenuFragment {
-            return EmployeeDishMenuFragment()
+        fun newInstance(): DishMenuFragment {
+            return DishMenuFragment()
         }
 
-        fun newInstance(dishId: Int): EmployeeDishMenuFragment {
-            return EmployeeDishMenuFragment().apply {
+        fun newInstance(dishId: Int): DishMenuFragment {
+            return DishMenuFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_DISH_ID, dishId)
                 }
@@ -156,6 +155,10 @@ class EmployeeDishMenuFragment : Fragment() {
 
         deleteButton.setOnClickListener {
             handleDeleteDish()
+        }
+
+        uploadDishImageButton.setOnClickListener {
+            pickImage.launch("image/*")
         }
     }
 
@@ -282,7 +285,7 @@ class EmployeeDishMenuFragment : Fragment() {
             }
             .setNegativeButton("Ne", null)
             .show()
-        }
+    }
 
     private fun validateInputs(): Boolean {
         if (titleInput.text.isNullOrBlank()) {
@@ -302,6 +305,22 @@ class EmployeeDishMenuFragment : Fragment() {
         }
 
         return true
+    }
+
+    private fun clearForm() {
+        titleInput.text?.clear()
+        descriptionInput.text?.clear()
+        priceInput.text?.clear()
+        caloriesInput.text?.clear()
+        carbsInput.text?.clear()
+        fiberInput.text?.clear()
+        fatInput.text?.clear()
+        proteinInput.text?.clear()
+        ingredientsInput.text?.clear()
+        categorySpinner.setSelection(0)
+        selectedImageUri = null
+        dishImagePreview.setImageResource(R.drawable.ic_restaurant)
+        dishImagePlaceholderText.visibility = View.VISIBLE
     }
 
     private fun handleCancel() {
