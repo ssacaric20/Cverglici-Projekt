@@ -3,12 +3,14 @@ package foi.cverglici.smartmenza.ui.student.menu
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
@@ -38,6 +40,11 @@ class DishDetailDialog(
     private lateinit var averageRating: TextView
     private lateinit var ratingCount: TextView
 
+    private lateinit var writeReviewButton: MaterialButton
+    private lateinit var reviewFormContainer: View
+    private lateinit var cancelReviewButton: MaterialButton
+    private lateinit var submitReviewButton: MaterialButton
+
     private lateinit var favoriteManager: FavoriteManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +63,6 @@ class DishDetailDialog(
         setupClickListeners()
         loadDishDetails()
 
-        // Initialize FavoriteManager
         favoriteManager = FavoriteManager(context, lifecycleOwner, favoriteIcon, dishId)
         favoriteManager.initialize()
     }
@@ -76,11 +82,30 @@ class DishDetailDialog(
         ingredientsChipGroup = findViewById(R.id.ingredientsChipGroup)
         averageRating = findViewById(R.id.averageRating)
         ratingCount = findViewById(R.id.ratingsCount)
+
+        writeReviewButton = findViewById(R.id.btnWriteReview)
+        reviewFormContainer = findViewById(R.id.reviewFormContainer)
+        cancelReviewButton = findViewById(R.id.btnCancelReview)
+        submitReviewButton = findViewById(R.id.btnSubmitReview)
     }
 
     private fun setupClickListeners() {
         closeButton.setOnClickListener {
             dismiss()
+        }
+
+        writeReviewButton.setOnClickListener {
+            reviewFormContainer.visibility =
+                if (reviewFormContainer.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        }
+
+        cancelReviewButton.setOnClickListener {
+            reviewFormContainer.visibility = View.GONE
+        }
+
+        submitReviewButton.setOnClickListener {
+            Toast.makeText(context, "Recenzija poslana", Toast.LENGTH_SHORT).show()
+            reviewFormContainer.visibility = View.GONE
         }
     }
 
@@ -104,7 +129,7 @@ class DishDetailDialog(
             } catch (e: Exception) {
                 Toast.makeText(
                     context,
-                    "Greška: ${e.message}",
+                    e.message ?: "Greška",
                     Toast.LENGTH_SHORT
                 ).show()
                 dismiss()
@@ -116,9 +141,7 @@ class DishDetailDialog(
         dishTitle.text = dish.title
         dishDescription.text = dish.description
         dishPrice.text = context.getString(R.string.price_format, dish.price)
-
         caloriesValue.text = context.getString(R.string.calories_detail, dish.calories)
-
         carbsValue.text = context.getString(R.string.grams_format, dish.carbohydrates)
         fiberValue.text = context.getString(R.string.grams_format, dish.fiber)
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
@@ -129,9 +152,9 @@ class DishDetailDialog(
         dishImage.setImageResource(R.drawable.ic_restaurant)
 
         ingredientsChipGroup.removeAllViews()
-        dish.ingredients.forEach { ingredient ->
+        dish.ingredients.forEach {
             val chip = Chip(context)
-            chip.text = ingredient
+            chip.text = it
             chip.isClickable = false
             chip.isCheckable = false
             ingredientsChipGroup.addView(chip)
