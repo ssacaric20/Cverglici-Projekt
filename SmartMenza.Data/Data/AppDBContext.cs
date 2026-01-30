@@ -52,6 +52,18 @@ namespace SmartMenza.Data.Data
             modelBuilder.Entity<Ingredient>().HasKey(i => i.IngredientId);
             modelBuilder.Entity<Dish>().HasKey(d => d.DishId);
             modelBuilder.Entity<DishRating>().HasKey(dr => dr.DishRatingId);
+            modelBuilder.Entity<DishRating>()
+                .HasOne(dr => dr.User)
+                .WithMany(u => u.DishRatings)
+                .HasForeignKey(dr => dr.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DishRating>()
+                .HasOne(dr => dr.Dish)
+                .WithMany(d => d.DishRatings)
+                .HasForeignKey(dr => dr.DishId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<NutricionGoal>().HasKey(ng => ng.NutricionalGoalId);
             modelBuilder.Entity<DailyFoodIntake>().HasKey(dfi => dfi.DailyFoodIntakeId);
             modelBuilder.Entity<DailyMenu>().HasKey(dm => dm.DailyMenuId);
@@ -218,11 +230,51 @@ namespace SmartMenza.Data.Data
         private void SeedDishRatings(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DishRating>().HasData(
-                new DishRating { DishRatingId = 1, DishId = 1, Rating = 5 },
-                new DishRating { DishRatingId = 2, DishId = 2, Rating = 4 },
-                new DishRating { DishRatingId = 3, DishId = 3, Rating = 3 },
-                new DishRating { DishRatingId = 4, DishId = 3, Rating = 4 },
-                new DishRating { DishRatingId = 5, DishId = 3, Rating = 4 }
+                new DishRating
+                {
+                    DishRatingId = 1,
+                    DishId = 1,
+                    UserId = 2,
+                    Rating = 5,
+                    Comment = "Odlično jelo, preporučujem!",
+                    CreatedAt = new DateTime(2025, 12, 1, 12, 0, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 2,
+                    DishId = 2,
+                    UserId = 2,
+                    Rating = 4,
+                    Comment = "Jako ukusno, ali malo premalo začinjeno.",
+                    CreatedAt = new DateTime(2025, 12, 2, 14, 30, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 3,
+                    DishId = 3,
+                    UserId = 2,
+                    Rating = 3,
+                    Comment = "Solidno, ali ništa posebno.",
+                    CreatedAt = new DateTime(2025, 12, 3, 18, 15, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 4,
+                    DishId = 3,
+                    UserId = 1,
+                    Rating = 4,
+                    Comment = "Dobra riba, svježa i ukusna!",
+                    CreatedAt = new DateTime(2025, 12, 4, 13, 45, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 5,
+                    DishId = 3,
+                    UserId = 1,
+                    Rating = 4,
+                    Comment = "",
+                    CreatedAt = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc)
+                }
             );
         }
 
