@@ -76,6 +76,7 @@ class MenuListFragment : Fragment() {
             if (currentCategory != "lunch") {
                 currentCategory = "lunch"
                 updateTabSelection(isLunchActive = true)
+                adapter.submitList(null)
                 loadTodayMenu()
             }
         }
@@ -84,6 +85,7 @@ class MenuListFragment : Fragment() {
             if (currentCategory != "dinner") {
                 currentCategory = "dinner"
                 updateTabSelection(isLunchActive = false)
+                adapter.submitList(null)
                 loadTodayMenu()
             }
         }
