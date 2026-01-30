@@ -12,9 +12,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import foi.cverglici.core.data.api.student.menu.RetrofitDish
-import foi.cverglici.core.data.model.menu.DishDetailsResponse
+import foi.cverglici.core.data.api.student.dailymenu.IDishService
+import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
+import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.session.SessionTokenProvider
+import foi.cverglici.smartmenza.ui.student.favorites.FavoriteManager
 import kotlinx.coroutines.launch
 
 class DishDetailDialog(
@@ -40,6 +43,9 @@ class DishDetailDialog(
     private lateinit var ratingCount: TextView
     private lateinit var aiAnalyzeButton: com.google.android.material.button.MaterialButton
 
+    private lateinit var favoriteManager: FavoriteManager
+    private lateinit var menuService: IDishService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -52,9 +58,15 @@ class DishDetailDialog(
 
         window?.setBackgroundDrawableResource(android.R.color.transparent)
 
+        val tokenProvider = SessionTokenProvider(context)
+        menuService = RetrofitDish.create(tokenProvider)
+
         initializeViews()
         setupClickListeners()
         loadDishDetails()
+
+        favoriteManager = FavoriteManager(context, lifecycleOwner, favoriteIcon, dishId)
+        favoriteManager.initialize()
     }
 
     private fun initializeViews() {
@@ -79,27 +91,12 @@ class DishDetailDialog(
         closeButton.setOnClickListener {
             dismiss()
         }
-
-        // Favorite icon - just visual for now, no functionality
-        favoriteIcon.setOnClickListener {
-            // TODO: Implement add to favorites
-            Toast.makeText(context, "Dodavanje u favorite uskoro!", Toast.LENGTH_SHORT).show()
-        }
-
-        aiAnalyzeButton.setOnClickListener {
-            val text = dishDescription.text?.toString().orEmpty()
-            val sheet = AiAnalysisBottomSheetFragment.newInstance(text)
-            sheet.show(fragmentManager, "AiAnalysis")
-        }
     }
 
-    /**
-     * load dish details
-     */
     private fun loadDishDetails() {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitDish.menuService.getDishDetails(dishId)
+                val response = menuService.getDishDetails(dishId)
 
                 if (response.isSuccessful) {
                     response.body()?.let { dish ->
@@ -124,19 +121,13 @@ class DishDetailDialog(
         }
     }
 
-    /**
-     * dish data on UI
-     */
     private fun displayDishDetails(dish: DishDetailsResponse) {
-        // basic information
         dishTitle.text = dish.title
         dishDescription.text = dish.description
         dishPrice.text = context.getString(R.string.price_format, dish.price)
 
-        // calories
         caloriesValue.text = context.getString(R.string.calories_detail, dish.calories)
 
-        // macronutrients
         carbsValue.text = context.getString(R.string.grams_format, dish.carbohydrates)
         fiberValue.text = context.getString(R.string.grams_format, dish.fiber)
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
@@ -144,13 +135,8 @@ class DishDetailDialog(
         averageRating.text = context.getString(R.string.average_rating_format, dish.averageRating)
         ratingCount.text = context.getString(R.string.reviews_total_format, dish.ratingsCount)
 
-
-        // image - placeholder
-        // TODO: Load image with Glide
-        // Glide.with(context).load(dish.imgPath).into(dishImage)
         dishImage.setImageResource(R.drawable.ic_restaurant)
 
-        // ingredients - chips
         ingredientsChipGroup.removeAllViews()
         dish.ingredients.forEach { ingredient ->
             val chip = Chip(context)

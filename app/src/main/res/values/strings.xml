@@ -66,10 +66,13 @@
 
     <!-- Image -->
     <string name="dish_image_label">Slika jela</string>
-    <string name="image_placeholder_text">Slika jela će biti dostupna uskoro\n(Upload/AI generiranje)</string>
+    <string name="image_placeholder_text">Unesite sliku iz galerije</string>
 
     <!-- Category -->
     <string name="category_label">Kategorija</string>
+
+    <!-- Upload -->
+    <string name="upload_button">Unesi sliku</string>
 
     <!-- Basic Info -->
     <string name="dish_title_label">Naziv jela</string>
@@ -86,6 +89,15 @@
     <!-- Ingredients -->
     <string name="ingredients_hint">Piletina, riža, povrće, maslac...</string>
     <string name="ingredients_hint_helper">Odvojite sastojke zarezom (,)</string>
+
+    <!--Recenzije-->
+    <string name="napisi_recenziju">Napiši Recenziju</string>
+    <string name="no_reviews_yet">Još nema recenzija. Budi prvi koji će ostaviti komentar.</string>
+    <string name="vasa_ocjena">Vaša Ocjena</string>
+    <string name="review_hint">Podijeli svoje mišljenje o ovom jelu...</string>
+    <string name="posalji_recenziju">Pošalji Recenziju</string>
+    <string name="odustani">Odustani</string>
+
 
     <!-- Buttons -->
     <string name="save_dish">Spremi jelo</string>

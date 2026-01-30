@@ -1,8 +1,12 @@
-﻿namespace SmartMenza.Business.Models.Auth
+﻿using System.Text.Json.Serialization;
+
+namespace SmartMenza.Business.Models.Auth
 {
     public class LoginRequest
     {
-        public string email { get; set; } = string.Empty;
-        public string passwordHash { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        
+        [JsonPropertyName("passwordHash")]
+        public string Password { get; set; } = string.Empty;
     }
 }

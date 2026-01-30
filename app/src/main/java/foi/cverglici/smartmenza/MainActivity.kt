@@ -4,13 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import foi.cverglici.navigation.NavigationManager
+import foi.cverglici.navigation.Enums.NavigationRole
 import foi.cverglici.smartmenza.session.SessionManager
 import foi.cverglici.smartmenza.ui.employee.menu.EmployeeMenuListFragment
+import foi.cverglici.smartmenza.ui.student.favorites.FavoritesFragment
 import foi.cverglici.smartmenza.ui.student.menu.MenuListFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
+    private lateinit var navigationManager: NavigationManager
+    private lateinit var bottomNavigation: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,46 +25,50 @@ class MainActivity : AppCompatActivity() {
 
         sessionManager = SessionManager(applicationContext)
 
-        // Check if user is logged in
         if (!sessionManager.isLoggedIn()) {
             navigateToLogin()
             return
         }
 
-        // Navigate based on role
+        bottomNavigation = findViewById(R.id.bottomNavigation)
+        navigationManager = NavigationManager(
+            activity = this,
+            containerId = R.id.fragmentContainer,
+            bottomNavigationView = bottomNavigation
+        )
+
         if (savedInstanceState == null) {
-            navigateBasedOnRole()
+            setupNavigationBasedOnRole()
         }
     }
 
-    /**
-     * navigate based on user role
-     */
-    private fun navigateBasedOnRole() {
+    private fun setupNavigationBasedOnRole() {
         when {
             sessionManager.isStudent() -> {
-                // student sees menu list
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, MenuListFragment())
-                    .commit()
+                navigationManager.setupNavigation(NavigationRole.STUDENT, ::getFragmentForTag)
             }
             sessionManager.isEmployee() -> {
-                // employee - TODO
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, EmployeeMenuListFragment())
-                    .commit()
+                navigationManager.setupNavigation(NavigationRole.EMPLOYEE, ::getFragmentForTag)
             }
             else -> {
-                // unknown role - logout and go to login
                 Toast.makeText(this, "Nepoznata uloga korisnika", Toast.LENGTH_LONG).show()
                 logout()
             }
         }
     }
 
-    /**
-     * navigate to login screen
-     */
+    private fun getFragmentForTag(tag: String): Fragment {
+        return when (tag) {
+            "menu" -> MenuListFragment()
+            "favorites" -> FavoritesFragment()
+            "goals" -> TODO("GoalsFragment - will be created later")
+            "employee_menu" -> EmployeeMenuListFragment()
+            "statistics" -> TODO("Statistics - will be implemented later")
+            "ai_tools" -> TODO("AI Tools - will be implemented later")
+            else -> MenuListFragment()
+        }
+    }
+
     private fun navigateToLogin() {
         val intent = Intent(this, AuthActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -65,9 +76,6 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    /**
-     * logout function - call from toolbar/menu
-     */
     fun logout() {
         sessionManager.logout()
         navigateToLogin()

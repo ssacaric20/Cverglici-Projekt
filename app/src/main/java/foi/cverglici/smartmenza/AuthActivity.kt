@@ -2,7 +2,7 @@ package foi.cverglici.smartmenza
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import foi.cverglici.smartmenza.ui.nav.AuthFragment
+import foi.cverglici.smartmenza.ui.auth.AuthFragment
 
 class AuthActivity : AppCompatActivity() {
 

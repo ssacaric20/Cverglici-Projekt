@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartMenza.Data.Models;
 using SmartMenza.Core.Enums;
+using SmartMenza.Data.Entities;
 
 namespace SmartMenza.Data.Data
 {
@@ -12,54 +12,102 @@ namespace SmartMenza.Data.Data
         {
         }
 
-        public DbSet<RoleDto> Roles { get; set; } = null!;
-        public DbSet<UserDto> Users { get; set; } = null!;
-        public DbSet<DishDto> Dishes { get; set; } = null!;
-        public DbSet<IngredientDto> Ingredients { get; set; } = null!;
-        public DbSet<NutricionGoalDto> NutricionGoals { get; set; } = null!;
-        public DbSet<DailyFoodIntakeDto> DailyFoodIntakes { get; set; } = null!;
-        public DbSet<DailyMenuDto> DailyMenus { get; set; } = null!;
+        public DbSet<Role> Roles { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Dish> Dishes { get; set; } = null!;
+        public DbSet<Ingredient> Ingredients { get; set; } = null!;
+        public DbSet<NutricionGoal> NutricionGoals { get; set; } = null!;
+        public DbSet<DailyFoodIntake> DailyFoodIntakes { get; set; } = null!;
+        public DbSet<DailyMenu> DailyMenus { get; set; } = null!;
 
         
-        public DbSet<DishIngredientDto> DishIngredients { get; set; } = null!;
-        public DbSet<FavoriteDishDto> FavoriteDishes { get; set; } = null!;
-        public DbSet<DishRatingDto> DishRatings { get; set; } = null!;
-        public DbSet<DailyMenuDishDto> DailyMenuDishes { get; set; } = null!;
+        public DbSet<DishIngredient> DishIngredients { get; set; } = null!;
+        public DbSet<FavoriteDish> FavoriteDishes { get; set; } = null!;
+        public DbSet<DishRating> DishRatings { get; set; } = null!;
+        public DbSet<DailyMenuDish> DailyMenuDishes { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-            modelBuilder.Entity<RoleDto>().HasKey(r => r.roleId);
-            modelBuilder.Entity<UserDto>().HasKey(u => u.userId);
-            modelBuilder.Entity<IngredientDto>().HasKey(i => i.ingredientId);
-            modelBuilder.Entity<DishDto>().HasKey(d => d.dishId);
-            modelBuilder.Entity<DishRatingDto>().HasKey(dr => dr.dishRatingId);
-            modelBuilder.Entity<NutricionGoalDto>().HasKey(ng => ng.nutricionalGoalId);
-            modelBuilder.Entity<DailyFoodIntakeDto>().HasKey(dfi => dfi.dailyFoodIntakeId);
-            modelBuilder.Entity<DailyMenuDto>().HasKey(dm => dm.dailyMenuId);
+
+            // DECIMAL PRECISION CONFIGURATION
+            modelBuilder.Entity<Dish>(entity =>
+            {
+                entity.Property(x => x.Price).HasPrecision(18, 2);
+                entity.Property(x => x.Protein).HasPrecision(18, 2);
+                entity.Property(x => x.Fat).HasPrecision(18, 2);
+                entity.Property(x => x.Carbohydrates).HasPrecision(18, 2);
+                entity.Property(x => x.Fiber).HasPrecision(18, 2);
+            });
+
+            modelBuilder.Entity<NutricionGoal>(entity =>
+            {
+                entity.Property(x => x.ProteinsGoal).HasPrecision(18, 2);
+                entity.Property(x => x.FatsGoal).HasPrecision(18, 2);
+                entity.Property(x => x.CarbohydratesGoal).HasPrecision(18, 2);
+            });
+
+
+            modelBuilder.Entity<Role>().HasKey(r => r.RoleId);
+            modelBuilder.Entity<User>().HasKey(u => u.UserId);
+            modelBuilder.Entity<Ingredient>().HasKey(i => i.IngredientId);
+            modelBuilder.Entity<Dish>().HasKey(d => d.DishId);
+            modelBuilder.Entity<DishRating>().HasKey(dr => dr.DishRatingId);
+            modelBuilder.Entity<DishRating>()
+                .HasOne(dr => dr.User)
+                .WithMany(u => u.DishRatings)
+                .HasForeignKey(dr => dr.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DishRating>()
+                .HasOne(dr => dr.Dish)
+                .WithMany(d => d.DishRatings)
+                .HasForeignKey(dr => dr.DishId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NutricionGoal>().HasKey(ng => ng.NutricionalGoalId);
+            modelBuilder.Entity<DailyFoodIntake>().HasKey(dfi => dfi.DailyFoodIntakeId);
+            modelBuilder.Entity<DailyMenu>().HasKey(dm => dm.DailyMenuId);
 
             
-            modelBuilder.Entity<DishIngredientDto>()
-                .HasKey(di => new { di.dishId, di.ingredientId });
+            modelBuilder.Entity<DishIngredient>()
+                .HasKey(di => new { di.DishId, di.IngredientId });
 
-            modelBuilder.Entity<FavoriteDishDto>()
-                .HasKey(fd => new { fd.userId, fd.dishId });
 
-            modelBuilder.Entity<DailyMenuDishDto>()
-                .HasKey(dmd => new { dmd.dailyMenuId, dmd.dishId });
+            modelBuilder.Entity<FavoriteDish>(entity =>
+            {
+                entity.HasKey(fd => new { fd.UserId, fd.DishId });
+
+                entity.HasOne(fd => fd.User)
+                      .WithMany(u => u.FavoriteDishes)
+                      .HasForeignKey(fd => fd.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(fd => fd.Dish)
+                      .WithMany(d => d.FavoriteDishes)
+                      .HasForeignKey(fd => fd.DishId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
+            modelBuilder.Entity<DailyMenuDish>()
+                .HasKey(dmd => new { dmd.DailyMenuId, dmd.DishId });
 
            
-            modelBuilder.Entity<DailyMenuDishDto>()
-                .HasOne(dmd => dmd.dailyMenu)
-                .WithMany(dm => dm.dailyMenuDishes)
-                .HasForeignKey(dmd => dmd.dailyMenuId);
+            modelBuilder.Entity<DailyMenuDish>()
+                .HasOne(dmd => dmd.DailyMenu)
+                .WithMany(dm => dm.DailyMenuDishes)
+                .HasForeignKey(dmd => dmd.DailyMenuId);
 
-            modelBuilder.Entity<DailyMenuDishDto>()
-                .HasOne(dmd => dmd.dish)
-                .WithMany(d => d.dailyMenuDishes)
-                .HasForeignKey(dmd => dmd.dishId);
+            modelBuilder.Entity<DailyMenuDish>()
+                .HasOne(dmd => dmd.Dish)
+                .WithMany(d => d.DailyMenuDishes)
+                .HasForeignKey(dmd => dmd.DishId);
 
             
+
+
+
+
             SeedRoles(modelBuilder);
             SeedUsers(modelBuilder);
             SeedIngredients(modelBuilder);
@@ -76,159 +124,199 @@ namespace SmartMenza.Data.Data
         
         private void SeedRoles(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RoleDto>().HasData(
-                new RoleDto { roleId = 1, roleTitle = "Employee" },
-                new RoleDto { roleId = 2, roleTitle = "Student" }
+            modelBuilder.Entity<Role>().HasData(
+                new Role { RoleId = 1, RoleTitle = "Employee" },
+                new Role { RoleId = 2, RoleTitle = "Student" }
             );
         }
 
         private void SeedUsers(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserDto>().HasData(
-                new UserDto
+            modelBuilder.Entity<User>().HasData(
+                new User
                 {
-                    userId = 1,
-                    firstName = "Test",
-                    lastName = "Employee",
-                    email = "employee@test.com",
-                    passwordHash = "pass123",
-                    roleId = (int)UserRole.Employee
+                    UserId = 1,
+                    FirstName = "Test",
+                    LastName = "Employee",
+                    Email = "employee@test.com",
+                    PasswordHash = "pass123",
+                    RoleId = (int)UserRole.Employee
                 },
-                new UserDto
+                new User
                 {
-                    userId = 2,
-                    firstName = "Test",
-                    lastName = "Student",
-                    email = "student@test.com",
-                    passwordHash = "pass123",
-                    roleId = (int)UserRole.Student
+                    UserId = 2,
+                    FirstName = "Test",
+                    LastName = "Student",
+                    Email = "student@test.com",
+                    PasswordHash = "pass123",
+                    RoleId = (int)UserRole.Student
                 }
             );
         }
 
         private void SeedIngredients(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<IngredientDto>().HasData(
-                new IngredientDto { ingredientId = 1, name = "Chicken breast" },
-                new IngredientDto { ingredientId = 2, name = "Rice" },
-                new IngredientDto { ingredientId = 3, name = "Pasta" },
-                new IngredientDto { ingredientId = 4, name = "Mixed vegetables" }
+            modelBuilder.Entity<Ingredient>().HasData(
+                new Ingredient { IngredientId = 1, Name = "Chicken breast" },
+                new Ingredient { IngredientId = 2, Name = "Rice" },
+                new Ingredient { IngredientId = 3, Name = "Pasta" },
+                new Ingredient { IngredientId = 4, Name = "Mixed vegetables" }
             );
         }
 
         private void SeedDishes(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DishDto>().HasData(
-                new DishDto
+            modelBuilder.Entity<Dish>().HasData(
+                new Dish
                 {
-                    dishId = 1,
-                    title = "Chicken with rice",
-                    description = "Boiled chicken with white rice",
-                    price = 3.20m,
-                    calories = 540,
-                    protein = 35m,
-                    carbohydrates = 50m,
-                    fiber = 30m,
-                    fat = 12m,
-                    imgPath = null
+                    DishId = 1,
+                    Title = "Chicken with rice",
+                    Description = "Boiled chicken with white rice",
+                    Price = 3.20m,
+                    Calories = 540,
+                    Protein = 35m,
+                    Carbohydrates = 50m,
+                    Fiber = 30m,
+                    Fat = 12m,
+                    ImgPath = null
                 },
-                new DishDto
+                new Dish
                 {
-                    dishId = 2,
-                    title = "Vegetarian pasta",
-                    description = "Pasta with vegetables",
-                    price = 2.80m,
-                    calories = 450,
-                    protein = 15m,
-                    carbohydrates = 70m,
-                    fiber = 30m,
-                    fat = 8m,
-                    imgPath = null
+                    DishId = 2,
+                    Title = "Vegetarian pasta",
+                    Description = "Pasta with vegetables",
+                    Price = 2.80m,
+                    Calories = 450,
+                    Protein = 15m,
+                    Carbohydrates = 70m,
+                    Fiber = 30m,
+                    Fat = 8m,
+                    ImgPath = null
                 },
-                new DishDto
+                new Dish
                 {
-                    dishId = 3,
-                    title = "Grilled fish",
-                    description = "Fresh grilled fish with lemon",
-                    price = 4.50m,
-                    calories = 320,
-                    protein = 40m,
-                    carbohydrates = 5m,
-                    fiber = 0m,
-                    fat = 10m,
-                    imgPath = null
+                    DishId = 3,
+                    Title = "Grilled fish",
+                    Description = "Fresh grilled fish with lemon",
+                    Price = 4.50m,
+                    Calories = 320,
+                    Protein = 40m,
+                    Carbohydrates = 5m,
+                    Fiber = 0m,
+                    Fat = 10m,
+                    ImgPath = null
                 }
             );
         }
 
         private void SeedDishIngredients(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DishIngredientDto>().HasData(
-                new DishIngredientDto { dishId = 1, ingredientId = 1 },
-                new DishIngredientDto { dishId = 1, ingredientId = 2 },
-                new DishIngredientDto { dishId = 2, ingredientId = 3 },
-                new DishIngredientDto { dishId = 2, ingredientId = 4 }
+            modelBuilder.Entity<DishIngredient>().HasData(
+                new DishIngredient { DishId = 1, IngredientId = 1 },
+                new DishIngredient { DishId = 1, IngredientId = 2 },
+                new DishIngredient { DishId = 2, IngredientId = 3 },
+                new DishIngredient { DishId = 2, IngredientId = 4 }
             );
         }
 
         private void SeedFavoriteDishes(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FavoriteDishDto>().HasData(
-                new FavoriteDishDto { userId = 2, dishId = 1 },
-                new FavoriteDishDto { userId = 2, dishId = 2 }
+            modelBuilder.Entity<FavoriteDish>().HasData(
+                new FavoriteDish { UserId = 2, DishId = 1 },
+                new FavoriteDish { UserId = 2, DishId = 2 }
             );
         }
 
         private void SeedDishRatings(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DishRatingDto>().HasData(
-                new DishRatingDto { dishRatingId = 1, dishId = 1, rating = 5 },
-                new DishRatingDto { dishRatingId = 2, dishId = 2, rating = 4 },
-                new DishRatingDto { dishRatingId = 3, dishId = 3, rating = 3 },
-                new DishRatingDto { dishRatingId = 4, dishId = 3, rating = 4 },
-                new DishRatingDto { dishRatingId = 5, dishId = 3, rating = 4 }
+            modelBuilder.Entity<DishRating>().HasData(
+                new DishRating
+                {
+                    DishRatingId = 1,
+                    DishId = 1,
+                    UserId = 2,
+                    Rating = 5,
+                    Comment = "Odlično jelo, preporučujem!",
+                    CreatedAt = new DateTime(2025, 12, 1, 12, 0, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 2,
+                    DishId = 2,
+                    UserId = 2,
+                    Rating = 4,
+                    Comment = "Jako ukusno, ali malo premalo začinjeno.",
+                    CreatedAt = new DateTime(2025, 12, 2, 14, 30, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 3,
+                    DishId = 3,
+                    UserId = 2,
+                    Rating = 3,
+                    Comment = "Solidno, ali ništa posebno.",
+                    CreatedAt = new DateTime(2025, 12, 3, 18, 15, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 4,
+                    DishId = 3,
+                    UserId = 1,
+                    Rating = 4,
+                    Comment = "Dobra riba, svježa i ukusna!",
+                    CreatedAt = new DateTime(2025, 12, 4, 13, 45, 0, DateTimeKind.Utc)
+                },
+                new DishRating
+                {
+                    DishRatingId = 5,
+                    DishId = 3,
+                    UserId = 1,
+                    Rating = 4,
+                    Comment = "",
+                    CreatedAt = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc)
+                }
             );
         }
 
         private void SeedNutricionGoals(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<NutricionGoalDto>().HasData(
-                new NutricionGoalDto
+            modelBuilder.Entity<NutricionGoal>().HasData(
+                new NutricionGoal
                 {
-                    nutricionalGoalId = 1,
-                    userId = 2,
-                    caloriesGoal = 2000,
-                    proteinsGoal = 120m,
-                    fatsGoal = 70m,
-                    carbohydratesGoal = 250m,
-                    goalSetDate = new DateTime(2025, 1, 1)
+                    NutricionalGoalId = 1,
+                    UserId = 2,
+                    CaloriesGoal = 2000,
+                    ProteinsGoal = 120m,
+                    FatsGoal = 70m,
+                    CarbohydratesGoal = 250m,
+                    GoalSetDate = new DateTime(2025, 1, 1)
                 }
             );
         }
 
         private void SeedDailyFoodIntakes(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DailyFoodIntakeDto>().HasData(
-                new DailyFoodIntakeDto
+            modelBuilder.Entity<DailyFoodIntake>().HasData(
+                new DailyFoodIntake
                 {
-                    dailyFoodIntakeId = 1,
-                    userId = 2,
-                    dishId = 1,
-                    date = new DateTime(2025, 1, 1)
+                    DailyFoodIntakeId = 1,
+                    UserId = 2,
+                    DishId = 1,
+                    Date = new DateTime(2025, 1, 1)
                 },
-                new DailyFoodIntakeDto
+                new DailyFoodIntake
                 {
-                    dailyFoodIntakeId = 2,
-                    userId = 2,
-                    dishId = 2,
-                    date = new DateTime(2025, 1, 1)
+                    DailyFoodIntakeId = 2,
+                    UserId = 2,
+                    DishId = 2,
+                    Date = new DateTime(2025, 1, 1)
                 }
             );
         }
 
         private void SeedDailyMenus(ModelBuilder modelBuilder)
         {
-            var seedMenus = new List<DailyMenuDto>();
+            var seedMenus = new List<DailyMenu>();
             int menuId = 1;
 
             // start i end date u kojem ce se nasumicno generirat menus
@@ -238,28 +326,28 @@ namespace SmartMenza.Data.Data
             for (var date = startDate; date <= endDate; date = date.AddDays(1))
             {
                 
-                seedMenus.Add(new DailyMenuDto
+                seedMenus.Add(new DailyMenu
                 {
-                    dailyMenuId = menuId++,
-                    date = date,
-                    category = (int)MenuCategory.Lunch
+                    DailyMenuId = menuId++,
+                    Date = date,
+                    Category = (int)MenuCategory.Lunch
                 });
 
                
-                seedMenus.Add(new DailyMenuDto
+                seedMenus.Add(new DailyMenu
                 {
-                    dailyMenuId = menuId++,
-                    date = date,
-                    category = (int)MenuCategory.Dinner
+                    DailyMenuId = menuId++,
+                    Date = date,
+                    Category = (int)MenuCategory.Dinner
                 });
             }
 
-            modelBuilder.Entity<DailyMenuDto>().HasData(seedMenus.ToArray());
+            modelBuilder.Entity<DailyMenu>().HasData(seedMenus.ToArray());
         }
 
         private void SeedDailyMenuDishes(ModelBuilder modelBuilder)
         {
-            var seedRelations = new List<DailyMenuDishDto>();
+            var seedRelations = new List<DailyMenuDish>();
 
             int menuId = 1; // rucak
             var startDate = new DateOnly(2025, 12, 3);
@@ -272,26 +360,26 @@ namespace SmartMenza.Data.Data
                 switch (patternDay % 5)
                 {
                     case 0: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                     case 1: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
                         break;
                     case 2: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                     case 3: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                     case 4: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                 }
 
@@ -301,26 +389,26 @@ namespace SmartMenza.Data.Data
                 switch (patternDay % 5)
                 {
                     case 0: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                     case 1: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                     case 2: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                     case 3: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 3 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 3 });
                         break;
                     case 4: 
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 1 });
-                        seedRelations.Add(new DailyMenuDishDto { dailyMenuId = menuId, dishId = 2 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 1 });
+                        seedRelations.Add(new DailyMenuDish { DailyMenuId = menuId, DishId = 2 });
                         break;
                 }
 
@@ -328,7 +416,7 @@ namespace SmartMenza.Data.Data
                 patternDay++;
             }
 
-            modelBuilder.Entity<DailyMenuDishDto>().HasData(seedRelations.ToArray());
+            modelBuilder.Entity<DailyMenuDish>().HasData(seedRelations.ToArray());
         }
     }
 }

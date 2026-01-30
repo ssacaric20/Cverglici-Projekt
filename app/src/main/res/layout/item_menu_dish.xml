@@ -40,19 +40,6 @@
                 app:layout_constraintStart_toStartOf="parent"
             />
 
-            <!-- SRCE (favorite ikona) DODAT IKONICU -->
-            <ImageView
-                android:id="@+id/iconFavorite"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_margin="16dp"
-                android:background="@drawable/circle_fav_bg"
-                android:contentDescription="@string/favorite"
-                android:padding="12dp"
-                android:src="@drawable/fav_circle_bg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
  </androidx.constraintlayout.widget.ConstraintLayout>
 
  <!-- DONJI DIO - Tekst i info -->

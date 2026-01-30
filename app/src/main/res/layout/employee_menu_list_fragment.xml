@@ -71,13 +71,28 @@
                     android:textColor="@color/text_primary"/>
             </LinearLayout>
 
-            <!-- Loading indicator -->
             <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
+                android:id="@+id/dishesLoadingIndicator"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/dishesMultiSelect"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/dishesLoadingText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleY="10" />
+                android:text="Učitavanje jela..."
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/dishesLoadingIndicator"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <!-- Empty state text -->
             <TextView
@@ -110,9 +125,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="54dp"
+        android:layout_marginRight="16dp"
         android:contentDescription="@string/add_new_dish"
         app:srcCompat="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/orange_primary"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginBottom="54dp"
+        android:layout_marginLeft="16dp"
+        android:contentDescription="@string/add_new_dish"
+        app:srcCompat="@drawable/ic_restaurant"
         app:backgroundTint="@color/orange_primary"
         app:tint="@color/white" />
 
