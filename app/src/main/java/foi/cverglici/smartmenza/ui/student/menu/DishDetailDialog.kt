@@ -7,6 +7,7 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +27,18 @@ class DishDetailDialog(
     private val fragmentManager: FragmentManager,
     private val dishId: Int
 ) : Dialog(context) {
+
+    constructor(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        dishId: Int
+    ) : this(
+        context = context,
+        lifecycleOwner = lifecycleOwner,
+        fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
+            ?: throw IllegalArgumentException("DishDetailDialog requires a FragmentActivity context."),
+        dishId = dishId
+    )
 
     private lateinit var closeButton: ImageView
     private lateinit var dishTitle: TextView
