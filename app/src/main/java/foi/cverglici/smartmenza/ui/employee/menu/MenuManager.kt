@@ -5,16 +5,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import foi.cverglici.core.data.api.employee.dailymenu.IEmployeeMenuService
 import foi.cverglici.core.data.api.employee.dailymenu.RetrofitEmployeeMenu
 import foi.cverglici.core.data.model.employee.dailymenu.CreateDailyMenuRequest
 import foi.cverglici.core.data.model.employee.dailymenu.DailyMenuDetailsResponse
 import foi.cverglici.core.data.model.employee.dailymenu.UpdateDailyMenuRequest
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 import kotlinx.coroutines.launch
 
 class MenuManager(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
 ) {
+    private val tokenProvider = SessionTokenProvider(context)
+    private val menuService: IEmployeeMenuService = RetrofitEmployeeMenu.create(tokenProvider)
 
     fun loadMenuDetails(
         menuId: Int,
@@ -23,7 +27,7 @@ class MenuManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeMenu.menuService.getMenuById(menuId)
+                val response = menuService.getMenuById(menuId)
 
                 if (response.isSuccessful) {
                     response.body()?.let { menu ->
@@ -52,7 +56,7 @@ class MenuManager(
             try {
                 val categoryString = if (category == 1) "lunch" else "dinner"
 
-                val existingMenuResponse = RetrofitEmployeeMenu.menuService.getTodayMenu(categoryString)
+                val existingMenuResponse = menuService.getTodayMenu(categoryString)
 
                 if (existingMenuResponse.isSuccessful) {
                     val existingMenuItems = existingMenuResponse.body() ?: emptyList()
@@ -105,7 +109,7 @@ class MenuManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeMenu.menuService.createMenu(request)
+                val response = menuService.createMenu(request)
 
                 if (response.isSuccessful) {
                     response.body()?.let { createdMenu ->
@@ -132,7 +136,7 @@ class MenuManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeMenu.menuService.updateMenu(menuId, request)
+                val response = menuService.updateMenu(menuId, request)
 
                 if (response.isSuccessful) {
                     response.body()?.let { updatedMenu ->
@@ -158,7 +162,7 @@ class MenuManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeMenu.menuService.deleteMenu(menuId)
+                val response = menuService.deleteMenu(menuId)
 
                 if (response.isSuccessful) {
                     Toast.makeText(context, "Meni uspješno obrisan!", Toast.LENGTH_SHORT).show()

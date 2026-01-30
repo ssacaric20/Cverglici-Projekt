@@ -21,6 +21,9 @@ import foi.cverglici.smartmenza.ui.employee.dish.DishMenuFragment
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import foi.cverglici.core.data.api.employee.dailymenu.RetrofitEmployeeMenu
+import foi.cverglici.core.data.api.employee.dailymenu.IEmployeeMenuService
+import foi.cverglici.core.data.api.student.dailymenu.IDishService
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 import java.util.*
 
 class EmployeeMenuListFragment : Fragment() {
@@ -34,6 +37,8 @@ class EmployeeMenuListFragment : Fragment() {
 
     private lateinit var tabLunch: TextView
     private lateinit var tabDinner: TextView
+    private lateinit var menuService: IDishService
+    private lateinit var employeeMenuService: IEmployeeMenuService
 
     private var currentCategory: String = "lunch"
     private var currentMenuId: Int? = null
@@ -52,6 +57,10 @@ class EmployeeMenuListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tokenProvider = SessionTokenProvider(requireContext())
+        menuService = RetrofitDish.create(tokenProvider)
+        employeeMenuService = RetrofitEmployeeMenu.create(tokenProvider)
 
         savedInstanceState?.let {
             currentCategory = it.getString(KEY_CURRENT_CATEGORY, "lunch")
@@ -135,7 +144,7 @@ class EmployeeMenuListFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitDish.menuService.getTodayMenu(currentCategory)
+                val response = menuService.getTodayMenu(currentCategory)  // Koristi menuService
 
                 if (response.isSuccessful) {
                     val menuItems = response.body() ?: emptyList()
@@ -167,8 +176,7 @@ class EmployeeMenuListFragment : Fragment() {
 
         for (i in 1..200) {
             try {
-                val response = RetrofitEmployeeMenu
-                    .menuService.getMenuById(i)
+                val response = employeeMenuService.getMenuById(i)  // Koristi employeeMenuService
 
                 if (response.isSuccessful) {
                     val menu = response.body()

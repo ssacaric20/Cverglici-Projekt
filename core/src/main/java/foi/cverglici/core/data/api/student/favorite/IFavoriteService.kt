@@ -7,21 +7,15 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface IFavoriteService {
-    @GET("api/Favorite/{userId}")
-    suspend fun getUserFavorites(@Path("userId") userId: Int): Response<List<FavoriteDish>>
+    @GET("api/Favorite")  // token
+    suspend fun getUserFavorites(): Response<List<FavoriteDish>>
 
     @POST("api/Favorite")
     suspend fun addFavorite(@Body request: AddFavoriteRequest): Response<Map<String, String>>
 
-    @DELETE("api/Favorite")
-    suspend fun removeFavorite(
-        @Query("userId") userId: Int,
-        @Query("dishId") dishId: Int
-    ): Response<Map<String, String>>
+    @DELETE("api/Favorite/{dishId}")
+    suspend fun removeFavorite(@Path("dishId") dishId: Int): Response<Map<String, String>>
 
-    @GET("api/Favorite/check")
-    suspend fun isFavorite(
-        @Query("userId") userId: Int,
-        @Query("dishId") dishId: Int
-    ): Response<FavoriteStatusResponse>
+    @GET("api/Favorite/check/{dishId}")
+    suspend fun isFavorite(@Path("dishId") dishId: Int): Response<FavoriteStatusResponse>
 }

@@ -17,6 +17,7 @@ namespace SmartMenza.Business.Services
             if (dish is null) return null;
 
             var ingredientNames = dish.DishIngredients
+                .Where(di => di.Ingredient != null)
                 .Select(di => di.Ingredient.Name)
                 .Distinct()
                 .ToList();
@@ -30,7 +31,7 @@ namespace SmartMenza.Business.Services
             {
                 DishId = dish.DishId,
                 Title = dish.Title,
-                Description = dish.Description,
+                Description = dish.Description ?? string.Empty,
                 Price = dish.Price,
                 Calories = dish.Calories,
                 Protein = dish.Protein,

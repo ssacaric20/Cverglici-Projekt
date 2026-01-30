@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import foi.cverglici.core.data.api.employee.dish.IEmployeeDishService
 import foi.cverglici.core.data.api.employee.dish.RetrofitEmployeeDish
 import foi.cverglici.core.data.model.employee.dailymenu.UpdateDailyMenuRequest
 import foi.cverglici.core.data.model.employee.dish.DishListItem
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,6 +34,7 @@ class MenuFormFragment : Fragment() {
 
     private var allDishes: List<DishListItem> = emptyList()
     private var selectedDishIds: MutableList<Int> = mutableListOf()
+    private lateinit var dishService: IEmployeeDishService
 
     companion object {
         private const val ARG_MENU_ID = "menu_id"
@@ -70,6 +73,9 @@ class MenuFormFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tokenProvider = SessionTokenProvider(requireContext())
+        dishService = RetrofitEmployeeDish.create(tokenProvider)
 
         menuManager = MenuManager(requireContext(), viewLifecycleOwner)
 
@@ -131,7 +137,7 @@ class MenuFormFragment : Fragment() {
     private fun loadAllDishes() {
         lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeDish.dishService.getAllDishes()
+                val response = dishService.getAllDishes()
 
                 if (response.isSuccessful) {
                     allDishes = response.body() ?: emptyList()
