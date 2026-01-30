@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit
 object RetrofitAi {
 
     // Choose ONE (must end with /)
-    //private const val BASE_URL = "http://10.0.2.2:5166/"
-    private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/"
+    private const val BASE_URL = "http://10.0.2.2:5166/"
+    //private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

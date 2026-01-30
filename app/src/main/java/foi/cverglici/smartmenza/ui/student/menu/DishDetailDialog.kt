@@ -7,11 +7,13 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.button.MaterialButton
 import foi.cverglici.core.data.api.student.dailymenu.IDishService
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
@@ -27,6 +29,18 @@ class DishDetailDialog(
     private val dishId: Int
 ) : Dialog(context) {
 
+    constructor(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        dishId: Int
+    ) : this(
+        context = context,
+        lifecycleOwner = lifecycleOwner,
+        fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
+            ?: throw IllegalArgumentException("DishDetailDialog requires a FragmentActivity context."),
+        dishId = dishId
+    )
+
     private lateinit var closeButton: ImageView
     private lateinit var dishTitle: TextView
     private lateinit var dishImage: ImageView
@@ -41,7 +55,7 @@ class DishDetailDialog(
     private lateinit var ingredientsChipGroup: ChipGroup
     private lateinit var averageRating: TextView
     private lateinit var ratingCount: TextView
-    private lateinit var aiAnalyzeButton: com.google.android.material.button.MaterialButton
+    private lateinit var aiAnalyzeButton: MaterialButton
 
     private lateinit var favoriteManager: FavoriteManager
     private lateinit var menuService: IDishService
@@ -88,9 +102,7 @@ class DishDetailDialog(
     }
 
     private fun setupClickListeners() {
-        closeButton.setOnClickListener {
-            dismiss()
-        }
+        closeButton.setOnClickListener { dismiss() }
     }
 
     private fun loadDishDetails() {
@@ -127,11 +139,11 @@ class DishDetailDialog(
         dishPrice.text = context.getString(R.string.price_format, dish.price)
 
         caloriesValue.text = context.getString(R.string.calories_detail, dish.calories)
-
         carbsValue.text = context.getString(R.string.grams_format, dish.carbohydrates)
         fiberValue.text = context.getString(R.string.grams_format, dish.fiber)
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
         proteinValue.text = context.getString(R.string.grams_format, dish.protein)
+
         averageRating.text = context.getString(R.string.average_rating_format, dish.averageRating)
         ratingCount.text = context.getString(R.string.reviews_total_format, dish.ratingsCount)
 
@@ -139,10 +151,11 @@ class DishDetailDialog(
 
         ingredientsChipGroup.removeAllViews()
         dish.ingredients.forEach { ingredient ->
-            val chip = Chip(context)
-            chip.text = ingredient
-            chip.isClickable = false
-            chip.isCheckable = false
+            val chip = Chip(context).apply {
+                text = ingredient
+                isClickable = false
+                isCheckable = false
+            }
             ingredientsChipGroup.addView(chip)
         }
     }
