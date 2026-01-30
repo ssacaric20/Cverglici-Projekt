@@ -73,7 +73,6 @@ Dish description:
                 new UserChatMessage(user),
             };
 
-            // Keep it simple and stable: no experimental options needed.
             var requestOptions = new ChatCompletionOptions
             {
                 Temperature = 0.2f
