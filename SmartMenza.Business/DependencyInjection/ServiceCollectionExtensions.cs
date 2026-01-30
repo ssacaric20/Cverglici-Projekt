@@ -42,6 +42,8 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IDailyMenuRepository, DailyMenuRepository>();
             services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+
 
             // Servisi
             services.AddScoped<ITokenService, JwtTokenService>();
@@ -51,6 +53,7 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IImageService, AzureBlobImageService>();
             services.AddScoped<IFavoriteService, FavoriteService>();
             services.AddScoped<IFoodAnalyzer, RuleBasedFoodAnalyzer>();
+            services.AddScoped<IReviewService, ReviewService>();
 
             return services;
         }
