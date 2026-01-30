@@ -1,24 +1,35 @@
-package foi.cverglici.core.data.api.student.dailymenu
+package foi.cverglici.core.data.api.ai
 
-import foi.cverglici.core.auth.ITokenProvider
-import foi.cverglici.core.data.api.interceptor.AuthInterceptor
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object RetrofitDish {
+object RetrofitAi {
+
+    // Choose ONE (must end with /)
     //private const val BASE_URL = "http://10.0.2.2:5166/"
-    private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net"
+    private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    fun create(tokenProvider: ITokenProvider): IDishService {
+    fun create(token: String?): IAiAnalysisService {
+        val authInterceptor = Interceptor { chain ->
+            val reqBuilder = chain.request().newBuilder()
+
+            if (!token.isNullOrBlank()) {
+                reqBuilder.addHeader("Authorization", "Bearer $token")
+            }
+
+            chain.proceed(reqBuilder.build())
+        }
+
         val client = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor(tokenProvider))
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -30,6 +41,6 @@ object RetrofitDish {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(IDishService::class.java)
+            .create(IAiAnalysisService::class.java)
     }
 }
