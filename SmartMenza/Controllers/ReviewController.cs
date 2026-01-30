@@ -17,9 +17,6 @@ namespace SmartMenza.API.Controllers
             _reviewService = reviewService;
         }
 
-        /// <summary>
-        /// Dohvaća sve recenzije za određeno jelo
-        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetReviewsByDish(int dishId)
         {
@@ -44,9 +41,6 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Dodaje novu recenziju za jelo
-        /// </summary>
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateReview(int dishId, [FromBody] CreateReviewRequest request)
@@ -87,9 +81,6 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Ažurira postojeću recenziju
-        /// </summary>
         [Authorize]
         [HttpPut("{reviewId}")]
         public async Task<IActionResult> UpdateReview(int dishId, int reviewId, [FromBody] UpdateReviewRequest request)
@@ -126,9 +117,6 @@ namespace SmartMenza.API.Controllers
             }
         }
 
-        /// <summary>
-        /// Briše recenziju
-        /// </summary>
         [Authorize]
         [HttpDelete("{reviewId}")]
         public async Task<IActionResult> DeleteReview(int dishId, int reviewId)
