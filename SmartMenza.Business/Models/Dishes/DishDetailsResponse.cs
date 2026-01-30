@@ -1,4 +1,6 @@
-﻿namespace SmartMenza.Business.Models.Dishes
+﻿using SmartMenza.Business.Models.Reviews;
+
+namespace SmartMenza.Business.Models.Dishes
 {
     public class DishDetailsResponse
     {
@@ -19,6 +21,8 @@
         public double? AverageRating { get; set; }
 
         public int RatingsCount { get; set; }
+
+        public List<DishReviewResponse> Reviews { get; set; } = new();
     }
 }
 

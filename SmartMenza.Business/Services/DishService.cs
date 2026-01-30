@@ -1,4 +1,5 @@
 ﻿using SmartMenza.Business.Models.Dishes;
+using SmartMenza.Business.Models.Reviews;
 using SmartMenza.Business.Services.Interfaces;
 using SmartMenza.Data.Entities;
 using SmartMenza.Data.Repositories.Interfaces;
@@ -27,6 +28,20 @@ namespace SmartMenza.Business.Services
                 ? dish.DishRatings!.Average(r => (double)r.Rating)
                 : null;
 
+            var reviews = dish.DishRatings?
+                .OrderByDescending(r => r.CreatedAt)
+                .Select(r => new DishReviewResponse
+                {
+                    DishRatingId = r.DishRatingId,
+                    Rating = r.Rating,
+                    Comment = r.Comment,
+                    CreatedAt = r.CreatedAt,
+                    UpdatedAt = r.UpdatedAt,
+                    UserId = r.UserId,
+                    UserName = $"{r.User.FirstName} {r.User.LastName}"
+                })
+                .ToList() ?? new List<DishReviewResponse>();
+
             return new DishDetailsResponse
             {
                 DishId = dish.DishId,
@@ -41,14 +56,14 @@ namespace SmartMenza.Business.Services
                 ImgPath = dish.ImgPath,
                 Ingredients = ingredientNames,
                 AverageRating = avg,
-                RatingsCount = ratingsCount
+                RatingsCount = ratingsCount,
+                Reviews = reviews
             };
         }
 
         public async Task<IEnumerable<DishListResponse>> GetAllDishesAsync()
         {
             var dishes = await _dishes.GetAllAsync();
-
             return dishes.Select(d => new DishListResponse
             {
                 DishId = d.DishId,
@@ -97,6 +112,7 @@ namespace SmartMenza.Business.Services
             dish.ImgPath = request.ImgPath;
 
             await _dishes.SaveChangesAsync();
+
             return await GetDishDetailsAsync(id);
         }
 

@@ -14,7 +14,7 @@ namespace SmartMenza.Data.Repositories.Implementations
         public Task<Dish?> GetDishWithDetailsAsync(int id)
             => _context.Dishes
                 .Include(d => d.DishIngredients).ThenInclude(di => di.Ingredient)
-                .Include(d => d.DishRatings)
+                .Include(d => d.DishRatings).ThenInclude(dr => dr.User)
                 .FirstOrDefaultAsync(d => d.DishId == id);
 
         public Task<List<Dish>> GetAllAsync()
