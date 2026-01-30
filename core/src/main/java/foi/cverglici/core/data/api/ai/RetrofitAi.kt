@@ -1,29 +1,42 @@
 package foi.cverglici.core.data.api.ai
 
-import foi.cverglici.core.data.api.auth.IAuthService
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object RetrofitAi{
+object RetrofitAi {
+
+    // Choose ONE (must end with /)
     //private const val BASE_URL = "http://10.0.2.2:5166/"
-    private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net"
+    private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net/"
+
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY  // Logs full request/response
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
-    // OkHttp client with logging and timeouts
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .connectTimeout(30, TimeUnit.SECONDS)    // Connection timeout
-        .readTimeout(30, TimeUnit.SECONDS)       // Read timeout
-        .writeTimeout(30, TimeUnit.SECONDS)      // Write timeout
-        .build()
+    fun create(token: String?): IAiAnalysisService {
+        val authInterceptor = Interceptor { chain ->
+            val reqBuilder = chain.request().newBuilder()
 
-    val aiService: IAiAnalysisService by lazy {
-        Retrofit.Builder()
+            if (!token.isNullOrBlank()) {
+                reqBuilder.addHeader("Authorization", "Bearer $token")
+            }
+
+            chain.proceed(reqBuilder.build())
+        }
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .addInterceptor(loggingInterceptor)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+
+        return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())

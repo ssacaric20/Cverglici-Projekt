@@ -1,6 +1,7 @@
 package foi.cverglici.smartmenza.ui.student.menu
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +12,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import foi.cverglici.core.data.api.ai.RetrofitAi
-import foi.cverglici.core.data.api.student.menu.RetrofitDish
 import foi.cverglici.core.data.model.ai.AnalyzeFoodRequest
 import foi.cverglici.core.data.model.ai.FoodAnalysisResult
 import foi.cverglici.core.data.model.ai.NutritionAnalyzeRequest
 import foi.cverglici.core.data.model.ai.NutritionEstimateResponse
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.session.SessionManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -30,13 +31,12 @@ class AiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var aiCarbs: TextView
     private lateinit var aiFat: TextView
     private lateinit var aiFiber: TextView
-    //private lateinit var aiConfidence: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? { return inflater.inflate(R.layout.ai_analysis_bottom_sheet_fragment, container, false)}
+    ): View? = inflater.inflate(R.layout.ai_analysis_bottom_sheet_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +49,6 @@ class AiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
         aiCarbs = view.findViewById(R.id.aiCarbs)
         aiFat = view.findViewById(R.id.aiFat)
         aiFiber = view.findViewById(R.id.aiFiber)
-        //aiConfidence = view.findViewById(R.id.aiConfidence)
 
         val description = arguments?.getString(ARG_TEXT).orEmpty()
         if (description.isBlank()) {
@@ -63,41 +62,57 @@ class AiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
     private fun loadAnalysis(text: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // Run both requests in parallel
-                val allergensCall = async {
-                    RetrofitAi.aiService.analyzeAllergens(AnalyzeFoodRequest(text))
-                }
-                val nutritionCall = async {
-                    RetrofitAi.aiService.analyzeNutrition(NutritionAnalyzeRequest(text, servings = 1))
-                }
+                val token = SessionManager(requireContext()).fetchAuthToken()
+                val aiService = RetrofitAi.create(token)
 
-                val allergensResp = allergensCall.await()
-                val nutritionResp = nutritionCall.await()
+                // RAW debug calls (to see exact JSON)
+                val rawAllergensCall = async { aiService.analyzeAllergensRaw(AnalyzeFoodRequest(text)) }
+                val rawNutritionCall = async { aiService.analyzeNutritionRaw(NutritionAnalyzeRequest(text, servings = 1)) }
+
+                val rawAllergensResp = rawAllergensCall.await()
+                val rawNutritionResp = rawNutritionCall.await()
+
+                val rawAllergensJson =
+                    rawAllergensResp.body()?.string() ?: rawAllergensResp.errorBody()?.string()
+                val rawNutritionJson =
+                    rawNutritionResp.body()?.string() ?: rawNutritionResp.errorBody()?.string()
+
+                Log.d("AI_RAW", "ALLERGENS HTTP ${rawAllergensResp.code()} JSON: $rawAllergensJson")
+                Log.d("AI_RAW", "NUTRITION HTTP ${rawNutritionResp.code()} JSON: $rawNutritionJson")
+
+                // Typed calls for UI
+                val allergensTypedCall = async { aiService.analyzeAllergens(AnalyzeFoodRequest(text)) }
+                val nutritionTypedCall = async { aiService.analyzeNutrition(NutritionAnalyzeRequest(text, servings = 1)) }
+
+                val allergensResp = allergensTypedCall.await()
+                val nutritionResp = nutritionTypedCall.await()
 
                 if (!allergensResp.isSuccessful) {
                     Toast.makeText(requireContext(), "Allergen analysis failed (${allergensResp.code()})", Toast.LENGTH_SHORT).show()
-                }
-                if (!nutritionResp.isSuccessful) {
-                    Toast.makeText(requireContext(), "Nutrition analysis failed (${nutritionResp.code()})", Toast.LENGTH_SHORT).show()
+                } else {
+                    allergensResp.body()?.let { renderAllergens(it) }
                 }
 
-                allergensResp.body()?.let { renderAllergens(it) }
-                nutritionResp.body()?.let { renderNutrition(it) }
+                if (!nutritionResp.isSuccessful) {
+                    Toast.makeText(requireContext(), "Nutrition analysis failed (${nutritionResp.code()})", Toast.LENGTH_SHORT).show()
+                } else {
+                    nutritionResp.body()?.let { renderNutrition(it) }
+                }
 
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e("AI_RAW", "Exception", e)
             }
         }
     }
 
     private fun renderAllergens(result: FoodAnalysisResult) {
-        // Diet chips
         dietChipGroup.removeAllViews()
+
         if (result.isVegan) dietChipGroup.addView(makeChip("Vegan"))
         if (result.isVegetarian) dietChipGroup.addView(makeChip("Vegetarian"))
         dietChipGroup.addView(makeChip(if (result.isGlutenFree) "Gluten-free" else "Contains gluten"))
 
-        // Allergen chips
         allergensChipGroup.removeAllViews()
         result.allergens.forEach { a ->
             val chip = makeChip(a.allergen).apply {
@@ -109,15 +124,19 @@ class AiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun renderNutrition(n: NutritionEstimateResponse) {
-        aiCalories.text = "${n.calories.toInt()} kcal"
-        aiProtein.text = "${fmt(n.protein)} g"
-        aiCarbs.text = "${fmt(n.carbohydrates)} g"
-        aiFat.text = "${fmt(n.fat)} g"
-        aiFiber.text = "${fmt(n.fiber)} g"
-        //aiConfidence.text = "Confidence: ${fmt(n.confidence)}"
+        val m = n.macros
+
+        // kcal may be null, so fallback to 0
+        val kcal = (m.kcal ?: 0.0).toInt()
+        aiCalories.text = "$kcal kcal"
+
+        aiProtein.text = "${fmt(m.protein_g)} g"
+        aiCarbs.text = "${fmt(m.carbs_g)} g"
+        aiFat.text = "${fmt(m.fat_g)} g"
+        aiFiber.text = "${fmt(m.fiber_g)} g"
     }
 
-    private fun fmt(v: Double): String = String.format("%.1f", v)
+    private fun fmt(v: Double?): String = String.format("%.1f", v ?: 0.0)
 
     private fun makeChip(text: String): Chip =
         Chip(requireContext()).apply {
