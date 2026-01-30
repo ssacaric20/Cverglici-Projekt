@@ -42,6 +42,8 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IDailyMenuRepository, DailyMenuRepository>();
             services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
 
             // Servisi
             services.AddScoped<ITokenService, JwtTokenService>();
