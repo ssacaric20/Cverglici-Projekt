@@ -1,5 +1,7 @@
 package foi.cverglici.core.data.api.student.favorite
 
+import foi.cverglici.core.auth.ITokenProvider
+import foi.cverglici.core.data.api.interceptor.AuthInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -13,15 +15,16 @@ object RetrofitFavorite {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private val client = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(30, TimeUnit.SECONDS)
-        .writeTimeout(30, TimeUnit.SECONDS)
-        .build()
+    fun create(tokenProvider: ITokenProvider): IFavoriteService {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(AuthInterceptor(tokenProvider))  // ← DODAJ OVO
+            .addInterceptor(loggingInterceptor)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
 
-    val favoriteService: IFavoriteService by lazy {
-        Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())

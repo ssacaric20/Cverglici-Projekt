@@ -13,26 +13,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import foi.cverglici.core.data.api.student.dailymenu.IDishService
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
 import foi.cverglici.core.data.model.student.dailymenu.DailyMenuItem
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 import kotlinx.coroutines.launch
 
-/**
- * display daily menu list (student view)
- */
 class MenuListFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var emptyStateText: TextView
     private lateinit var adapter: MenuListAdapter
+    private lateinit var menuService: IDishService
 
-    // tab views
     private lateinit var tabLunch: TextView
     private lateinit var tabDinner: TextView
 
-    // current selected category
     private var currentCategory: String = "lunch"
 
     override fun onCreateView(
@@ -45,6 +43,9 @@ class MenuListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tokenProvider = SessionTokenProvider(requireContext())
+        menuService = RetrofitDish.create(tokenProvider)
 
         initializeViews(view)
         setupRecyclerView()
@@ -76,6 +77,7 @@ class MenuListFragment : Fragment() {
             if (currentCategory != "lunch") {
                 currentCategory = "lunch"
                 updateTabSelection(isLunchActive = true)
+                adapter.submitList(null)
                 loadTodayMenu()
             }
         }
@@ -84,20 +86,18 @@ class MenuListFragment : Fragment() {
             if (currentCategory != "dinner") {
                 currentCategory = "dinner"
                 updateTabSelection(isLunchActive = false)
+                adapter.submitList(null)
                 loadTodayMenu()
             }
         }
     }
 
-    /**
-     * today menu based on current category
-     */
     private fun loadTodayMenu() {
         showLoading(true)
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitDish.menuService.getTodayMenu(currentCategory)
+                val response = menuService.getTodayMenu(currentCategory)
 
                 if (response.isSuccessful) {
                     val menuItems = response.body() ?: emptyList<DailyMenuItem>()
@@ -119,24 +119,17 @@ class MenuListFragment : Fragment() {
         }
     }
 
-    /**
-     * update tab visual
-     */
     private fun updateTabSelection(isLunchActive: Boolean) {
         if (isLunchActive) {
-            // highlight lunch
             tabLunch.setBackgroundResource(R.drawable.bg_segment_active)
             tabLunch.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
 
-            // deactivate dinner
             tabDinner.background = null
             tabDinner.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
         } else {
-            // highlight dinner
             tabDinner.setBackgroundResource(R.drawable.bg_segment_active)
             tabDinner.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
 
-            // deactivate lunch
             tabLunch.background = null
             tabLunch.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
         }
@@ -167,7 +160,6 @@ class MenuListFragment : Fragment() {
     private fun onDishClicked(menuItem: DailyMenuItem) {
         Log.d("MenuListFragment", "Dish clicked: ${menuItem.dish.title} (ID: ${menuItem.dishId})")
 
-        // show DishDetailDialog
         val dialog = DishDetailDialog(
             requireContext(),
             viewLifecycleOwner,

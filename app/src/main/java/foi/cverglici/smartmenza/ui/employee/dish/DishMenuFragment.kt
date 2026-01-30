@@ -15,10 +15,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
+import foi.cverglici.core.data.api.employee.dish.IEmployeeDishService
+import foi.cverglici.core.data.api.employee.dish.RetrofitEmployeeDish
 import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
 import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 
 class DishMenuFragment : Fragment() {
 
@@ -39,6 +42,8 @@ class DishMenuFragment : Fragment() {
     private lateinit var deleteButton: Button
     private lateinit var uploadDishImageButton: Button
     private lateinit var dishImagePlaceholderText: TextView
+
+    private lateinit var dishService: IEmployeeDishService
 
     private var dishId: Int? = null
     private var isEditMode: Boolean = false
@@ -92,6 +97,9 @@ class DishMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val tokenProvider = SessionTokenProvider(requireContext())
+        dishService = RetrofitEmployeeDish.create(tokenProvider)
 
         dishManager = DishManager(requireContext(), viewLifecycleOwner)
 

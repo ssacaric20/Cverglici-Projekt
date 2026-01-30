@@ -11,9 +11,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import foi.cverglici.core.data.api.student.dailymenu.IDishService
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 import foi.cverglici.smartmenza.ui.student.favorites.FavoriteManager
 import kotlinx.coroutines.launch
 
@@ -39,6 +41,7 @@ class DishDetailDialog(
     private lateinit var ratingCount: TextView
 
     private lateinit var favoriteManager: FavoriteManager
+    private lateinit var menuService: IDishService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +55,13 @@ class DishDetailDialog(
 
         window?.setBackgroundDrawableResource(android.R.color.transparent)
 
+        val tokenProvider = SessionTokenProvider(context)
+        menuService = RetrofitDish.create(tokenProvider)
+
         initializeViews()
         setupClickListeners()
         loadDishDetails()
 
-        // Initialize FavoriteManager
         favoriteManager = FavoriteManager(context, lifecycleOwner, favoriteIcon, dishId)
         favoriteManager.initialize()
     }
@@ -87,7 +92,7 @@ class DishDetailDialog(
     private fun loadDishDetails() {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitDish.menuService.getDishDetails(dishId)
+                val response = menuService.getDishDetails(dishId)
 
                 if (response.isSuccessful) {
                     response.body()?.let { dish ->

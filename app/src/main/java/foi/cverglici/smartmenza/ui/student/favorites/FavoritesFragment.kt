@@ -12,10 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import foi.cverglici.core.data.api.student.favorite.IFavoriteService
 import foi.cverglici.core.data.api.student.favorite.RetrofitFavorite
 import foi.cverglici.core.data.model.student.favorite.FavoriteDish
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.session.SessionManager
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 import foi.cverglici.smartmenza.ui.student.menu.DishDetailDialog
 import kotlinx.coroutines.launch
 
@@ -26,6 +28,8 @@ class FavoritesFragment : Fragment() {
     private lateinit var emptyStateText: TextView
     private lateinit var adapter: FavoritesAdapter
     private lateinit var sessionManager: SessionManager
+    private lateinit var favoriteService: IFavoriteService
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +43,10 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sessionManager = SessionManager(requireContext())
+
+        val tokenProvider = SessionTokenProvider(requireContext())
+        favoriteService = RetrofitFavorite.create(tokenProvider)
+
         initializeViews(view)
         setupRecyclerView()
         loadFavorites()
@@ -74,11 +82,9 @@ class FavoritesFragment : Fragment() {
     private fun loadFavorites() {
         showLoading(true)
 
-        val userId = sessionManager.getUserId()
-
         lifecycleScope.launch {
             try {
-                val response = RetrofitFavorite.favoriteService.getUserFavorites(userId)
+                val response = favoriteService.getUserFavorites()
 
                 if (response.isSuccessful) {
                     val favorites = response.body() ?: emptyList()
@@ -101,11 +107,9 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun removeFavorite(dishId: Int) {
-        val userId = sessionManager.getUserId()
-
         lifecycleScope.launch {
             try {
-                val response = RetrofitFavorite.favoriteService.removeFavorite(userId, dishId)
+                val response = favoriteService.removeFavorite(dishId)
 
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "Uklonjeno iz favorita", Toast.LENGTH_SHORT).show()
@@ -138,7 +142,7 @@ class FavoritesFragment : Fragment() {
     private fun showEmptyState() {
         recyclerView.visibility = View.GONE
         emptyStateText.visibility = View.VISIBLE
-        emptyStateText.text = "Nemate omiljenih jela.\nDodajte ih klikom na ❤️ ikonu!"
+        emptyStateText.text = "Nemate omiljenih jela.\nDodajte ih klikom na ikonu srca!"
     }
 
     private fun showLoading(isLoading: Boolean) {

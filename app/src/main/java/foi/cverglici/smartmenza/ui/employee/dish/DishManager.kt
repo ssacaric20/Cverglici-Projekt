@@ -5,16 +5,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import foi.cverglici.core.data.api.employee.dish.IEmployeeDishService
 import foi.cverglici.core.data.api.employee.dish.RetrofitEmployeeDish
 import foi.cverglici.core.data.model.employee.dish.CreateDishRequest
 import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
+import foi.cverglici.smartmenza.session.SessionTokenProvider
 import kotlinx.coroutines.launch
 
 class DishManager(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
 ) {
+    private val tokenProvider = SessionTokenProvider(context)
+    private val dishService: IEmployeeDishService = RetrofitEmployeeDish.create(tokenProvider)
 
     fun loadDishDetails(
         dishId: Int,
@@ -23,7 +27,7 @@ class DishManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeDish.dishService.getDishDetails(dishId)
+                val response = dishService.getDishDetails(dishId)
 
                 if (response.isSuccessful) {
                     response.body()?.let { dish ->
@@ -48,7 +52,7 @@ class DishManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeDish.dishService.createDish(request)
+                val response = dishService.createDish(request)
 
                 if (response.isSuccessful) {
                     response.body()?.let { createdDish ->
@@ -75,7 +79,7 @@ class DishManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeDish.dishService.updateDish(dishId, request)
+                val response = dishService.updateDish(dishId, request)
 
                 if (response.isSuccessful) {
                     response.body()?.let { updatedDish ->
@@ -101,7 +105,7 @@ class DishManager(
     ) {
         lifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitEmployeeDish.dishService.deleteDish(dishId)
+                val response = dishService.deleteDish(dishId)
 
                 if (response.isSuccessful) {
                     Toast.makeText(context, "Jelo uspješno obrisano!", Toast.LENGTH_SHORT).show()
