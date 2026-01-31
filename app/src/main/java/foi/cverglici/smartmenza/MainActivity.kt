@@ -12,6 +12,8 @@ import foi.cverglici.smartmenza.session.SessionManager
 import foi.cverglici.smartmenza.ui.employee.menu.EmployeeMenuListFragment
 import foi.cverglici.smartmenza.ui.student.favorites.FavoritesFragment
 import foi.cverglici.smartmenza.ui.student.menu.MenuListFragment
+import foi.cverglici.smartmenza.ui.student.goals.GoalsFragment
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         return when (tag) {
             "menu" -> MenuListFragment()
             "favorites" -> FavoritesFragment()
-            "goals" -> TODO("GoalsFragment - will be created later")
+            "goals" -> GoalsFragment()
             "employee_menu" -> EmployeeMenuListFragment()
             "statistics" -> TODO("Statistics - will be implemented later")
             "ai_tools" -> TODO("AI Tools - will be implemented later")

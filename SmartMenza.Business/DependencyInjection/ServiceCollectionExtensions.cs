@@ -12,6 +12,9 @@ using SmartMenza.Data.Data;
 using SmartMenza.Data.Repositories.Implementations;
 using SmartMenza.Data.Repositories.Interfaces;
 
+
+
+
 namespace SmartMenza.Business.DependencyInjection
 {
     public static class ServiceCollectionExtensions
@@ -42,6 +45,9 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IDailyMenuRepository, DailyMenuRepository>();
             services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            services.AddScoped<INutritionGoalRepository, NutritionGoalRepository>();
+            services.AddScoped<IDailyFoodIntakeRepository, DailyFoodIntakeRepository>();
+
 
             // Servisi
             services.AddScoped<ITokenService, JwtTokenService>();
@@ -50,7 +56,10 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IDailyMenuService, DailyMenuService>();
             services.AddScoped<IImageService, AzureBlobImageService>();
             services.AddScoped<IFavoriteService, FavoriteService>();
-            services.AddScoped<IFoodAnalyzer, RuleBasedFoodAnalyzer>();
+            services.AddScoped<IFoodAnalyzer, RuleBasedFoodAnalyzerService>();
+            services.AddScoped<INutritionGoalService, NutritionGoalService>();
+            services.AddScoped<INutritionGoalStatisticsService, NutritionGoalStatisticsService>();
+            services.AddScoped<IDailyFoodIntakeService, DailyFoodIntakeService>();
 
             return services;
         }

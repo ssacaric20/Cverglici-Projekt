@@ -3,7 +3,7 @@ using SmartMenza.Business.Services.Interfaces;
 
 namespace SmartMenza.Business.Services
 {
-    public sealed class RuleBasedFoodAnalyzer : IFoodAnalyzer
+    public sealed class RuleBasedFoodAnalyzerService : IFoodAnalyzer
     {
         private static readonly Dictionary<string, string[]> AllergenKeywords = new()
         {

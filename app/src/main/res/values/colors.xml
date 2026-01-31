@@ -23,4 +23,5 @@
     <color name="fat_text">#FBC02D</color>
     <color name="protein_bg">#E3F2FD</color>
     <color name="protein_text">#1976D2</color>
+    <color name="danger_red">#D32F2F</color>
 </resources>
