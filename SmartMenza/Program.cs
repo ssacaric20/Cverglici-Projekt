@@ -1,9 +1,8 @@
-using Azure.Storage.Blobs;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SmartMenza.API.Configuration;
 using SmartMenza.Business.DependencyInjection;
 using SmartMenza.Data.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,24 +42,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-var storageConn = builder.Configuration["AzureStorage:ConnectionString"];
-
-if (string.IsNullOrWhiteSpace(storageConn))
-{
-    throw new Exception("AzureStorage:ConnectionString is missing (set AzureStorage__ConnectionString).");
-}
-
-builder.Services.AddSingleton(new BlobServiceClient(storageConn));
-
 builder.Services.AddJwtAuthentication();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
-    db.Database.Migrate();
-}
 
 app.UseSwagger();
 app.UseSwaggerUI();
