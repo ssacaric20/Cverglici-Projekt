@@ -11,9 +11,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.button.MaterialButton
 import foi.cverglici.core.data.api.student.dailymenu.IDishService
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
@@ -59,6 +59,7 @@ class DishDetailDialog(
 
     private lateinit var favoriteManager: FavoriteManager
     private lateinit var menuService: IDishService
+    private var aiTextToAnalyze: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +70,6 @@ class DishDetailDialog(
             (context.resources.displayMetrics.widthPixels * 1),
             (context.resources.displayMetrics.heightPixels * 0.85).toInt()
         )
-
         window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         val tokenProvider = SessionTokenProvider(context)
@@ -103,6 +103,16 @@ class DishDetailDialog(
 
     private fun setupClickListeners() {
         closeButton.setOnClickListener { dismiss() }
+
+        aiAnalyzeButton.setOnClickListener {
+            if (aiTextToAnalyze.isBlank()) {
+                Toast.makeText(context, "Pričekajte da se učitaju podaci o jelu.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val sheet = AiAnalysisBottomSheetFragment.newInstance(aiTextToAnalyze)
+            sheet.show(fragmentManager, "AiAnalysisBottomSheet")
+        }
     }
 
     private fun loadDishDetails() {
@@ -157,6 +167,13 @@ class DishDetailDialog(
                 isCheckable = false
             }
             ingredientsChipGroup.addView(chip)
+        }
+
+        val ingredientsText = if (dish.ingredients.isNullOrEmpty()) "" else dish.ingredients.joinToString(", ")
+        aiTextToAnalyze = buildString {
+            appendLine(dish.title)
+            if (!dish.description.isNullOrBlank()) appendLine(dish.description)
+            if (ingredientsText.isNotBlank()) appendLine("Ingredients: $ingredientsText")
         }
     }
 }
