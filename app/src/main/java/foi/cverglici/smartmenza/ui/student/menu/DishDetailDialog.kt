@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import foi.cverglici.core.data.api.student.dailymenu.IDishService
@@ -54,10 +55,11 @@ class DishDetailDialog(
     private lateinit var ingredientsChipGroup: ChipGroup
     private lateinit var averageRating: TextView
     private lateinit var ratingCount: TextView
-    private lateinit var aiAnalyzeButton: com.google.android.material.button.MaterialButton
+    private lateinit var aiAnalyzeButton: MaterialButton
 
     private lateinit var favoriteManager: FavoriteManager
     private lateinit var menuService: IDishService
+    private var aiTextToAnalyze: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,6 @@ class DishDetailDialog(
             (context.resources.displayMetrics.widthPixels * 1),
             (context.resources.displayMetrics.heightPixels * 0.85).toInt()
         )
-
         window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         val tokenProvider = SessionTokenProvider(context)
@@ -101,14 +102,16 @@ class DishDetailDialog(
     }
 
     private fun setupClickListeners() {
-        closeButton.setOnClickListener {
-            dismiss()
-        }
+        closeButton.setOnClickListener { dismiss() }
 
         aiAnalyzeButton.setOnClickListener {
-            val text = dishDescription.text?.toString().orEmpty()
-            val sheet = AiAnalysisBottomSheetFragment.newInstance(text)
-            sheet.show(fragmentManager, "AiAnalysis")
+            if (aiTextToAnalyze.isBlank()) {
+                Toast.makeText(context, "Pričekajte da se učitaju podaci o jelu.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val sheet = AiAnalysisBottomSheetFragment.newInstance(aiTextToAnalyze)
+            sheet.show(fragmentManager, "AiAnalysisBottomSheet")
         }
     }
 
@@ -151,6 +154,7 @@ class DishDetailDialog(
         fiberValue.text = context.getString(R.string.grams_format, dish.fiber)
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
         proteinValue.text = context.getString(R.string.grams_format, dish.protein)
+
         averageRating.text = context.getString(R.string.average_rating_format, dish.averageRating)
         ratingCount.text = context.getString(R.string.reviews_total_format, dish.ratingsCount)
 
@@ -158,11 +162,19 @@ class DishDetailDialog(
 
         ingredientsChipGroup.removeAllViews()
         dish.ingredients.forEach { ingredient ->
-            val chip = Chip(context)
-            chip.text = ingredient
-            chip.isClickable = false
-            chip.isCheckable = false
+            val chip = Chip(context).apply {
+                text = ingredient
+                isClickable = false
+                isCheckable = false
+            }
             ingredientsChipGroup.addView(chip)
+        }
+
+        val ingredientsText = if (dish.ingredients.isNullOrEmpty()) "" else dish.ingredients.joinToString(", ")
+        aiTextToAnalyze = buildString {
+            appendLine(dish.title)
+            if (!dish.description.isNullOrBlank()) appendLine(dish.description)
+            if (ingredientsText.isNotBlank()) appendLine("Ingredients: $ingredientsText")
         }
     }
 }
