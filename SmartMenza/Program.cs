@@ -1,7 +1,9 @@
+using Azure.Storage.Blobs;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SmartMenza.API.Configuration;
 using SmartMenza.Business.DependencyInjection;
-using Azure.Storage.Blobs;
+using SmartMenza.Data.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +55,12 @@ builder.Services.AddSingleton(new BlobServiceClient(storageConn));
 builder.Services.AddJwtAuthentication();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+    db.Database.Migrate();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
