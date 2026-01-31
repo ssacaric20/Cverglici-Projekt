@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AI analiza"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp"/>
+
+    <ProgressBar
+        android:id="@+id/aiProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Diet"
+        android:textStyle="bold"
+        android:layout_marginBottom="6dp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/dietChipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Allergens"
+        android:textStyle="bold"
+        android:layout_marginBottom="6dp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/allergensChipGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Macros"
+        android:textStyle="bold"
+        android:layout_marginBottom="6dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/aiCalories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 kcal" />
+
+        <TextView
+            android:id="@+id/aiProtein"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0 g protein" />
+
+        <TextView
+            android:id="@+id/aiCarbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0 g carbs" />
+
+        <TextView
+            android:id="@+id/aiFat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0 g fat" />
+
+        <TextView
+            android:id="@+id/aiFiber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0 g fiber" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/servingText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Serving: -"
+        android:layout_marginBottom="6dp"/>
+
+    <TextView
+        android:id="@+id/assumptionsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Assumptions: -"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancelAiButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="Odustani" />
+
+        <Button
+            android:id="@+id/acceptAiButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="Prihvati"
+            android:layout_marginStart="12dp" />
+    </LinearLayout>
+
+</LinearLayout>
