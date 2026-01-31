@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SmartMenza.API.Configuration;
 using SmartMenza.Business.DependencyInjection;
-using Azure.Storage.Blobs;
-using Microsoft.EntityFrameworkCore;
 using SmartMenza.Data.Data;
 
 var builder = WebApplication.CreateBuilder(args);
