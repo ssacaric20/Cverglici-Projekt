@@ -9,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitDish {
+    //private const val BASE_URL = "http://10.0.2.2:5166/"
     private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {

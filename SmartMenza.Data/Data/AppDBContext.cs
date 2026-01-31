@@ -52,6 +52,18 @@ namespace SmartMenza.Data.Data
             modelBuilder.Entity<Ingredient>().HasKey(i => i.IngredientId);
             modelBuilder.Entity<Dish>().HasKey(d => d.DishId);
             modelBuilder.Entity<DishRating>().HasKey(dr => dr.DishRatingId);
+            modelBuilder.Entity<DishRating>()
+                .HasOne(dr => dr.User)
+                .WithMany(u => u.DishRatings)
+                .HasForeignKey(dr => dr.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DishRating>()
+                .HasOne(dr => dr.Dish)
+                .WithMany(d => d.DishRatings)
+                .HasForeignKey(dr => dr.DishId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<NutricionGoal>().HasKey(ng => ng.NutricionalGoalId);
             modelBuilder.Entity<DailyFoodIntake>().HasKey(dfi => dfi.DailyFoodIntakeId);
             modelBuilder.Entity<DailyMenu>().HasKey(dm => dm.DailyMenuId);
@@ -217,13 +229,7 @@ namespace SmartMenza.Data.Data
 
         private void SeedDishRatings(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DishRating>().HasData(
-                new DishRating { DishRatingId = 1, DishId = 1, Rating = 5 },
-                new DishRating { DishRatingId = 2, DishId = 2, Rating = 4 },
-                new DishRating { DishRatingId = 3, DishId = 3, Rating = 3 },
-                new DishRating { DishRatingId = 4, DishId = 3, Rating = 4 },
-                new DishRating { DishRatingId = 5, DishId = 3, Rating = 4 }
-            );
+            
         }
 
         private void SeedNutricionGoals(ModelBuilder modelBuilder)

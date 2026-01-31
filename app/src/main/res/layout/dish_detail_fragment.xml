@@ -9,9 +9,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="10dp">
+         >
 
         <!-- Header sa nazivom jela i X -->
         <FrameLayout
@@ -320,6 +321,18 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="24dp"
                 android:background="@color/gray_light" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/aiAnalyzeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="AI analiza"
+                android:textAllCaps="false"
+                app:icon="@android:drawable/ic_menu_search"
+                app:iconPadding="8dp"
+                app:cornerRadius="12dp"
+                tools:ignore="HardcodedText" />
 
             <!-- ================= RECENZIJE HEADER ================= -->
             <LinearLayout

@@ -19,7 +19,7 @@
         public ICollection<DishRating> DishRatings { get; set; } = new List<DishRating>();
         public ICollection<DailyFoodIntake> DailyFoodIntakes { get; set; } = new List<DailyFoodIntake>();
 
-        // veza vise-vise 
+        // veza vise-vise
         public ICollection<DailyMenuDish> DailyMenuDishes { get; set; } = new List<DailyMenuDish>();
     }
 }

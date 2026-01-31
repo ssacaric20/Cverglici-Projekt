@@ -13,10 +13,9 @@
 
         // navigacija
         public Role Role { get; set; } = null!;
-
         public ICollection<NutricionGoal> NutricionGoals { get; set; } = new List<NutricionGoal>();
         public ICollection<DailyFoodIntake> DailyFoodIntakes { get; set; } = new List<DailyFoodIntake>();
         public ICollection<FavoriteDish> FavoriteDishes { get; set; } = new List<FavoriteDish>();
+        public ICollection<DishRating> DishRatings { get; set; } = new List<DishRating>();
     }
-
 }

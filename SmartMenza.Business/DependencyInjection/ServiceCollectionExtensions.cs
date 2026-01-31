@@ -26,6 +26,9 @@ namespace SmartMenza.Business.DependencyInjection
             services.Configure<JwtSettings>(config.GetSection("JwtSettings"));
             services.Configure<AzureStorageSettings>(config.GetSection("AzureStorage"));
 
+            // Azure OpenAI
+            services.Configure<AzureOpenAISettings>(config.GetSection("AzureOpenAI"));
+
             // Azure Blob
             services.AddSingleton<BlobServiceClient?>(sp =>
             {
@@ -42,6 +45,9 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IDishRepository, DishRepository>();
             services.AddScoped<IDailyMenuRepository, DailyMenuRepository>();
             services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IStatisticsRepository, StatisticsRepository>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
 
             // Servisi
             services.AddScoped<ITokenService, JwtTokenService>();
@@ -50,7 +56,10 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IDailyMenuService, DailyMenuService>();
             services.AddScoped<IImageService, AzureBlobImageService>();
             services.AddScoped<IFavoriteService, FavoriteService>();
-            services.AddScoped<IFoodAnalyzer, RuleBasedFoodAnalyzer>();
+            services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IFoodAnalyzer, AzureOpenAIFoodAnalyzer>();
+            services.AddScoped<INutritionAnalyzer, AzureOpenAINutritionAnalyzer>();
+
 
             return services;
         }

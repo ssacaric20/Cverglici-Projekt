@@ -1132,49 +1132,32 @@ namespace SmartMenza.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DishRatingId"));
 
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("DishId")
                         .HasColumnType("int");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("DishRatingId");
 
                     b.HasIndex("DishId");
 
-                    b.ToTable("DishRatings");
+                    b.HasIndex("UserId");
 
-                    b.HasData(
-                        new
-                        {
-                            DishRatingId = 1,
-                            DishId = 1,
-                            Rating = 5
-                        },
-                        new
-                        {
-                            DishRatingId = 2,
-                            DishId = 2,
-                            Rating = 4
-                        },
-                        new
-                        {
-                            DishRatingId = 3,
-                            DishId = 3,
-                            Rating = 3
-                        },
-                        new
-                        {
-                            DishRatingId = 4,
-                            DishId = 3,
-                            Rating = 4
-                        },
-                        new
-                        {
-                            DishRatingId = 5,
-                            DishId = 3,
-                            Rating = 4
-                        });
+                    b.ToTable("DishRatings");
                 });
 
             modelBuilder.Entity("SmartMenza.Data.Entities.FavoriteDish", b =>
@@ -1439,7 +1422,15 @@ namespace SmartMenza.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SmartMenza.Data.Entities.User", "User")
+                        .WithMany("DishRatings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Dish");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartMenza.Data.Entities.FavoriteDish", b =>
@@ -1514,6 +1505,8 @@ namespace SmartMenza.Data.Migrations
             modelBuilder.Entity("SmartMenza.Data.Entities.User", b =>
                 {
                     b.Navigation("DailyFoodIntakes");
+
+                    b.Navigation("DishRatings");
 
                     b.Navigation("FavoriteDishes");
 

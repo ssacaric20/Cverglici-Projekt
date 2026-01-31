@@ -1,6 +1,9 @@
 using Microsoft.OpenApi.Models;
 using SmartMenza.API.Configuration;
 using SmartMenza.Business.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using SmartMenza.Data.Data;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,10 +44,22 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 builder.Services.AddJwtAuthentication();
 
 var app = builder.Build();
+
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+        db.Database.Migrate();
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Migracija nije uspjela: {ex.Message}");
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();
