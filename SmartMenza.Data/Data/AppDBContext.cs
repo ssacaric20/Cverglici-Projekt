@@ -229,53 +229,7 @@ namespace SmartMenza.Data.Data
 
         private void SeedDishRatings(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<DishRating>().HasData(
-                new DishRating
-                {
-                    DishRatingId = 1,
-                    DishId = 1,
-                    UserId = 2,
-                    Rating = 5,
-                    Comment = "Odlično jelo, preporučujem!",
-                    CreatedAt = new DateTime(2025, 12, 1, 12, 0, 0, DateTimeKind.Utc)
-                },
-                new DishRating
-                {
-                    DishRatingId = 2,
-                    DishId = 2,
-                    UserId = 2,
-                    Rating = 4,
-                    Comment = "Jako ukusno, ali malo premalo začinjeno.",
-                    CreatedAt = new DateTime(2025, 12, 2, 14, 30, 0, DateTimeKind.Utc)
-                },
-                new DishRating
-                {
-                    DishRatingId = 3,
-                    DishId = 3,
-                    UserId = 2,
-                    Rating = 3,
-                    Comment = "Solidno, ali ništa posebno.",
-                    CreatedAt = new DateTime(2025, 12, 3, 18, 15, 0, DateTimeKind.Utc)
-                },
-                new DishRating
-                {
-                    DishRatingId = 4,
-                    DishId = 3,
-                    UserId = 1,
-                    Rating = 4,
-                    Comment = "Dobra riba, svježa i ukusna!",
-                    CreatedAt = new DateTime(2025, 12, 4, 13, 45, 0, DateTimeKind.Utc)
-                },
-                new DishRating
-                {
-                    DishRatingId = 5,
-                    DishId = 3,
-                    UserId = 1,
-                    Rating = 4,
-                    Comment = "",
-                    CreatedAt = new DateTime(2025, 12, 5, 19, 0, 0, DateTimeKind.Utc)
-                }
-            );
+            
         }
 
         private void SeedNutricionGoals(ModelBuilder modelBuilder)
