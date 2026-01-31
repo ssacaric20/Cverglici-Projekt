@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartMenza.Business.Models.FoodAnalysis;
+using SmartMenza.Business.Services.Interfaces;
+
+namespace SmartMenza.API.Controllers;
+
+[ApiController]
+[Route("api/food")]
+public sealed class NutritionController : ControllerBase
+{
+    private readonly INutritionAnalyzer _nutrition;
+
+    public NutritionController(INutritionAnalyzer nutrition)
+    {
+        _nutrition = nutrition;
+    }
+
+    [HttpPost("nutrition")]
+    public async Task<ActionResult<NutritionResult>> AnalyzeNutrition([FromBody] AnalyzeNutritionRequest req, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(req.Text))
+            return BadRequest("Text is required.");
+
+        var result = await _nutrition.AnalyzeAsync(req.Text, ct);
+        return Ok(result);
+    }
+}

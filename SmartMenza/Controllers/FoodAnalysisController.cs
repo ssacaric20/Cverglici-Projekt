@@ -5,7 +5,7 @@ using SmartMenza.Business.Services.Interfaces;
 namespace SmartMenza.API.Controllers;
 
 [ApiController]
-[Route("api/food")]
+[Route("api/Food")]
 public sealed class FoodAnalysisController : ControllerBase
 {
     private readonly IFoodAnalyzer _analyzer;
