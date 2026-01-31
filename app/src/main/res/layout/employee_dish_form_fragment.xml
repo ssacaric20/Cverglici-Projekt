@@ -454,6 +454,19 @@
                 android:gravity="top" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Button
+            android:id="@+id/aiAnalyzeButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:text="AI analiza"
+            android:backgroundTint="@color/gray_light"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+
+
         <!-- Save Button -->
         <Button
             android:id="@+id/saveDishButton"

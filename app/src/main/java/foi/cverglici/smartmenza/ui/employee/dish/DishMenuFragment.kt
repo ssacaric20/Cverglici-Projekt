@@ -37,6 +37,7 @@ class DishMenuFragment : Fragment() {
     private lateinit var fatInput: TextInputEditText
     private lateinit var proteinInput: TextInputEditText
     private lateinit var ingredientsInput: TextInputEditText
+    private lateinit var aiAnalyzeButton: Button
     private lateinit var saveDishButton: Button
     private lateinit var cancelButton: Button
     private lateinit var deleteButton: Button
@@ -53,15 +54,11 @@ class DishMenuFragment : Fragment() {
     companion object {
         private const val ARG_DISH_ID = "dish_id"
 
-        fun newInstance(): DishMenuFragment {
-            return DishMenuFragment()
-        }
+        fun newInstance(): DishMenuFragment = DishMenuFragment()
 
         fun newInstance(dishId: Int): DishMenuFragment {
             return DishMenuFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_DISH_ID, dishId)
-                }
+                arguments = Bundle().apply { putInt(ARG_DISH_ID, dishId) }
             }
         }
     }
@@ -74,7 +71,6 @@ class DishMenuFragment : Fragment() {
                 selectedImageUri = uri
             }
         }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +102,7 @@ class DishMenuFragment : Fragment() {
         initializeViews(view)
         setupCategorySpinner()
         setupClickListeners()
+        setupAiResultListener()
 
         if (isEditMode) {
             formTitle.text = getString(R.string.edit_dish)
@@ -130,6 +127,7 @@ class DishMenuFragment : Fragment() {
         fatInput = view.findViewById(R.id.fatInput)
         proteinInput = view.findViewById(R.id.proteinInput)
         ingredientsInput = view.findViewById(R.id.ingredientsInput)
+        aiAnalyzeButton = view.findViewById(R.id.aiAnalyzeButton)
         saveDishButton = view.findViewById(R.id.saveDishButton)
         cancelButton = view.findViewById(R.id.cancelButton)
         deleteButton = view.findViewById(R.id.deleteButton)
@@ -138,36 +136,63 @@ class DishMenuFragment : Fragment() {
     }
 
     private fun setupCategorySpinner() {
-        val categories = arrayOf(
-            getString(R.string.lunch),
-            getString(R.string.dinner)
-        )
+        val categories = arrayOf(getString(R.string.lunch), getString(R.string.dinner))
 
-        val adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            categories
-        )
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         categorySpinner.adapter = adapter
     }
 
     private fun setupClickListeners() {
-        saveDishButton.setOnClickListener {
-            handleSaveDish()
-        }
+        saveDishButton.setOnClickListener { handleSaveDish() }
+        cancelButton.setOnClickListener { handleCancel() }
+        deleteButton.setOnClickListener { handleDeleteDish() }
 
-        cancelButton.setOnClickListener {
-            handleCancel()
-        }
+        uploadDishImageButton.setOnClickListener { pickImage.launch("image/*") }
 
-        deleteButton.setOnClickListener {
-            handleDeleteDish()
+        aiAnalyzeButton.setOnClickListener {
+            val text = buildAiInputText()
+            if (text.isBlank()) {
+                Toast.makeText(requireContext(), "Unesite barem naziv jela za AI analizu.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            EmployeeDishAiAnalysisBottomSheetFragment
+                .newInstance(text)
+                .show(parentFragmentManager, "EmployeeDishAiAnalysis")
         }
+    }
 
-        uploadDishImageButton.setOnClickListener {
-            pickImage.launch("image/*")
+    private fun setupAiResultListener() {
+        parentFragmentManager.setFragmentResultListener(
+            EmployeeDishAiAnalysisBottomSheetFragment.RESULT_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val calories = bundle.getInt("calories", 0)
+            val protein = bundle.getDouble("protein", 0.0)
+            val carbs = bundle.getDouble("carbs", 0.0)
+            val fat = bundle.getDouble("fat", 0.0)
+            val fiber = bundle.getDouble("fiber", 0.0)
+
+            caloriesInput.setText(calories.toString())
+            proteinInput.setText(protein.toString())
+            carbsInput.setText(carbs.toString())
+            fatInput.setText(fat.toString())
+            fiberInput.setText(fiber.toString())
+
+            Toast.makeText(requireContext(), "AI vrijednosti primijenjene u formu.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun buildAiInputText(): String {
+        val title = titleInput.text?.toString()?.trim().orEmpty()
+        val desc = descriptionInput.text?.toString()?.trim().orEmpty()
+        val ing = ingredientsInput.text?.toString()?.trim().orEmpty()
+
+        return buildString {
+            if (title.isNotBlank()) appendLine(title)
+            if (desc.isNotBlank()) appendLine(desc)
+            if (ing.isNotBlank()) appendLine("Ingredients: $ing")
+        }.trim()
     }
 
     private fun loadDishData(dishId: Int) {
@@ -197,15 +222,11 @@ class DishMenuFragment : Fragment() {
         fatInput.setText(dish.fat?.toString() ?: "")
         proteinInput.setText(dish.protein?.toString() ?: "")
 
-        uploadDishImageButton.setOnClickListener {
-            pickImage.launch("image/*")
-        }
+        uploadDishImageButton.setOnClickListener { pickImage.launch("image/*") }
     }
 
     private fun handleSaveDish() {
-        if (!validateInputs()) {
-            return
-        }
+        if (!validateInputs()) return
 
         val title = titleInput.text.toString().trim()
         val description = descriptionInput.text.toString().trim()
@@ -277,7 +298,6 @@ class DishMenuFragment : Fragment() {
             .setPositiveButton("Da") { _, _ ->
                 dishId?.let { id ->
                     showLoading(true)
-
                     dishManager.deleteDish(
                         dishId = id,
                         onSuccess = {
@@ -315,22 +335,6 @@ class DishMenuFragment : Fragment() {
         return true
     }
 
-    private fun clearForm() {
-        titleInput.text?.clear()
-        descriptionInput.text?.clear()
-        priceInput.text?.clear()
-        caloriesInput.text?.clear()
-        carbsInput.text?.clear()
-        fiberInput.text?.clear()
-        fatInput.text?.clear()
-        proteinInput.text?.clear()
-        ingredientsInput.text?.clear()
-        categorySpinner.setSelection(0)
-        selectedImageUri = null
-        dishImagePreview.setImageResource(R.drawable.ic_restaurant)
-        dishImagePlaceholderText.visibility = View.VISIBLE
-    }
-
     private fun handleCancel() {
         navigateBack()
     }
@@ -343,5 +347,6 @@ class DishMenuFragment : Fragment() {
         saveDishButton.isEnabled = !isLoading
         deleteButton.isEnabled = !isLoading
         cancelButton.isEnabled = !isLoading
+        aiAnalyzeButton.isEnabled = !isLoading
     }
 }
