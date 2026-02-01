@@ -102,7 +102,7 @@ class DishDetailDialog(
         loadDishDetails()
 
         // REVIEWS (API)
-        val currentUserId = 1 // privremeno dok ne dohvatite userId iz sessiona
+        val currentUserId = 1 // privremeno dok se ne dobije userId iz sessiona
         val reviewService = RetrofitReview.create(tokenProvider)
 
         val repo: ReviewRepository = RetrofitReviewRepository(
