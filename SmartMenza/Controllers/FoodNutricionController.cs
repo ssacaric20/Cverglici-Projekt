@@ -8,9 +8,9 @@ namespace SmartMenza.API.Controllers;
 [Route("api/food")]
 public sealed class NutritionController : ControllerBase
 {
-    private readonly INutritionAnalyzer _nutrition;
+    private readonly IAINutritionAnalyzerService _nutrition;
 
-    public NutritionController(INutritionAnalyzer nutrition)
+    public NutritionController(IAINutritionAnalyzerService nutrition)
     {
         _nutrition = nutrition;
     }
