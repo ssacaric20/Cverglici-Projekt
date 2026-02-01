@@ -3,30 +3,30 @@ package foi.cverglici.smartmenza.ui.student.menu
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.Window
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import foi.cverglici.core.data.api.student.dailymenu.IDishService
 import foi.cverglici.core.data.api.student.dailymenu.RetrofitDish
+import foi.cverglici.core.data.api.student.reviews.RetrofitReview
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
+import foi.cverglici.core.data.model.student.reviews.ReviewResponse
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.session.SessionTokenProvider
 import foi.cverglici.smartmenza.ui.student.favorites.FavoriteManager
+import foi.cverglici.smartmenza.ui.student.reviews.ReviewManager
+import foi.cverglici.smartmenza.ui.student.reviews.ReviewsAdapter
 import kotlinx.coroutines.launch
-import android.view.View
-import android.widget.EditText
-import android.widget.RatingBar
-import androidx.recyclerview.widget.RecyclerView
-import foi.cverglici.smartmenza.ui.student.reviews.ReviewRepository
-import foi.cverglici.smartmenza.ui.student.reviews.RetrofitReviewRepository
-import foi.cverglici.smartmenza.ui.student.reviews.ReviewsController
-import foi.cverglici.core.data.api.student.reviews.RetrofitReview
-
 
 class DishDetailDialog(
     context: Context,
@@ -62,8 +62,15 @@ class DishDetailDialog(
     private lateinit var btnSubmitReview: View
     private lateinit var btnCancelReview: View
 
-    private lateinit var reviewsController: ReviewsController
+    // reviews
+    private lateinit var reviewManager: ReviewManager
+    private lateinit var reviewsAdapter: ReviewsAdapter
 
+    // state for edit
+    private var editingReviewId: Int? = null
+
+    // TODO: zamijeni sa stvarnim userId iz sessiona
+    private val currentUserId: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,34 +88,17 @@ class DishDetailDialog(
         // dish details service
         menuService = RetrofitDish.create(tokenProvider)
 
+        // review service + manager
+        val reviewService = RetrofitReview.create(tokenProvider)
+        reviewManager = ReviewManager(context, lifecycleOwner, reviewService)
+
         initializeViews()
         setupClickListeners()
+
+        setupReviewsUi()
+
         loadDishDetails()
-
-        // REVIEWS (API)
-        val currentUserId = 1 // privremeno dok ne dohvatite userId iz sessiona
-        val reviewService = RetrofitReview.create(tokenProvider)
-
-        val repo: ReviewRepository = RetrofitReviewRepository(
-            service = reviewService,
-            currentUserId = currentUserId
-        )
-
-        reviewsController = ReviewsController(
-            context = context,
-            lifecycleOwner = lifecycleOwner,
-            dishId = dishId,
-            repo = repo,
-            reviewsRecyclerView = reviewsRecyclerView,
-            reviewsEmptyState = reviewsEmptyState,
-            reviewFormContainer = reviewFormContainer,
-            ratingBar = ratingBar,
-            etReviewText = etReviewText,
-            btnWriteReview = btnWriteReview,
-            btnSubmitReview = btnSubmitReview,
-            btnCancelReview = btnCancelReview
-        )
-        reviewsController.init()
+        loadReviews()
 
         favoriteManager = FavoriteManager(context, lifecycleOwner, favoriteIcon, dishId)
         favoriteManager.initialize()
@@ -129,6 +119,7 @@ class DishDetailDialog(
         ingredientsChipGroup = findViewById(R.id.ingredientsChipGroup)
         averageRating = findViewById(R.id.averageRating)
         ratingCount = findViewById(R.id.ratingsCount)
+
         reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView)
         reviewsEmptyState = findViewById(R.id.reviewsEmptyState)
         reviewFormContainer = findViewById(R.id.reviewFormContainer)
@@ -137,14 +128,15 @@ class DishDetailDialog(
         btnWriteReview = findViewById(R.id.btnWriteReview)
         btnSubmitReview = findViewById(R.id.btnSubmitReview)
         btnCancelReview = findViewById(R.id.btnCancelReview)
-
     }
 
     private fun setupClickListeners() {
-        closeButton.setOnClickListener {
-            dismiss()
-        }
+        closeButton.setOnClickListener { dismiss() }
     }
+
+    // -------------------------
+    // Dish details
+    // -------------------------
 
     private fun loadDishDetails() {
         lifecycleOwner.lifecycleScope.launch {
@@ -162,16 +154,11 @@ class DishDetailDialog(
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
                 Toast.makeText(context, "Dish error: ${e.message}", Toast.LENGTH_LONG).show()
                 dismiss()
             }
-
         }
     }
-
-
-
 
     private fun displayDishDetails(dish: DishDetailsResponse) {
         dishTitle.text = dish.title
@@ -184,6 +171,7 @@ class DishDetailDialog(
         fiberValue.text = context.getString(R.string.grams_format, dish.fiber)
         fatValue.text = context.getString(R.string.grams_format, dish.fat)
         proteinValue.text = context.getString(R.string.grams_format, dish.protein)
+
         averageRating.text = context.getString(R.string.average_rating_format, dish.averageRating)
         ratingCount.text = context.getString(R.string.reviews_total_format, dish.ratingsCount)
 
@@ -197,5 +185,121 @@ class DishDetailDialog(
             chip.isCheckable = false
             ingredientsChipGroup.addView(chip)
         }
+    }
+
+    // -------------------------
+    // Reviews UI + logic
+    // -------------------------
+
+    private fun setupReviewsUi() {
+        reviewsAdapter = ReviewsAdapter(
+            currentUserId = currentUserId,
+            onEdit = { review -> openEditReview(review) },
+            onDelete = { review -> deleteReview(review) }
+        )
+
+        reviewsRecyclerView.layoutManager = LinearLayoutManager(context)
+        reviewsRecyclerView.adapter = reviewsAdapter
+
+        hideReviewForm()
+
+        btnWriteReview.setOnClickListener {
+            openCreateReview()
+        }
+
+        btnCancelReview.setOnClickListener {
+            hideReviewForm()
+        }
+
+        btnSubmitReview.setOnClickListener {
+            submitReview()
+        }
+    }
+
+    private fun loadReviews() {
+        reviewManager.loadReviews(
+            dishId = dishId,
+            onSuccess = { list ->
+                val sorted = list.sortedByDescending { it.createdAt }
+                reviewsAdapter.submit(sorted)
+
+                val isEmpty = sorted.isEmpty()
+                reviewsEmptyState.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                reviewsRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            }
+        )
+    }
+
+    private fun openCreateReview() {
+        editingReviewId = null
+        ratingBar.rating = 0f
+        etReviewText.setText("")
+        showReviewForm()
+    }
+
+    private fun openEditReview(review: ReviewResponse) {
+        editingReviewId = review.dishRatingId
+        ratingBar.rating = review.rating.toFloat()
+        etReviewText.setText(review.comment)
+        showReviewForm()
+    }
+
+    private fun deleteReview(review: ReviewResponse) {
+        reviewManager.deleteReview(
+            dishId = dishId,
+            reviewId = review.dishRatingId,
+            onSuccess = { loadReviews() }
+        )
+    }
+
+    private fun submitReview() {
+        val rating = ratingBar.rating.toInt()
+        val comment = etReviewText.text?.toString()?.trim().orEmpty()
+
+        if (rating <= 0) {
+            Toast.makeText(context, "Odaberi ocjenu.", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (comment.isBlank()) {
+            Toast.makeText(context, "Upiši komentar.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val editId = editingReviewId
+        if (editId == null) {
+            reviewManager.createReview(
+                dishId,
+                rating,
+                comment,
+                onSuccess = {
+                    hideReviewForm()
+                    loadReviews()
+                }
+            )
+        } else {
+            reviewManager.updateReview(
+                dishId = dishId,
+                reviewId = editId,
+                rating = rating,
+                comment = comment,
+                onSuccess = {
+                    hideReviewForm()
+                    loadReviews()
+                }
+            )
+        }
+    }
+
+    private fun showReviewForm() {
+        reviewFormContainer.visibility = View.VISIBLE
+        btnWriteReview.visibility = View.GONE
+    }
+
+    private fun hideReviewForm() {
+        reviewFormContainer.visibility = View.GONE
+        btnWriteReview.visibility = View.VISIBLE
+        editingReviewId = null
+        ratingBar.rating = 0f
+        etReviewText.setText("")
     }
 }

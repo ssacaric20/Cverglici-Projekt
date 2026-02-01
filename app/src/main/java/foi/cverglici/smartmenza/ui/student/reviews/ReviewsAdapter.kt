@@ -8,15 +8,17 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import foi.cverglici.smartmenza.R
+import foi.cverglici.core.data.model.student.reviews.ReviewResponse
 
 class ReviewsAdapter(
-    private val onEdit: (ReviewUi) -> Unit,
-    private val onDelete: (ReviewUi) -> Unit
+    private val currentUserId: Int,
+    private val onEdit: (ReviewResponse) -> Unit,
+    private val onDelete: (ReviewResponse) -> Unit
 ) : RecyclerView.Adapter<ReviewsAdapter.VH>() {
 
-    private val items = mutableListOf<ReviewUi>()
+    private val items = mutableListOf<ReviewResponse>()
 
-    fun submit(list: List<ReviewUi>) {
+    fun submit(list: List<ReviewResponse>) {
         items.clear()
         items.addAll(list)
         notifyDataSetChanged()
@@ -28,7 +30,7 @@ class ReviewsAdapter(
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.bind(items[position], onEdit, onDelete)
+        holder.bind(items[position], currentUserId, onEdit, onDelete)
     }
 
     override fun getItemCount(): Int = items.size
@@ -40,13 +42,19 @@ class ReviewsAdapter(
         private val tvDate: TextView = itemView.findViewById(R.id.tvReviewDate)
         private val btnMore: ImageView = itemView.findViewById(R.id.btnMore)
 
-        fun bind(item: ReviewUi, onEdit: (ReviewUi) -> Unit, onDelete: (ReviewUi) -> Unit) {
-            tvName.text = item.userDisplayName
+        fun bind(
+            item: ReviewResponse,
+            currentUserId: Int,
+            onEdit: (ReviewResponse) -> Unit,
+            onDelete: (ReviewResponse) -> Unit
+        ) {
+            tvName.text = item.userName
             tvRating.text = item.rating.toString()
-            tvText.text = item.text
-            tvDate.text = item.dateIso
+            tvText.text = item.comment
+            tvDate.text = item.createdAt.take(10) // YYYY-MM-DD iz ISO stringa
 
-            btnMore.visibility = if (item.isMine) View.VISIBLE else View.GONE
+            val isMine = item.userId == currentUserId
+            btnMore.visibility = View.VISIBLE
 
             btnMore.setOnClickListener { v ->
                 val popup = PopupMenu(v.context, v)
@@ -54,10 +62,16 @@ class ReviewsAdapter(
                 popup.menu.add(0, 2, 1, v.context.getString(R.string.delete))
                 popup.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
-                        1 -> onEdit(item)
-                        2 -> onDelete(item)
+                        1 -> {
+                            onEdit(item)
+                            true
+                        }
+                        2 -> {
+                            onDelete(item)
+                            true
+                        }
+                        else -> false
                     }
-                    true
                 }
                 popup.show()
             }
