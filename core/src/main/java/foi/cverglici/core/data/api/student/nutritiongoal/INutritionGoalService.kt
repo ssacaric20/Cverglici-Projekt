@@ -15,6 +15,6 @@ interface INutritionGoalService {
     @PUT("api/NutritionGoal/me")
     suspend fun setMyGoal(@Body request: SetNutritionGoalRequest): NutritionGoalResponse
 
-    @GET("api/nutrition-goal-statistics/today")
+    @GET("api/NutritionGoalStatistics/today")
     suspend fun getTodayProgress(): TodayNutritionProgressResponse
 }

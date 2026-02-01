@@ -15,7 +15,7 @@ public sealed class FoodAnalysisController : ControllerBase
         _analyzer = analyzer;
     }
 
-    [HttpPost("analyze")]
+    [HttpPost("analysis")]
     public async Task<ActionResult<FoodAnalysisResult>> Analyze([FromBody] AnalyzeFoodRequest req, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(req.Text))

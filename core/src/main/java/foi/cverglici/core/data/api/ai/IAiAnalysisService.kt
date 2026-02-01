@@ -11,17 +11,15 @@ import retrofit2.http.POST
 
 interface IAiAnalysisService {
 
-    // Typed (your current usage)
-    @POST("api/Food/analyze")
+    @POST("api/Food/analysis")
     suspend fun analyzeAllergens(@Body req: AnalyzeFoodRequest): Response<FoodAnalysisResult>
 
-    @POST("api/food/nutrition")
+    @POST("api/Nutrition/analysis")
     suspend fun analyzeNutrition(@Body req: NutritionAnalyzeRequest): Response<NutritionEstimateResponse>
 
-    // Raw (debug) – lets you see exact JSON coming from backend/OpenAI
-    @POST("api/Food/analyze")
+    @POST("api/Food/analysis")
     suspend fun analyzeAllergensRaw(@Body req: AnalyzeFoodRequest): Response<ResponseBody>
 
-    @POST("api/food/nutrition")
+    @POST("api/Nutrition/analysis")
     suspend fun analyzeNutritionRaw(@Body req: NutritionAnalyzeRequest): Response<ResponseBody>
 }
