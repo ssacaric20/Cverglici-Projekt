@@ -18,6 +18,15 @@ import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.session.SessionTokenProvider
 import foi.cverglici.smartmenza.ui.student.favorites.FavoriteManager
 import kotlinx.coroutines.launch
+import android.view.View
+import android.widget.EditText
+import android.widget.RatingBar
+import androidx.recyclerview.widget.RecyclerView
+import foi.cverglici.smartmenza.ui.student.reviews.ReviewRepository
+import foi.cverglici.smartmenza.ui.student.reviews.RetrofitReviewRepository
+import foi.cverglici.smartmenza.ui.student.reviews.ReviewsController
+import foi.cverglici.core.data.api.student.reviews.RetrofitReview
+
 
 class DishDetailDialog(
     context: Context,
@@ -43,6 +52,19 @@ class DishDetailDialog(
     private lateinit var favoriteManager: FavoriteManager
     private lateinit var menuService: IDishService
 
+    private lateinit var reviewsRecyclerView: RecyclerView
+    private lateinit var reviewsEmptyState: TextView
+
+    private lateinit var reviewFormContainer: View
+    private lateinit var ratingBar: RatingBar
+    private lateinit var etReviewText: EditText
+    private lateinit var btnWriteReview: View
+    private lateinit var btnSubmitReview: View
+    private lateinit var btnCancelReview: View
+
+    private lateinit var reviewsController: ReviewsController
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -52,15 +74,41 @@ class DishDetailDialog(
             (context.resources.displayMetrics.widthPixels * 1),
             (context.resources.displayMetrics.heightPixels * 0.85).toInt()
         )
-
         window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         val tokenProvider = SessionTokenProvider(context)
+
+        // dish details service
         menuService = RetrofitDish.create(tokenProvider)
 
         initializeViews()
         setupClickListeners()
         loadDishDetails()
+
+        // REVIEWS (API)
+        val currentUserId = 1 // privremeno dok ne dohvatite userId iz sessiona
+        val reviewService = RetrofitReview.create(tokenProvider)
+
+        val repo: ReviewRepository = RetrofitReviewRepository(
+            service = reviewService,
+            currentUserId = currentUserId
+        )
+
+        reviewsController = ReviewsController(
+            context = context,
+            lifecycleOwner = lifecycleOwner,
+            dishId = dishId,
+            repo = repo,
+            reviewsRecyclerView = reviewsRecyclerView,
+            reviewsEmptyState = reviewsEmptyState,
+            reviewFormContainer = reviewFormContainer,
+            ratingBar = ratingBar,
+            etReviewText = etReviewText,
+            btnWriteReview = btnWriteReview,
+            btnSubmitReview = btnSubmitReview,
+            btnCancelReview = btnCancelReview
+        )
+        reviewsController.init()
 
         favoriteManager = FavoriteManager(context, lifecycleOwner, favoriteIcon, dishId)
         favoriteManager.initialize()
@@ -81,6 +129,15 @@ class DishDetailDialog(
         ingredientsChipGroup = findViewById(R.id.ingredientsChipGroup)
         averageRating = findViewById(R.id.averageRating)
         ratingCount = findViewById(R.id.ratingsCount)
+        reviewsRecyclerView = findViewById(R.id.reviewsRecyclerView)
+        reviewsEmptyState = findViewById(R.id.reviewsEmptyState)
+        reviewFormContainer = findViewById(R.id.reviewFormContainer)
+        ratingBar = findViewById(R.id.ratingBar)
+        etReviewText = findViewById(R.id.etReviewText)
+        btnWriteReview = findViewById(R.id.btnWriteReview)
+        btnSubmitReview = findViewById(R.id.btnSubmitReview)
+        btnCancelReview = findViewById(R.id.btnCancelReview)
+
     }
 
     private fun setupClickListeners() {
@@ -99,23 +156,22 @@ class DishDetailDialog(
                         displayDishDetails(dish)
                     }
                 } else {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.error_loading_dish),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val err = response.errorBody()?.string()
+                    Toast.makeText(context, "Dish HTTP ${response.code()} $err", Toast.LENGTH_LONG).show()
                     dismiss()
                 }
+
             } catch (e: Exception) {
-                Toast.makeText(
-                    context,
-                    "Greška: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                e.printStackTrace()
+                Toast.makeText(context, "Dish error: ${e.message}", Toast.LENGTH_LONG).show()
                 dismiss()
             }
+
         }
     }
+
+
+
 
     private fun displayDishDetails(dish: DishDetailsResponse) {
         dishTitle.text = dish.title

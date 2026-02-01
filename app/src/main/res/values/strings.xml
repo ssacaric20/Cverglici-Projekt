@@ -97,6 +97,17 @@
     <string name="review_hint">Podijeli svoje mišljenje o ovom jelu...</string>
     <string name="posalji_recenziju">Pošalji Recenziju</string>
     <string name="odustani">Odustani</string>
+    <string name="more">Više opcija</string>
+    <string name="edit">Uredi</string>
+    <string name="delete">Obriši</string>
+    <string name="delete_review_title">Obrisati recenziju?</string>
+    <string name="delete_review_message">Jeste li sigurni da želite obrisati recenziju?</string>
+    <string name="rating_required">Molim odaberite ocjenu.</string>
+    <string name="review_too_short">Tekst recenzije je prekratak.</string>
+    <string name="error_loading_reviews">Greška pri učitavanju recenzija.</string>
+    <string name="error_saving_review">Greška pri spremanju recenzije.</string>
+    <string name="error_deleting_review">Greška pri brisanju recenzije.</string>
+
 
 
     <!-- Buttons -->

@@ -1,4 +1,4 @@
-package foi.cverglici.core.data.api.student.dailymenu
+package foi.cverglici.core.data.api.student.reviews
 
 import foi.cverglici.core.auth.ITokenProvider
 import foi.cverglici.core.data.api.interceptor.AuthInterceptor
@@ -8,15 +8,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object RetrofitDish {
-    private const val BASE_URL = "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net"
-
+object RetrofitReview {
+    private const val BASE_URL =
+        "https://smartmenza-h5csfahadafnajaq.germanywestcentral-01.azurewebsites.net"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    fun create(tokenProvider: ITokenProvider): IDishService {
+    fun create(tokenProvider: ITokenProvider): IReviewService {
         val client = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(tokenProvider))
             .addInterceptor(loggingInterceptor)
@@ -30,6 +30,6 @@ object RetrofitDish {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(IDishService::class.java)
+            .create(IReviewService::class.java)
     }
 }
