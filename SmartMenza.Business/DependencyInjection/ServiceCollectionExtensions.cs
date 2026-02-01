@@ -64,6 +64,7 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IAINutritionAnalyzerService, AINutritionAnalyzerService>();
             services.AddScoped<INutritionGoalService, NutritionGoalService>();
             services.AddScoped<INutritionGoalStatisticsService, NutritionGoalStatisticsService>();
+            services.AddScoped<IDailyFoodIntakeService, DailyFoodIntakeService>();
 
 
             return services;
