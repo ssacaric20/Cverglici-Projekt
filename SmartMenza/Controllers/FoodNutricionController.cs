@@ -15,7 +15,7 @@ public sealed class NutritionController : ControllerBase
         _nutrition = nutrition;
     }
 
-    [HttpPost("nutrition")]
+    [HttpPost("analysis")]
     public async Task<ActionResult<NutritionResult>> AnalyzeNutrition([FromBody] AnalyzeNutritionRequest req, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(req.Text))
