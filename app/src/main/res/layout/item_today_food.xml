@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    card_view:cardCornerRadius="14dp"
+    card_view:cardElevation="0dp"
+    card_view:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/macro_card_bg">
+
+        <!-- Slika jela -->
+        <ImageView
+            android:id="@+id/imgTodayDish"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/image_round_bg"
+            android:contentDescription="Dish image" />
+
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="0dp" />
+
+        <!-- Title + badges -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTodayDishTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jelo"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Badge row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/badgeTodayCalories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="5dp"
+                    android:paddingVertical="4dp"
+                    android:text="0 kcal"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/orange_primary"
+                    android:background="@drawable/badge_neutral_bg" />
+
+                <Space android:layout_width="8dp" android:layout_height="0dp" />
+
+                <TextView
+                    android:id="@+id/badgeTodayProtein"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="5dp"
+                    android:paddingVertical="4dp"
+                    android:text="0g P"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/protein_text"
+                    android:background="@drawable/badge_protein_bg" />
+
+                <Space android:layout_width="8dp" android:layout_height="0dp" />
+
+                <TextView
+                    android:id="@+id/badgeTodayCarbs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="5dp"
+                    android:paddingVertical="4dp"
+                    android:text="0g C"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/carbs_text"
+                    android:background="@drawable/badge_carbs_bg" />
+
+                <Space android:layout_width="8dp" android:layout_height="0dp" />
+
+                <TextView
+                    android:id="@+id/badgeTodayFat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="5dp"
+                    android:paddingVertical="4dp"
+                    android:text="0g F"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/fat_text"
+                    android:background="@drawable/badge_fat_bg" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/txtTodayDishMacros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="0 kcal | P 0 | C 0 | F 0" />
+        </LinearLayout>
+
+        <!-- Trash full-color -->
+        <ImageButton
+            android:id="@+id/btnDeleteTodayDish"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            android:padding="4dp"
+            android:contentDescription="Obriši"
+            android:src="@drawable/ic_trash_filled"
+            card_view:tint="@color/orange_primary" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

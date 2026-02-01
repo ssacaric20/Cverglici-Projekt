@@ -1,4 +1,4 @@
-package foi.cverglici.core.data.api.employee.dailymenu
+package foi.cverglici.core.data.api.student.nutritiongoal
 
 import foi.cverglici.core.auth.ITokenProvider
 import foi.cverglici.core.data.api.interceptor.AuthInterceptor
@@ -8,14 +8,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import foi.cverglici.core.data.api.ApiConfig
-
-object RetrofitEmployeeMenu {
+object RetrofitNutritionGoal {
     private const val BASE_URL = ApiConfig.BASE_URL
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    fun create(tokenProvider: ITokenProvider): IEmployeeMenuService {
+    fun create(tokenProvider: ITokenProvider): INutritionGoalService {
         val client = OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(tokenProvider))
             .addInterceptor(loggingInterceptor)
@@ -29,6 +28,6 @@ object RetrofitEmployeeMenu {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(IEmployeeMenuService::class.java)
+            .create(INutritionGoalService::class.java)
     }
 }
