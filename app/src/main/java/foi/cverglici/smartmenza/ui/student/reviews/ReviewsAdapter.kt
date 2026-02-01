@@ -54,7 +54,8 @@ class ReviewsAdapter(
             tvDate.text = item.createdAt.take(10) // YYYY-MM-DD iz ISO stringa
 
             val isMine = item.userId == currentUserId
-            btnMore.visibility = View.VISIBLE
+            btnMore.visibility = if (isMine) View.VISIBLE else View.GONE
+
 
             btnMore.setOnClickListener { v ->
                 val popup = PopupMenu(v.context, v)

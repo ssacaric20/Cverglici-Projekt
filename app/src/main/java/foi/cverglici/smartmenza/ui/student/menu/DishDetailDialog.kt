@@ -25,6 +25,7 @@ import foi.cverglici.core.data.api.student.reviews.RetrofitReview
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.core.data.model.student.reviews.ReviewResponse
 import foi.cverglici.smartmenza.R
+import foi.cverglici.smartmenza.session.SessionManager
 import foi.cverglici.smartmenza.session.SessionTokenProvider
 import foi.cverglici.smartmenza.ui.student.favorites.FavoriteManager
 import foi.cverglici.smartmenza.ui.student.reviews.ReviewManager
@@ -87,8 +88,9 @@ class DishDetailDialog(
     // state for edit
     private var editingReviewId: Int? = null
 
-    // TODO: zamijeni sa stvarnim userId iz sessiona
-    private val currentUserId: Int = 1
+    private val currentUserId: Int by lazy {
+        SessionManager(context).getUserId()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
