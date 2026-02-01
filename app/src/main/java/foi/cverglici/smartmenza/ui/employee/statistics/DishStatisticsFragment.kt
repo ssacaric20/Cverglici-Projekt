@@ -16,11 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import foi.cverglici.core.data.api.employee.statistics.IStatisticsService
 import foi.cverglici.core.data.api.employee.statistics.RetrofitStatistics
-import foi.cverglici.core.data.api.student.review.IReviewService
-import foi.cverglici.core.data.api.student.review.RetrofitReview
+import foi.cverglici.core.data.api.student.reviews.IReviewService
+import foi.cverglici.core.data.api.student.reviews.RetrofitReview
+import foi.cverglici.core.data.model.employee.statistics.DishStatisticsResponse
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.session.SessionTokenProvider
-import foi.cverglici.smartmenza.ui.student.dish.ReviewsAdapter
+import foi.cverglici.smartmenza.ui.student.reviews.ReviewsAdapter
 import kotlinx.coroutines.launch
 
 class DishStatisticsFragment : Fragment() {
@@ -105,7 +106,11 @@ class DishStatisticsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        reviewsAdapter = ReviewsAdapter()
+        reviewsAdapter = ReviewsAdapter(
+            currentUserId = -1,
+            onEdit = {},
+            onDelete = {}
+        )
 
         reviewsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -159,7 +164,7 @@ class DishStatisticsFragment : Fragment() {
                     } else {
                         emptyReviewsText.visibility = View.GONE
                         reviewsRecyclerView.visibility = View.VISIBLE
-                        reviewsAdapter.submitList(reviews)
+                        reviewsAdapter.submit(reviews)
                     }
                 } else {
                     Log.e("DishStatisticsFragment", "Failed to load reviews: ${response.code()}")
@@ -170,7 +175,7 @@ class DishStatisticsFragment : Fragment() {
         }
     }
 
-    private fun displayStatistics(statistics: foi.cverglici.core.data.model.statistics.DishStatisticsResponse) {
+    private fun displayStatistics(statistics: DishStatisticsResponse) {
         dishTitle.text = statistics.title
 
         if (statistics.averageRating != null) {
