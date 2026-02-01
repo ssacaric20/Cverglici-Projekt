@@ -156,7 +156,7 @@ class DishMenuFragment : Fragment() {
                 Toast.makeText(requireContext(), "Unesite barem naziv jela za AI analizu.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            EmployeeDishAiAnalysisBottomSheetFragment
+            AiAnalysisBottomSheetFragment
                 .newInstance(text)
                 .show(parentFragmentManager, "EmployeeDishAiAnalysis")
         }
@@ -164,7 +164,7 @@ class DishMenuFragment : Fragment() {
 
     private fun setupAiResultListener() {
         parentFragmentManager.setFragmentResultListener(
-            EmployeeDishAiAnalysisBottomSheetFragment.RESULT_KEY,
+            AiAnalysisBottomSheetFragment.RESULT_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
             val calories = bundle.getInt("calories", 0)

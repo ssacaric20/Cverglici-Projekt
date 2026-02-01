@@ -23,7 +23,7 @@ import foi.cverglici.smartmenza.session.SessionManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class EmployeeDishAiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
+class AiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var dietChipGroup: ChipGroup
     private lateinit var allergensChipGroup: ChipGroup
@@ -215,8 +215,8 @@ class EmployeeDishAiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
         private const val BUNDLE_IS_VEGETARIAN = "isVegetarian"
         private const val BUNDLE_IS_GLUTEN_FREE = "isGlutenFree"
 
-        fun newInstance(text: String): EmployeeDishAiAnalysisBottomSheetFragment =
-            EmployeeDishAiAnalysisBottomSheetFragment().apply {
+        fun newInstance(text: String): AiAnalysisBottomSheetFragment =
+            AiAnalysisBottomSheetFragment().apply {
                 arguments = Bundle().apply { putString(ARG_TEXT, text) }
             }
     }
