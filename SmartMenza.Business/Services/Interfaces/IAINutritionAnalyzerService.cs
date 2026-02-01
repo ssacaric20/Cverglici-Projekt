@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartMenza.Business.Services.Interfaces
 {
-    public interface INutritionAnalyzer
+    public interface IAINutritionAnalyzerService
     {
         Task<NutritionResult> AnalyzeAsync(string text, CancellationToken ct = default);
     }

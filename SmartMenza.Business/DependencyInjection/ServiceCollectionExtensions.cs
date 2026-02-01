@@ -57,8 +57,8 @@ namespace SmartMenza.Business.DependencyInjection
             services.AddScoped<IImageService, AzureBlobImageService>();
             services.AddScoped<IFavoriteService, FavoriteService>();
             services.AddScoped<IReviewService, ReviewService>();
-            services.AddScoped<IFoodAnalyzer, AzureOpenAIFoodAnalyzer>();
-            services.AddScoped<INutritionAnalyzer, AzureOpenAINutritionAnalyzer>();
+            services.AddScoped<IAIFoodAnalyzerService, AIFoodAnalyzerService>();
+            services.AddScoped<IAINutritionAnalyzerService, AINutritionAnalyzerService>();
 
 
             return services;

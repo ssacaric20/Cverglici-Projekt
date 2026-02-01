@@ -8,9 +8,9 @@ namespace SmartMenza.API.Controllers;
 [Route("api/Food")]
 public sealed class FoodAnalysisController : ControllerBase
 {
-    private readonly IFoodAnalyzer _analyzer;
+    private readonly IAIFoodAnalyzerService _analyzer;
 
-    public FoodAnalysisController(IFoodAnalyzer analyzer)
+    public FoodAnalysisController(IAIFoodAnalyzerService analyzer)
     {
         _analyzer = analyzer;
     }

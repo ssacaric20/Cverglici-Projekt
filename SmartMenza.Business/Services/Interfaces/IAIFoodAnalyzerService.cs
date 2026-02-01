@@ -2,7 +2,7 @@
 
 namespace SmartMenza.Business.Services.Interfaces
 {
-    public interface IFoodAnalyzer
+    public interface IAIFoodAnalyzerService
     {
         Task<FoodAnalysisResult> AnalyzeAsync(string text, CancellationToken ct = default);
     }
