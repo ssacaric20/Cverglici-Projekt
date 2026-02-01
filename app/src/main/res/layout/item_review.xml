@@ -43,6 +43,18 @@
                 android:layout_marginStart="4dp"
                 android:textColor="@color/text_primary"
                 tools:text="5" />
+
+            <ImageView
+                android:id="@+id/btnMore"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@android:drawable/ic_menu_more"
+                android:contentDescription="@string/more"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="2dp"
+                app:tint="@color/text_secondary" />
+
         </LinearLayout>
 
         <TextView
@@ -60,6 +72,7 @@
             android:layout_marginTop="8dp"
             android:textColor="@color/text_secondary"
             tools:text="2026-01-30" />
+
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
