@@ -5,7 +5,7 @@ using SmartMenza.Business.Services.Interfaces;
 namespace SmartMenza.API.Controllers
 {
     [ApiController]
-    [Route("api/nutrition-goal-statistics")]
+    [Route("api/NutritionGoalStatistics")]
     [Authorize]
     public class NutritionGoalStatisticsController : BaseAuthorizedController
     {
