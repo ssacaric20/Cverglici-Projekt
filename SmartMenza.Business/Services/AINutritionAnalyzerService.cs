@@ -9,11 +9,11 @@ using System.Text.Json;
 
 namespace SmartMenza.Business.Services
 {
-    public sealed class AzureOpenAINutritionAnalyzer : INutritionAnalyzer
+    public sealed class AINutritionAnalyzerService : IAINutritionAnalyzerService
     {
         private readonly ChatClient _chatClient;
 
-        public AzureOpenAINutritionAnalyzer(IOptions<AzureOpenAISettings> options)
+        public AINutritionAnalyzerService(IOptions<AzureOpenAISettings> options)
         {
             var s = options.Value;
 

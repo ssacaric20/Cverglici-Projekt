@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kalorije (kcal)"
+        android:textStyle="bold"
+        android:textColor="@color/orange_primary"
+        android:layout_marginTop="8dp"/>
+
+
+    <EditText
+        android:id="@+id/etCalories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange_primary"
+        android:hint="npr. 2000"
+        android:inputType="number"
+        android:minHeight="48dp" />
+
+    <Spinner
+        android:id="@+id/spinnerMacroProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+
+
+    <TextView
+        android:id="@+id/txtRecommendedMacros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="12dp"
+        android:background="@color/orange_light"
+        android:textColor="@color/text_primary"
+        android:text="Preporuka će se prikazati nakon unosa kalorija."
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Proteini (g)"
+        android:textStyle="bold"
+        android:textColor="@color/protein_text"
+        android:layout_marginTop="10dp"/>
+
+
+    <EditText
+        android:id="@+id/etProteins"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/protein_text"
+        android:hint="npr. 150"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ugljikohidrati (g)"
+        android:textStyle="bold"
+        android:textColor="@color/carbs_text"
+        android:layout_marginTop="10dp"/>
+
+
+
+    <EditText
+        android:id="@+id/etCarbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/carbs_text"
+        android:hint="npr. 250"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Masti (g)"
+        android:textStyle="bold"
+        android:textColor="@color/fat_text"
+        android:layout_marginTop="10dp"/>
+
+
+
+    <EditText
+        android:id="@+id/etFats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:backgroundTint="@color/fat_text"
+        android:hint="npr. 65"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+</LinearLayout>

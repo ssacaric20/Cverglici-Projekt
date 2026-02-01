@@ -9,13 +9,13 @@ using System.Text.Json;
 
 namespace SmartMenza.Business.Services
 {
-    public sealed class AzureOpenAIFoodAnalyzer : IFoodAnalyzer
+    public sealed class AIFoodAnalyzerService : IAIFoodAnalyzerService
     {
         private readonly AzureOpenAISettings _settings;
         private readonly AzureOpenAIClient _azureClient;
         private readonly ChatClient _chatClient;
 
-        public AzureOpenAIFoodAnalyzer(IOptions<AzureOpenAISettings> options)
+        public AIFoodAnalyzerService(IOptions<AzureOpenAISettings> options)
         {
             _settings = options.Value;
 

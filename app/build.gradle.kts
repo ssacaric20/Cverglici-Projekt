@@ -40,6 +40,8 @@ android {
     buildFeatures {
         compose = true
     }
+
+
 }
 
 dependencies {
@@ -72,4 +74,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("io.coil-kt:coil:2.6.0")
+
+
 }

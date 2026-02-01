@@ -8,14 +8,14 @@ namespace SmartMenza.API.Controllers;
 [Route("api/Food")]
 public sealed class FoodAnalysisController : ControllerBase
 {
-    private readonly IFoodAnalyzer _analyzer;
+    private readonly IAIFoodAnalyzerService _analyzer;
 
-    public FoodAnalysisController(IFoodAnalyzer analyzer)
+    public FoodAnalysisController(IAIFoodAnalyzerService analyzer)
     {
         _analyzer = analyzer;
     }
 
-    [HttpPost("analyze")]
+    [HttpPost("analysis")]
     public async Task<ActionResult<FoodAnalysisResult>> Analyze([FromBody] AnalyzeFoodRequest req, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(req.Text))

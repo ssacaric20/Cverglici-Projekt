@@ -5,17 +5,17 @@ using SmartMenza.Business.Services.Interfaces;
 namespace SmartMenza.API.Controllers;
 
 [ApiController]
-[Route("api/food")]
+[Route("api/Nutrition")]
 public sealed class NutritionController : ControllerBase
 {
-    private readonly INutritionAnalyzer _nutrition;
+    private readonly IAINutritionAnalyzerService _nutrition;
 
-    public NutritionController(INutritionAnalyzer nutrition)
+    public NutritionController(IAINutritionAnalyzerService nutrition)
     {
         _nutrition = nutrition;
     }
 
-    [HttpPost("nutrition")]
+    [HttpPost("analysis")]
     public async Task<ActionResult<NutritionResult>> AnalyzeNutrition([FromBody] AnalyzeNutritionRequest req, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(req.Text))
