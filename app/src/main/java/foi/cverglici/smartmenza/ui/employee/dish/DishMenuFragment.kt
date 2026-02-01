@@ -22,6 +22,7 @@ import foi.cverglici.core.data.model.employee.dish.UpdateDishRequest
 import foi.cverglici.core.data.model.student.dailymenu.DishDetailsResponse
 import foi.cverglici.smartmenza.R
 import foi.cverglici.smartmenza.session.SessionTokenProvider
+import foi.cverglici.smartmenza.ui.employee.ai.common.AiDishPrefillContract
 
 class DishMenuFragment : Fragment() {
 
@@ -164,7 +165,7 @@ class DishMenuFragment : Fragment() {
 
     private fun setupAiResultListener() {
         parentFragmentManager.setFragmentResultListener(
-            EmployeeDishAiAnalysisBottomSheetFragment.RESULT_KEY,
+            AiDishPrefillContract.RESULT_KEY,
             viewLifecycleOwner
         ) { _, bundle ->
             val calories = bundle.getInt("calories", 0)
@@ -172,6 +173,14 @@ class DishMenuFragment : Fragment() {
             val carbs = bundle.getDouble("carbs", 0.0)
             val fat = bundle.getDouble("fat", 0.0)
             val fiber = bundle.getDouble("fiber", 0.0)
+
+            val title = bundle.getString(AiDishPrefillContract.KEY_TITLE)
+            val desc  = bundle.getString(AiDishPrefillContract.KEY_DESCRIPTION)
+            val ing   = bundle.getString(AiDishPrefillContract.KEY_INGREDIENTS)
+
+            if (!title.isNullOrBlank()) titleInput.setText(title)
+            if (!desc.isNullOrBlank()) descriptionInput.setText(desc)
+            if (!ing.isNullOrBlank()) ingredientsInput.setText(ing)
 
             caloriesInput.setText(calories.toString())
             proteinInput.setText(protein.toString())

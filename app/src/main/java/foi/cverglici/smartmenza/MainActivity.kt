@@ -9,6 +9,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import foi.cverglici.navigation.NavigationManager
 import foi.cverglici.navigation.Enums.NavigationRole
 import foi.cverglici.smartmenza.session.SessionManager
+import foi.cverglici.smartmenza.ui.employee.ai.tools.AiToolsFragment
 import foi.cverglici.smartmenza.ui.employee.menu.EmployeeMenuListFragment
 import foi.cverglici.smartmenza.ui.student.favorites.FavoritesFragment
 import foi.cverglici.smartmenza.ui.student.menu.MenuListFragment
@@ -65,8 +66,8 @@ class MainActivity : AppCompatActivity() {
             "favorites" -> FavoritesFragment()
             "goals" -> GoalsFragment()
             "employee_menu" -> EmployeeMenuListFragment()
-            "statistics" -> TODO("Statistics - will be implemented later")
-            "ai_tools" -> TODO("AI Tools - will be implemented later")
+            "statistics" -> TODO("Statistics - will be implemented later*")
+            "ai_tools" -> AiToolsFragment()
             else -> MenuListFragment()
         }
     }
