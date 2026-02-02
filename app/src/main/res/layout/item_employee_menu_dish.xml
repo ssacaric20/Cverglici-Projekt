@@ -95,7 +95,7 @@
             android:padding="8dp"
             android:text="Uredi"
             android:textColor="@color/text_primary"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
     </LinearLayout>

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
         <!-- Header -->
         <TextView
@@ -75,6 +75,7 @@
             android:layout_height="56dp"
             android:text="@string/upload_button"
             android:layout_marginBottom="24dp"
+            android:textStyle="bold"
             android:backgroundTint="@color/orange_primary"
             android:textColor="@color/white"
             app:cornerRadius="8dp" />
@@ -460,8 +461,8 @@
             android:layout_height="56dp"
             android:layout_marginBottom="16dp"
             android:text="AI analiza"
-            android:backgroundTint="@color/gray_light"
-            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/soft_teal"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             app:cornerRadius="8dp" />
@@ -470,10 +471,10 @@
         <!-- Save Button -->
         <Button
             android:id="@+id/saveDishButton"
+            android:text="@string/save_dish"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:backgroundTint="@color/orange_primary"
-            android:text="@string/save_dish"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -494,15 +495,14 @@
         <!-- Cancel Button -->
         <Button
             android:id="@+id/cancelButton"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="@string/cancel"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="@string/cancel"
-            android:textColor="@color/text_secondary"
             android:backgroundTint="@color/gray_light"
-            android:textSize="14sp"
-            app:cornerRadius="8dp"
-            android:layout_marginBottom="16dp" />
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"/>
 
     </LinearLayout>
 

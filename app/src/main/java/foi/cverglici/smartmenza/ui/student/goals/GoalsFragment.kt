@@ -25,13 +25,10 @@ import android.widget.ArrayAdapter
 
 class GoalsFragment : Fragment() {
 
-    // US27
     private lateinit var goalsManager: GoalsManager
 
-    // US28
     private lateinit var dailyFoodIntakeManager: DailyFoodIntakeManager
 
-    // Views
     private lateinit var btnEditGoals: Button
     private lateinit var btnAddDish: Button
 
@@ -71,8 +68,6 @@ class GoalsFragment : Fragment() {
     private lateinit var progCarbs: ProgressBar
     private lateinit var progFat: ProgressBar
 
-
-    // cache for prefill
     private var lastGoal: NutritionGoalResponse? = null
 
     override fun onCreateView(
@@ -132,19 +127,15 @@ class GoalsFragment : Fragment() {
 
         val (bF, vF, pF) = bindCard(cardFat)
         badgeFat = bF; valueFat = vF; progFat = pF
-
-
     }
 
     private fun setupTodayList() {
         todayAdapter = TodayFoodIntakeAdapter(emptyList()) { item ->
 
-
             todayAdapter.removeById(item.dailyFoodIntakeId)
 
             txtTodayCount.text = "Današnji obroci: ${todayAdapter.itemCount}"
             txtEmptyToday.visibility = if (todayAdapter.itemCount == 0) View.VISIBLE else View.GONE
-
 
             dailyFoodIntakeManager.deleteItem(
                 id = item.dailyFoodIntakeId,
@@ -159,7 +150,6 @@ class GoalsFragment : Fragment() {
                 }
             )
         }
-
         rvTodayFoods.layoutManager = LinearLayoutManager(requireContext())
         rvTodayFoods.adapter = todayAdapter
     }
@@ -168,8 +158,6 @@ class GoalsFragment : Fragment() {
         loadGoalAndProgress()
         loadTodayFoodIntakes()
     }
-
-
 
     private fun loadGoalAndProgress() {
         goalsManager.loadGoalAndTodayProgress(
@@ -189,7 +177,6 @@ class GoalsFragment : Fragment() {
         badgeCarbs.text = "UGLJIKOHIDRATI"
         badgeFat.text = "MASTI"
 
-        // Badge boje (iz vaših colors.xml)
         // Calories: sivi/neutralno
         badgeCalories.setTextColor(resources.getColor(R.color.text_primary, null))
         badgeCalories.setBackgroundColor(resources.getColor(R.color.white, null))
@@ -340,9 +327,6 @@ class GoalsFragment : Fragment() {
                     return@setPositiveButton
                 }
 
-
-
-
                 goalsManager.saveGoal(
                     request = SetNutritionGoalRequest(
                         caloriesGoal = cal,
@@ -357,13 +341,8 @@ class GoalsFragment : Fragment() {
                     onError = { err -> toast(err) }
                 )
             }
-
             .show()
     }
-
-    // -----------------------------
-    // US28: dnevni unos (add/delete)
-    // -----------------------------
 
     private fun loadTodayFoodIntakes() {
         dailyFoodIntakeManager.loadToday(
@@ -389,7 +368,6 @@ class GoalsFragment : Fragment() {
             .setView(dialogView)
             .setNegativeButton("Odustani", null)
             .create()
-
 
         val tokenProvider = SessionTokenProvider(requireContext())
         val dishService = RetrofitDish.create(tokenProvider)
@@ -428,13 +406,8 @@ class GoalsFragment : Fragment() {
                 txtEmpty.text = "Greška: ${e.message}"
             }
         }
-
         dialog.show()
     }
-
-    // -----------------------------
-    // helpers
-    // -----------------------------
 
     private fun validateGoalInputs(cal: Int, p: Double, f: Double, c: Double): String? {
         if (cal < 0 || cal > 10000) return "Kalorije moraju biti 0–10000."

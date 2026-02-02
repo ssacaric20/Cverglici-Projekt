@@ -42,6 +42,7 @@
             android:layout_marginBottom="4dp"
             android:backgroundTint="@color/orange_primary"
             android:text="@string/button_login"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="16sp"
             app:cornerRadius="8dp" />
@@ -52,6 +53,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="24dp"
+            android:textStyle="bold"
             android:backgroundTint="@color/orange_primary"
             android:text="@string/button_register"
             android:textColor="@color/white"

@@ -61,7 +61,8 @@
             android:id="@+id/tvReviewText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_margin="6dp"
+            android:padding="8dp"
             android:textColor="@color/text_secondary"
             tools:text="Savršen obrok pun proteina! Piletina je uvijek sočna i dobro začinjena." />
 

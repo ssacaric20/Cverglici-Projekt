@@ -2,16 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AI analiza"
         android:textStyle="bold"
-        android:textSize="18sp"
-        android:layout_marginBottom="12dp"/>
+        android:textSize="20sp"
+        android:layout_marginBottom="12dp"
+        android:textColor="@color/text_primary"/>
 
     <ProgressBar
         android:id="@+id/aiProgress"
@@ -26,7 +28,8 @@
         android:layout_height="wrap_content"
         android:text="Diet"
         android:textStyle="bold"
-        android:layout_marginBottom="6dp"/>
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/text_primary"/>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/dietChipGroup"
@@ -39,7 +42,8 @@
         android:layout_height="wrap_content"
         android:text="Allergens"
         android:textStyle="bold"
-        android:layout_marginBottom="6dp"/>
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/text_primary"/>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/allergensChipGroup"
@@ -52,7 +56,8 @@
         android:layout_height="wrap_content"
         android:text="Macros"
         android:textStyle="bold"
-        android:layout_marginBottom="6dp"/>
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/text_primary"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -111,19 +116,26 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/cancelAiButton"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:text="Odustani" />
-
-        <Button
             android:id="@+id/acceptAiButton"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/orange_primary"
+            android:textStyle="bold"
             android:text="Prihvati"
-            android:layout_marginStart="12dp" />
+            app:cornerRadius="8dp"/>
+
+        <Button
+            android:id="@+id/cancelAiButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/gray_light"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:text="Odustani"
+            app:cornerRadius="8dp"
+            android:layout_marginStart="12dp"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -46,7 +46,7 @@
     <string name="lunch">Ručak</string>
     <string name="dinner">Večera</string>
     <string name="todays_offer">Današnja ponuda</string>
-    <string name="date_example">19. listopada 2025.</string>
+    <string name="date_example">Pregled menija</string>
 
     <!-- Menu ITEM -->
     <string name="menu_list_title">Popis jela</string>

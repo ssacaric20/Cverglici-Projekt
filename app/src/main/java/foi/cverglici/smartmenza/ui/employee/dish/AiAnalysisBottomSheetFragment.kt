@@ -89,7 +89,6 @@ class AiAnalysisBottomSheetFragment : BottomSheetDialogFragment() {
                 putDouble(BUNDLE_FAT, m.fat_g ?: 0.0)
                 putDouble(BUNDLE_FIBER, m.fiber_g ?: 0.0)
 
-                // Optional: ako kasnije budeš htio i ovo spremati/koristiti u UI-u
                 putBoolean(BUNDLE_IS_VEGAN, latestAllergens?.isVegan ?: false)
                 putBoolean(BUNDLE_IS_VEGETARIAN, latestAllergens?.isVegetarian ?: false)
                 putBoolean(BUNDLE_IS_GLUTEN_FREE, latestAllergens?.isGlutenFree ?: false)
