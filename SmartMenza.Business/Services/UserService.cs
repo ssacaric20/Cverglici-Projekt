@@ -97,7 +97,10 @@ namespace SmartMenza.Business.Services
         {
             var settings = new GoogleJsonWebSignature.ValidationSettings
             {
-                Audience = new[] { "STAVITI GOOGLE CLIENT ID" }
+                Audience = new[] 
+                {
+                    "280341921249-meb0sm0fc9dlrcr2uhdt0l3phj47mlfj.apps.googleusercontent.com"
+                }
             };
 
             GoogleJsonWebSignature.Payload payload;
